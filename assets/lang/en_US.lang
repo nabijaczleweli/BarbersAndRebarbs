@@ -1,0 +1,4 @@
+gui.application.text.mute=Mute
+gui.application.text.unmute=Unmute
+gui.application.text.quit=Quit game
+gui.application.text.start=Start game

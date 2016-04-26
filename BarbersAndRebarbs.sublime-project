@@ -1,0 +1,52 @@
+{
+	"build_systems":
+	[
+		{
+			"cmd": "make -C\"$project_path\" git clean all",
+			"name": "Make all the things"
+		}
+	],
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"name": "Source",
+			"path": "src"
+		},
+		{
+			"follow_symlinks": true,
+			"name": "Resources",
+			"path": "assets"
+		},
+		{
+			"file_include_patterns":
+			[
+				"*Makefile*"
+			],
+			"folder_exclude_patterns":
+			[
+				"*"
+			],
+			"follow_symlinks": true,
+			"name": "Makefiles",
+			"path": "."
+		},
+		{
+			"follow_symlinks": true,
+			"name": "Legacy",
+			"path": "old"
+		},
+		{
+			"follow_symlinks": true,
+			"name": "External code",
+			"path": "ext/All"
+		}
+	],
+	"settings":
+	{
+		"FuzzyFilePath":
+		{
+		},
+		"tab_size": 2
+	}
+}
