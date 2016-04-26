@@ -5,9 +5,13 @@ cache:
   directories:
     - /tmp
 
+env:
+  global:
+    - SFML_INSTALLDIR="$HOME"
+
 matrix:
   include:
-    - env: SFML_INSTALLDIR="$HOME" COMPILER_NAME="GCC 5" CXX=g++-5 CC=gcc-5
+    - env: CXX=g++-5 CC=gcc-5 DEPLOY=true
       addons:
         apt:
           packages:
@@ -29,7 +33,7 @@ matrix:
             - r-packages-precise
             - llvm-toolchain-precise-3.8
             - ubuntu-toolchain-r-test
-    - env: SFML_INSTALLDIR="$HOME" COMPILER_NAME="Clang 3.8" CXX=clang++-3.8 CC=clang-3.8
+    - env: CXX=clang++-3.8 CC=clang-3.8
       addons:
         apt:
           packages:
@@ -50,12 +54,10 @@ matrix:
           sources: *sources
 
 install:
-  - ninja --version
-  - export SFML_TAG=$(curl -SsL 'https://api.github.com/repos/SFML/SFML/tags' | perl -pe 's/[[:space:]]//g' | perl -pe 's/\}\},\{/}},\n{/g' | perl -pe 's/,/, /g' | awk '{print($3)}' | sed -e 's/^.*":"//g' -e 's/",//g' -e 's:/: / :g' | awk '/[[:digit:].]+$/ {print($14); exit}')
+  - eval $(base64 -d <<< ZXhwb3J0IFNGTUxfVEFHPSQoY3VybCAtU3NMICdodHRwczovL2FwaS5naXRodWIuY29tL3JlcG9zL1NGTUwvU0ZNTC90YWdzJyB8IHBlcmwgLXBlICdzL1tbOnNwYWNlOl1dLy9nJyB8IHBlcmwgLXBlICdzL1x9XH0sXHsvfX0sXG57L2cnIHwgcGVybCAtcGUgJ3MvLC8sIC9nJyB8IGF3ayAne3ByaW50KCQzKX0nIHwgc2VkIC1lICdzL14uKiI6Ii8vZycgLWUgJ3MvIiwvL2cnIC1lICdzOi86IC8gOmcnIHwgYXdrICcvW1s6ZGlnaXQ6XS5dKyQvIHtwcmludCgkMTQpOyBleGl0fScp)
   - if [[ ! -d "/tmp/SFML-$SFML_TAG" ]]; then
-      mkdir -p "/tmp/SFML";
-      pushd "/tmp/SFML";
-      curl -SL https://github.com/SFML/SFML/archive/$SFML_TAG.tar.gz | tar -xzf-
+      pushd "/tmp";
+      curl -SL https://github.com/SFML/SFML/archive/$SFML_TAG.tar.gz | tar -xzf-;
       cd "SFML-$SFML_TAG";
       mkdir build && cd build;
       cmake -G"Unix Makefiles" .. -DCMAKE_INSTALL_PREFIX:PATH="$SFML_INSTALLDIR";
@@ -72,13 +74,15 @@ before_deploy:
   - cp -r out/BarbersAndRebarbs assets release/
   - LD_LIBRARY_PATH="$SFML_INSTALLDIR/lib" ldd release/BarbersAndRebarbs | grep sfml | awk '{system("cp " $3 " release/")}'
   - strip --strip-all --remove-section=.comment --remove-section=.note release/BarbersAndRebarbs
-  - tar -caf "BarbersAndRebarbs-$TRAVIS_TAG-$COMPILER_NAME.tbz2" release
+  - mv release "BarbersAndRebarbs-$TRAVIS_TAG"
+  - tar -caf "BarbersAndRebarbs-$TRAVIS_TAG.tbz2" "BarbersAndRebarbs-$TRAVIS_TAG"
 
 deploy:
   provider: releases
   api-key:
     secure: ftpe/n5jmeu7Ad/Sxt5DxD/awQAz4oF9zSZ7ywpJF66ngsk9P9Q+ux063YlWz0gVZS7wy0blU8DG0Q1FpFt0/9oPBv/QhQwNAm61AX+XGVD/2MK7UGHvy8XWkYAG4STDP+v3PqrqAiQ+oS0+ku45RH47QFje5riWMOSDwsMkGEMeieEcoYUtdJtIUAPzetoHlCmO6Su40l3BQd5gLE+eyF+APeOIdg4mkTNu3IgZRhNG2has0vKRzcu5g29WcLrlIWsnybzl+kuWxfjFE2KAj3zoiVykqxReedypWRlp5Is+18G/AhGw0Gnvb+ktRxZQZ2lJVu0KnlKfyje3QFH6GTh14mtw2mJ07YAJnwDv8MBmPaPat57T8B17rOpjZCIGHUTw4MBLxjRx+es5slZYANnjEzLVx9lSw0p1c9JIIrR2/HuwWpN/BthabjLxAWdIvTgVyxQlCQidkCAdpO+D3SeDN1HxFooFG2mZkgWnjFjhfaYT8G0SF7fGO0oLAZzg1KneA+TjnlTU0nexLKi9Os89lJxdDv0sA9cayRxg5b51RO8rLAFGmtlc4aqJ0EFNN1HmXoMhQpIcQvGLOxYI/ogX8+rWaMOlYSI+9E4jH4kB6UPHP51ZKjYBRQkZpFOSooiMUKzuJVwz4+OYVSGDNGTuM2YrYC1ztTzps0d6ccY=
-  file: "BarbersAndRebarbs-$TRAVIS_TAG-$COMPILER_NAME.tbz2"
+  file: "BarbersAndRebarbs-$TRAVIS_TAG.tbz2"
   skip_cleanup: true
   on:
     tags: true
+    condition: $DEPLOY = true
