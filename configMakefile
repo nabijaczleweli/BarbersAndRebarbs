@@ -38,10 +38,16 @@ else
 	endif
 endif
 
+ifneq "$(ADDITIONAL_INCLUDE_DIR)" ""
+	ADDCPPAR = -isystem$(ADDITIONAL_INCLUDE_DIR)
+else
+	ADDCPPAR =
+endif
+
 OBJ = .o
 ARCH = .a
 AR = ar
-CPPAR = -Os -fomit-frame-pointer -std=c++14 -pedantic -Wall -Wextra -pipe -Iext/All
+CPPAR = -Os -fomit-frame-pointer -std=c++14 -pedantic -Wall -Wextra -pipe -Iext/All $(ADDCPPAR)
 STRIP = strip
 STRIPAR = --strip-all --remove-section=.comment --remove-section=.note
 

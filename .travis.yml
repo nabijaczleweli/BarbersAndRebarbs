@@ -67,7 +67,7 @@ install:
   - make -j$(nproc) install
   - popd
 
-script: make -j$(nproc)
+script: ADDITIONAL_INCLUDE_DIR="$SFML_INSTALLDIR/include" make -j$(nproc)
 
 before_deploy:
   - mkdir release
