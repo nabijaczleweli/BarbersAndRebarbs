@@ -7,7 +7,10 @@ cache:
 
 env:
   global:
-    - SFML_INSTALLDIR="$HOME"
+    - LIB_INSTALLDIR="$HOME"
+    - AUDIERE_TAG=1.9.4
+    - SPEEX_VER=1.1.9
+    - SFML_TAG_CMDLINE=ZXhwb3J0IFNGTUxfVEFHPSQoY3VybCAtU3NMICdodHRwczovL2FwaS5naXRodWIuY29tL3JlcG9zL1NGTUwvU0ZNTC90YWdzJyB8IHBlcmwgLXBlICdzL1tbOnNwYWNlOl1dLy9nJyB8IHBlcmwgLXBlICdzL1x9XH0sXHsvfX0sXG57L2cnIHwgcGVybCAtcGUgJ3MvLC8sIC9nJyB8IGF3ayAne3ByaW50KCQzKX0nIHwgc2VkIC1lICdzL14uKiI6Ii8vZycgLWUgJ3MvIiwvL2cnIC1lICdzOi86IC8gOmcnIHwgYXdrICcvW1s6ZGlnaXQ6XS5dKyQvIHtwcmludCgkMTQpOyBleGl0fScp
 
 matrix:
   include:
@@ -16,6 +19,7 @@ matrix:
         apt:
           packages:
             - g++-5
+            - scons
             - libpthread-stubs0-dev
             - libgl1-mesa-dev
             - libx11-dev
@@ -38,6 +42,7 @@ matrix:
         apt:
           packages:
             - clang-3.8
+            - scons
             - libpthread-stubs0-dev
             - libgl1-mesa-dev
             - libx11-dev
@@ -54,25 +59,61 @@ matrix:
           sources: *sources
 
 install:
-  - eval $(base64 -d <<< ZXhwb3J0IFNGTUxfVEFHPSQoY3VybCAtU3NMICdodHRwczovL2FwaS5naXRodWIuY29tL3JlcG9zL1NGTUwvU0ZNTC90YWdzJyB8IHBlcmwgLXBlICdzL1tbOnNwYWNlOl1dLy9nJyB8IHBlcmwgLXBlICdzL1x9XH0sXHsvfX0sXG57L2cnIHwgcGVybCAtcGUgJ3MvLC8sIC9nJyB8IGF3ayAne3ByaW50KCQzKX0nIHwgc2VkIC1lICdzL14uKiI6Ii8vZycgLWUgJ3MvIiwvL2cnIC1lICdzOi86IC8gOmcnIHwgYXdrICcvW1s6ZGlnaXQ6XS5dKyQvIHtwcmludCgkMTQpOyBleGl0fScp)
+  - export SFML_TAG_CMDLINE=$(base64 -d <<< $SFML_TAG_CMDLINE)
+  - echo $SFML_TAG_CMDLINE
+  - eval $SFML_TAG_CMDLINE
+  - echo Using SFML ver $SFML_TAG
   - if [[ ! -d "/tmp/SFML-$SFML_TAG" ]]; then
       pushd "/tmp";
       curl -SL https://github.com/SFML/SFML/archive/$SFML_TAG.tar.gz | tar -xzf-;
       cd "SFML-$SFML_TAG";
       mkdir build && cd build;
-      cmake -G"Unix Makefiles" .. -DCMAKE_INSTALL_PREFIX:PATH="$SFML_INSTALLDIR";
+      cmake -G"Unix Makefiles" .. -DCMAKE_INSTALL_PREFIX:PATH="$LIB_INSTALLDIR";
       popd;
     fi
   - pushd "/tmp/SFML-$SFML_TAG/build"
   - make -j$(nproc) install
   - popd
+  -
+  - if [[ ! -d "/tmp/speex-$SPEEX_VER" ]]; then
+      pushd "/tmp";
+      curl -SL "http://downloads.xiph.org/releases/speex/speex-$SPEEX_VER.tar.gz" | tar -xzf-;
+      cd "speex-$SPEEX_VER";
+      curl -SL "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD" > config.sub;
+      curl -SL "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD" > config.guess;
+      ./configure --prefix="$LIB_INSTALLDIR";
+      make -j$(nproc);
+      popd;
+    fi
+  - pushd "/tmp/speex-$SPEEX_VER"
+  - make -j$(nproc) install
+  - popd
+  -
+  - if [[ ! -d "/tmp/audiere-$AUDIERE_TAG" ]]; then
+      pushd "/tmp";
+      curl -SL "http://kent.dl.sourceforge.net/project/audiere/audiere/$AUDIERE_TAG/audiere-$AUDIERE_TAG-src.tar.bz2" | tar -xjf-;
+      mv "audiere" "audiere-$AUDIERE_TAG";
+      cd "audiere-$AUDIERE_TAG";
+      sed -i "s/'-Wno-non-virtual-dtor']/'-Wno-non-virtual-dtor'])\nif ARGUMENTS.has_key('CXXFLAGS'):\n  env.Append(CXXFLAGS=ARGUMENTS['CXXFLAGS'])/" SConstruct;
+      sed -i "s/#include <string>/#include <string>\n#include <cstring>/" src/audiere.h;
+      sed -i "s/#include <stdio.h>/#include <stdio.h>\n#include <stdlib.h>/" src/debug.h;
+      sed -i "s:#include <speex:#include <speex/speex:g" src/speexfile/speexfile.h;
+      sed -i "s/#include <ctype.h>/#include <ctype.h>\n#include <stdio.h>/" src/utility.cpp;
+      scons CXXFLAGS="-isystem$LIB_INSTALLDIR/include -L$LIB_INSTALLDIR/lib" use_flac=no use_dumb=no;
+      popd;
+    fi
+  - pushd "/tmp/audiere-$AUDIERE_TAG"
+  # Doesn't work with `libFLAC.a` installed (gvia libflac-dev) either: https://travis-ci.org/nabijaczleweli/BarbersAndRebarbs/jobs/126249508#L709-L710
+  # dumb is unavailable as package on Travis
+  - scons CXXFLAGS="-isystem$LIB_INSTALLDIR/include -L$LIB_INSTALLDIR/lib" use_flac=no use_dumb=no prefix="$LIB_INSTALLDIR" install
+  - popd
 
-script: ADDITIONAL_INCLUDE_DIR="$SFML_INSTALLDIR/include" make -j$(nproc)
+script: ADDITIONAL_INCLUDE_DIR="$LIB_INSTALLDIR/include" make -j$(nproc)
 
 before_deploy:
   - mkdir release
   - cp -r out/BarbersAndRebarbs assets release/
-  - LD_LIBRARY_PATH="$SFML_INSTALLDIR/lib" ldd release/BarbersAndRebarbs | grep sfml | awk '{system("cp " $3 " release/")}'
+  - LD_LIBRARY_PATH="$LIB_INSTALLDIR/lib" ldd release/BarbersAndRebarbs | grep sfml | awk '{system("cp " $3 " release/")}'
   - strip --strip-all --remove-section=.comment --remove-section=.note release/BarbersAndRebarbs
   - mv release "BarbersAndRebarbs-$TRAVIS_TAG"
   - tar -caf "BarbersAndRebarbs-$TRAVIS_TAG.tbz2" "BarbersAndRebarbs-$TRAVIS_TAG"
