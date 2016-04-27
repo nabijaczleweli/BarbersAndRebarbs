@@ -2,7 +2,7 @@
 	"build_systems":
 	[
 		{
-			"cmd": "make -C\"$project_path\" git clean all",
+			"cmd": "make -C\"$project_path\" -j10 git clean all",
 			"name": "Make all the things"
 		}
 	],
@@ -44,9 +44,6 @@
 	],
 	"settings":
 	{
-		"FuzzyFilePath":
-		{
-		},
 		"tab_size": 2
 	}
 }

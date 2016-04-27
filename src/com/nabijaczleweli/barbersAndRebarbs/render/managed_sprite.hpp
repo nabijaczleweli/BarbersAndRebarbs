@@ -29,30 +29,30 @@
 
 
 class managed_sprite : public sf::Texture, public sf::Sprite {
-	public:
-		inline virtual bool loadFromFile(const std::string & filename, const sf::IntRect & area = sf::IntRect()) {
-			const auto ret = Texture::loadFromFile(filename, area);
-			setTexture(*this);
-			return ret;
-		}
+public:
+	inline virtual bool loadFromFile(const std::string & filename, const sf::IntRect & area = sf::IntRect()) {
+		const auto ret = Texture::loadFromFile(filename, area);
+		setTexture(*this);
+		return ret;
+	}
 
-		inline virtual bool loadFromMemory(const void * data, std::size_t size, const sf::IntRect & area = sf::IntRect()) {
-			const auto ret = Texture::loadFromMemory(data, size, area);
-			setTexture(*this);
-			return ret;
-		}
+	inline virtual bool loadFromMemory(const void * data, std::size_t size, const sf::IntRect & area = sf::IntRect()) {
+		const auto ret = Texture::loadFromMemory(data, size, area);
+		setTexture(*this);
+		return ret;
+	}
 
-		inline virtual bool loadFromStream(sf::InputStream & stream, const sf::IntRect & area = sf::IntRect()) {
-			const auto ret = Texture::loadFromStream(stream, area);
-			setTexture(*this);
-			return ret;
-		}
+	inline virtual bool loadFromStream(sf::InputStream & stream, const sf::IntRect & area = sf::IntRect()) {
+		const auto ret = Texture::loadFromStream(stream, area);
+		setTexture(*this);
+		return ret;
+	}
 
-		inline virtual bool loadFromImage(const sf::Image & image, const sf::IntRect & area = sf::IntRect()) {
-			const auto ret = Texture::loadFromImage(image, area);
-			setTexture(*this);
-			return ret;
-		}
+	inline virtual bool loadFromImage(const sf::Image & image, const sf::IntRect & area = sf::IntRect()) {
+		const auto ret = Texture::loadFromImage(image, area);
+		setTexture(*this);
+		return ret;
+	}
 };
 
 

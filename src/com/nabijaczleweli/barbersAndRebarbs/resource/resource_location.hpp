@@ -29,18 +29,18 @@
 
 
 class resource_location {
-	public:
-		const std::string resource_domain;
-		const std::string resource_path;
+public:
+	const std::string resource_domain;
+	const std::string resource_path;
 
-		resource_location(const std::string & domain, const std::string & path);
-		resource_location(const std::string & bundle);
+	resource_location(const std::string & domain, const std::string & path);
+	resource_location(const std::string & bundle);
 
-		operator std::string() const;
-		bool operator==(const resource_location & other) const;
+	operator std::string() const;
+	bool operator==(const resource_location & other) const;
 
-		std::string path() const;
-		bool exists() const;
+	std::string path() const;
+	bool exists() const;
 };
 
 

@@ -27,7 +27,7 @@ SUBSYSTEMS_SFML = system window graphics
 CUSTOM_DLLS = p:/C++/Utilities/Cpponfiguration/out/cpponfig$(DLL) p:/C++/Utilities/Cpp-NBT/out/cpp-nbt$(DLL)
 LDDLLS = audiere $(foreach subsystem,$(SUBSYSTEMS_SFML),sfml-$(subsystem)-2) cpponfig cpp-nbt
 LDAR = -fpic -L"p:/C++/Utilities/Cpponfiguration/out" -L"p:/C++/Utilities/Cpp-NBT/out" $(foreach dll,$(LDDLLS),-l$(dll))
-SOURCES = $(sort $(filter-out ./old/% ./ext/%,$(shell find src -name *.cpp)))
+SOURCES = $(sort $(filter-out ./old/% ./ext/%,$(wildcard src/**/**/**/*.cpp src/**/**/**/**/*.cpp src/**/**/**/**/**/*.cpp src/**/**/**/**/**/**/*.cpp)))
 
 
 .PHONY : clean all release git

@@ -30,30 +30,31 @@
 #include <unordered_set>
 
 
-class configurables_configuration : public cpponfig::configuration, cpponfig::swappable<configurables_configuration>,
+class configurables_configuration : public cpponfig::configuration,
+                                    cpponfig::swappable<configurables_configuration>,
                                     public cpponfig::hashable<configurables_configuration> {
-	private:
-		std::unordered_set<configurable *> configurables;
+private:
+	std::unordered_set<configurable *> configurables;
 
-		virtual size_t hash_code() const override;
+	virtual size_t hash_code() const override;
 
-	public:
-		configurables_configuration();
-		configurables_configuration(const std::string & name);
-		configurables_configuration(const configurables_configuration & other);
-		configurables_configuration(configurables_configuration && other);
+public:
+	configurables_configuration();
+	configurables_configuration(const std::string & name);
+	configurables_configuration(const configurables_configuration & other);
+	configurables_configuration(configurables_configuration && other);
 
-		virtual ~configurables_configuration();
+	virtual ~configurables_configuration();
 
-		configurables_configuration & operator=(const configurables_configuration & other);
-		configurables_configuration & operator+=(const configurables_configuration & other);
-		configurables_configuration & operator-=(const configurables_configuration & other);
+	configurables_configuration & operator=(const configurables_configuration & other);
+	configurables_configuration & operator+=(const configurables_configuration & other);
+	configurables_configuration & operator-=(const configurables_configuration & other);
 
-		virtual void swap(configurables_configuration & cfg) override;
+	virtual void swap(configurables_configuration & cfg) override;
 
-		void add(configurable * cfgbl);
-		inline void add(configurable & cfgbl) { add(&cfgbl); }
-		void configure();
+	void add(configurable * cfgbl);
+	inline void add(configurable & cfgbl) { add(&cfgbl); }
+	void configure();
 };
 
 configurables_configuration operator+(const configurables_configuration & lhs, const configurables_configuration & rhs);

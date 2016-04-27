@@ -33,46 +33,43 @@
 
 
 class application : configurable {
-	private:
-		friend screen;
-		friend class main_game_screen;
-		friend class main_menu_screen;
-		friend class splash_screen;
+private:
+	friend screen;
+	friend class main_game_screen;
+	friend class main_menu_screen;
+	friend class splash_screen;
 
-		screen * current_screen = nullptr,
-		       * temp_screen = nullptr;
-		sf::RenderWindow window;
-		managed_sprite mouse_pointer;
-		SequentialMusicPtr music;
-		unsigned int splash_length;
+	screen *current_screen = nullptr, *temp_screen = nullptr;
+	sf::RenderWindow window;
+	managed_sprite mouse_pointer;
+	SequentialMusicPtr music;
+	unsigned int splash_length;
 
-		int loop();
-		int draw();
+	int loop();
+	int draw();
 
-		virtual void config(cpponfig::configuration & cfg) override;
+	virtual void config(cpponfig::configuration & cfg) override;
 
-	public:
-		static const unsigned int & FPS;  // 0: vsync
-		static const unsigned int vsync_FPS;
+public:
+	static const unsigned int & FPS;  // 0: vsync
+	static const unsigned int vsync_FPS;
 
-		static inline unsigned int effective_FPS() __attribute__((always_inline)) {
-			return FPS ?: vsync_FPS;
-		}
+	static inline unsigned int effective_FPS() __attribute__((always_inline)) { return FPS ? FPS : vsync_FPS; }
 
 
-		cpponfig::property * play_sounds = nullptr;
+	cpponfig::property * play_sounds = nullptr;
 
-		int run();
+	int run();
 
-		void retry_music();
+	void retry_music();
 
-		template<class T, class... A>
-		inline void schedule_screen(const A &... args) {
-			temp_screen = new T(this, args...);
-		}
+	template <class T, class... A>
+	inline void schedule_screen(const A &... args) {
+		temp_screen = new T(this, args...);
+	}
 
-		application();
-		virtual ~application();
+	application();
+	virtual ~application();
 };
 
 

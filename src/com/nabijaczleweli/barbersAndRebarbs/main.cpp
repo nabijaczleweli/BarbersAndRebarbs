@@ -57,7 +57,7 @@ int main(int argc, char * argv[]) {
 }
 
 
-void init_app(int, char *[]) {
+void init_app(int, char * []) {
 	const_cast<localizer &>(fallback_izer).open();
 	const_cast<localizer &>(local_izer).open(app_language);
 	const_cast<localizer &>(global_izer).merge(local_izer).merge(fallback_izer);
@@ -77,53 +77,55 @@ void deinit_app() {
 
 void init_deps() {
 	class deps_configable : public configurable {
-		private:
-			virtual void config(configuration & cfg) override {
-				cout << "GCC version " << __GNUC__ << '.' << __GNUC_MINOR__ << '.' << __GNUC_PATCHLEVEL__ << " initializing...\n";
-				srand(time(nullptr));
-				cout << "GCC initialized.\n"
+	private:
+		virtual void config(configuration & cfg) override {
+			cout << "GCC version " << __GNUC__ << '.' << __GNUC_MINOR__ << '.' << __GNUC_PATCHLEVEL__ << " initializing...\n";
+			srand(time(nullptr));
+			cout << "GCC initialized.\n"
 
-				        "SFML version " << SFML_VERSION_MAJOR << '.' << SFML_VERSION_MINOR << " doesn\'t need initialization.\n"
-				        "audiere version " << audiere::GetVersion() << " doesn\'t need initialization.\n"
-				        "Cpp-NBT doesn\'t need initialization.\n";
+			        "SFML version "
+			     << SFML_VERSION_MAJOR << '.' << SFML_VERSION_MINOR << " doesn\'t need initialization.\n"
+			                                                           "audiere version "
+			     << audiere::GetVersion() << " doesn\'t need initialization.\n"
+			                                 "Cpp-NBT doesn\'t need initialization.\n";
 
-				if(cfg.contains("system:language"))
-					const_cast<string &>(app_language) = cfg.get("system:language").textual();
-				else {
-					string files;
-					for(const auto & name : list_files(localization_root))
-						if(name[0] != '.' && name.size() == 10 && name.find(".lang") == 5)
-							files += name.substr(0, name.find(".lang")) + ", ";
-					cfg.get("system:language", property(app_language, "Available languages: " + files.substr(0, files.size() - 2)));
-				}
+			if(cfg.contains("system:language"))
+				const_cast<string &>(app_language) = cfg.get("system:language").textual();
+			else {
+				string files;
+				for(const auto & name : list_files(localization_root))
+					if(name[0] != '.' && name.size() == 10 && name.find(".lang") == 5)
+						files += name.substr(0, name.find(".lang")) + ", ";
+				cfg.get("system:language", property(app_language, "Available languages: " + files.substr(0, files.size() - 2)));
 			}
+		}
 
-		public:
-			deps_configable() : configurable(nothrow) {}
+	public:
+		deps_configable() : configurable(nothrow) {}
 
-			void preconfig() {
-				cout << "Cpponfiguration version " << cpponfiguration_version << " initializing...\n";
-				configuration::datetime_footer_type = configuration::datetime_mode::gmt;
-				cout << "Cpponfiguration initialized.\n";
-			}
+		void preconfig() {
+			cout << "Cpponfiguration version " << cpponfiguration_version << " initializing...\n";
+			configuration::datetime_footer_type = configuration::datetime_mode::gmt;
+			cout << "Cpponfiguration initialized.\n";
+		}
 	};
 
 
 	cout << "Initializing dependencies under "
 #ifdef _WIN32
-	"Windows"
+	        "Windows"
 #elif defined(unix) || defined(__unix__) || defined(__unix)
-	"UNIX"
+	        "UNIX"
 #elif defined(__APPLE__)
-	"Mac OS X"
+	        "Mac OS X"
 #elif defined(__linux__)
-	"Linux"
+	        "Linux"
 #elif defined(__FreeBSD__)
-	"FreeBSD"
+	        "FreeBSD"
 #else
-	"an unknown OS"
+	        "an unknown OS"
 #endif
-	"...\n\n";
+	        "...\n\n";
 
 
 	deps_configable dependencies_config;

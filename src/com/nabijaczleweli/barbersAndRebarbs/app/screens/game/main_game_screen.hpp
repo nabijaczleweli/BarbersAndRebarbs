@@ -36,23 +36,23 @@
 
 
 class main_game_screen : public screen, configurable {
-	private:
-		virtual void config(cpponfig::configuration & cfg) override;
+private:
+	virtual void config(cpponfig::configuration & cfg) override;
 
-		stat_bar hp_stat, energy_stat;
-		player the_player;
-		std::deque<std::unique_ptr<entity>> entities;
+	stat_bar hp_stat, energy_stat;
+	player the_player;
+	std::deque<std::unique_ptr<entity>> entities;
 
-	public:
-		virtual void setup() override;
-		virtual int loop() override;
-		virtual int draw() override;
-		virtual int handle_event(const sf::Event & event) override;
+public:
+	virtual void setup() override;
+	virtual int loop() override;
+	virtual int draw() override;
+	virtual int handle_event(const sf::Event & event) override;
 
-		main_game_screen(application * theapp);
-		main_game_screen(const main_game_screen & other);
-		main_game_screen(main_game_screen && other);
-		virtual ~main_game_screen();
+	main_game_screen(application * theapp);
+	main_game_screen(const main_game_screen & other);
+	main_game_screen(main_game_screen && other);
+	virtual ~main_game_screen();
 };
 
 

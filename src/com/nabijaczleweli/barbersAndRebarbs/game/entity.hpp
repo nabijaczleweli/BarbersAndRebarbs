@@ -29,27 +29,27 @@
 
 
 class entity : public cpp_nbt::nbt_reloadable {
-	protected:
-		float x, y;
-		float motion_x, motion_y;
+protected:
+	float x, y;
+	float motion_x, motion_y;
 
-	public:
-		entity();
-		entity(const cpp_nbt::nbt_compound & from);
-		entity(const entity & other);
-		entity(entity && other);
+public:
+	entity();
+	entity(const cpp_nbt::nbt_compound & from);
+	entity(const entity & other);
+	entity(entity && other);
 
-		virtual ~entity();
+	virtual ~entity();
 
-		virtual void read_from_nbt(const cpp_nbt::nbt_compound & from);
-		virtual void write_to_nbt(cpp_nbt::nbt_compound & to) const;
+	virtual void read_from_nbt(const cpp_nbt::nbt_compound & from);
+	virtual void write_to_nbt(cpp_nbt::nbt_compound & to) const;
 
-		virtual void tick(float max_x = 0, float max_y = 0);  // maxes for physics
+	virtual void tick(float max_x = 0, float max_y = 0);  // maxes for physics
 
 
-		void start_movement(float amt_x, float amt_y);
+	void start_movement(float amt_x, float amt_y);
 
-		virtual float speed() const;
+	virtual float speed() const;
 };
 
 

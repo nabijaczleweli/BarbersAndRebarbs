@@ -37,10 +37,10 @@ typedef main_menu_screen::direction direction;
 
 void main_menu_screen::move_selection(direction dir) {
 	switch(dir) {
-		case direction::up :
+		case direction::up:
 			selected = min(main_buttons.size() - 1, selected + 1);
 			break;
-		case direction::down :
+		case direction::down:
 			if(selected)
 				--selected;
 			break;
@@ -100,19 +100,18 @@ int main_menu_screen::handle_event(const Event & event) {
 		return i;
 
 	switch(static_cast<int>(event.type)) {
-		case Event::MouseMoved : {
-				unsigned int buttid = 0;
-				for(const auto & button : main_buttons) {
-					if(button.first.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y)) {
-						selected = buttid;
-						break;
-					}
-					++buttid;
+		case Event::MouseMoved: {
+			unsigned int buttid = 0;
+			for(const auto & button : main_buttons) {
+				if(button.first.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y)) {
+					selected = buttid;
+					break;
 				}
+				++buttid;
 			}
-			break;
+		} break;
 
-		case Event::MouseButtonPressed :
+		case Event::MouseButtonPressed:
 			if(event.mouseButton.button == Mouse::Left)
 				for(const auto & button : main_buttons)
 					if(button.first.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
@@ -121,32 +120,33 @@ int main_menu_screen::handle_event(const Event & event) {
 					}
 			break;
 
-		case Event::MouseWheelMoved :
+		case Event::MouseWheelMoved:
 			move_selection((event.mouseWheel.delta > 0) ? direction::up : direction::down);
 			break;
-		case Event::KeyPressed :
+		case Event::KeyPressed:
 			switch(static_cast<int>(event.key.code)) {
-				case Keyboard::Key::Up :
+				case Keyboard::Key::Up:
 					move_selection(direction::up);
 					break;
-				case Keyboard::Key::Down :
+				case Keyboard::Key::Down:
 					move_selection(direction::down);
 					break;
-				case Keyboard::Key::Return :
-				case Keyboard::Key::Space :
+				case Keyboard::Key::Return:
+				case Keyboard::Key::Space:
 					press_button();
 					break;
 			}
 			break;
 
-		case Event::JoystickMoved :
+		case Event::JoystickMoved:
 			if(event.joystickMove.axis == X360_axis_mappings["LeftStickVertical"].axis || event.joystickMove.axis == X360_axis_mappings["DPadVertical"].axis) {
 				if(event.joystickMove.position && (event.joystickMove.position >= 25 || event.joystickMove.position <= -25)) {
 					if(joystick_up)
 						break;
-					joystick_up = true;
+					joystick_up    = true;
 					const int sign = event.joystickMove.position / abs(event.joystickMove.position);
-					const auto & axis(X360_axis_mappings[(event.joystickMove.axis == X360_axis_mappings["LeftStickVertical"].axis) ? "LeftStickVertical" : "DPadVertical"]);
+					const auto & axis(
+					    X360_axis_mappings[(event.joystickMove.axis == X360_axis_mappings["LeftStickVertical"].axis) ? "LeftStickVertical" : "DPadVertical"]);
 
 					move_selection((sign == axis.up_right) ? direction::up : direction::down);
 				} else
@@ -154,7 +154,7 @@ int main_menu_screen::handle_event(const Event & event) {
 			}
 			break;
 
-		case Event::JoystickButtonPressed :
+		case Event::JoystickButtonPressed:
 			if(event.joystickButton.button == X360_button_mappings["A"])
 				press_button();
 			break;
@@ -163,34 +163,30 @@ int main_menu_screen::handle_event(const Event & event) {
 	return 0;
 }
 
-main_menu_screen::main_menu_screen(application * theapp) : screen(theapp), control_frames_counter(0), joystick_up(false),
-                                                           joystick_drawing(0, xbox_drawing(Vector2f(0, 0), app->window.getSize())),
-                                                           keys_drawing(Vector2f(0, 0), app->window.getSize()) {
-	keys_drawing.move(app->window.getSize().x / 4 - keys_drawing.size().x / 2,
-	                  app->window.getSize().y / 2 - keys_drawing.size().y / 2);
+main_menu_screen::main_menu_screen(application * theapp)
+      : screen(theapp), control_frames_counter(0), joystick_up(false), joystick_drawing(0, xbox_drawing(Vector2f(0, 0), app->window.getSize())),
+        keys_drawing(Vector2f(0, 0), app->window.getSize()) {
+	keys_drawing.move(app->window.getSize().x / 4 - keys_drawing.size().x / 2, app->window.getSize().y / 2 - keys_drawing.size().y / 2);
 	joystick_drawing.second.move(app->window.getSize().x / 4 - joystick_drawing.second.size().x / 2,
 	                             app->window.getSize().y / 2 - joystick_drawing.second.size().y / 2);
 
-	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text.start"), font_swirly), [&](Text &) {
-		app->schedule_screen<main_game_screen>();
-	});
+	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text.start"), font_swirly),
+	                           [&](Text &) { app->schedule_screen<main_game_screen>(); });
 	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text."s + (app->play_sounds->boolean() ? "" : "un") + "mute"), font_swirly),
 	                           [&](Text & txt) {
-		app->play_sounds->boolean() ^= 1;
-		txt.setString(global_izer.translate_key("gui.application.text."s + (app->play_sounds->boolean() ? "" : "un") + "mute"));
-		app->retry_music();
-	});
-	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text.quit"), font_swirly), [&](Text &) {
-		app->window.close();
-	});
+		                           app->play_sounds->boolean() ^= 1;
+		                           txt.setString(global_izer.translate_key("gui.application.text."s + (app->play_sounds->boolean() ? "" : "un") + "mute"));
+		                           app->retry_music();
+		                         });
+	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text.quit"), font_swirly), [&](Text &) { app->window.close(); });
 
 	selected = main_buttons.size() - 1;
 }
-main_menu_screen::main_menu_screen(const main_menu_screen & other) : screen(other), main_buttons(other.main_buttons), selected(other.selected),
-                                                                     control_frames_counter(0), joystick_up(other.joystick_up),
-                                                                     joystick_drawing(other.joystick_drawing), keys_drawing(other.keys_drawing) {}
-main_menu_screen::main_menu_screen(main_menu_screen && other) : screen(move(other)), main_buttons(move(other.main_buttons)), selected(other.selected),
-                                                                control_frames_counter(other.control_frames_counter), joystick_up(other.joystick_up),
-                                                                joystick_drawing(move(other.joystick_drawing)), keys_drawing(move(other.keys_drawing)) {}
+main_menu_screen::main_menu_screen(const main_menu_screen & other)
+      : screen(other), main_buttons(other.main_buttons), selected(other.selected), control_frames_counter(0), joystick_up(other.joystick_up),
+        joystick_drawing(other.joystick_drawing), keys_drawing(other.keys_drawing) {}
+main_menu_screen::main_menu_screen(main_menu_screen && other)
+      : screen(move(other)), main_buttons(move(other.main_buttons)), selected(other.selected), control_frames_counter(other.control_frames_counter),
+        joystick_up(other.joystick_up), joystick_drawing(move(other.joystick_drawing)), keys_drawing(move(other.keys_drawing)) {}
 
 main_menu_screen::~main_menu_screen() {}

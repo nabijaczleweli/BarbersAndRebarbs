@@ -28,32 +28,32 @@
 
 
 class stat_bar : public sf::Drawable, public sf::Transformable {
-	protected:
-		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
+protected:
+	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 
-	private:
-		static sf::Texture bar_frame_texture;
-		static const sf::Texture & load_bar_frame_texture();
-		static sf::Texture bar_fill_texture;
-		static const sf::Texture & load_bar_fill_texture();
+private:
+	static sf::Texture bar_frame_texture;
+	static const sf::Texture & load_bar_frame_texture();
+	static sf::Texture bar_fill_texture;
+	static const sf::Texture & load_bar_fill_texture();
 
-		sf::Sprite bar_frame_sprite;
-		sf::Sprite bar_fill_sprite;
+	sf::Sprite bar_frame_sprite;
+	sf::Sprite bar_fill_sprite;
 
-	public:
-		float filled;
+public:
+	float filled;
 
-		stat_bar(sf::Color color, float filledness);
-		stat_bar(const stat_bar & other);
-		stat_bar(stat_bar && other);
+	stat_bar(sf::Color color, float filledness);
+	stat_bar(const stat_bar & other);
+	stat_bar(stat_bar && other);
 
-		stat_bar & operator=(const stat_bar & from);
+	stat_bar & operator=(const stat_bar & from);
 
-		inline sf::FloatRect getGlobalBounds() const { return bar_frame_sprite.getGlobalBounds(); }
-		inline sf::FloatRect getLocalBounds() const { return bar_frame_sprite.getLocalBounds(); }
+	inline sf::FloatRect getGlobalBounds() const { return bar_frame_sprite.getGlobalBounds(); }
+	inline sf::FloatRect getLocalBounds() const { return bar_frame_sprite.getLocalBounds(); }
 
-		virtual void setPosition(float x, float y) /*override*/;
-		virtual void setPosition(const sf::Vector2f & position) /*override*/;
+	virtual void setPosition(float x, float y) /*override*/;
+	virtual void setPosition(const sf::Vector2f & position) /*override*/;
 };
 
 

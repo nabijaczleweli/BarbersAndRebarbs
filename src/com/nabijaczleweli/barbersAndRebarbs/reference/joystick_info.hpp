@@ -33,7 +33,7 @@ struct directional_axis {
 	int up_right, down_left;
 };
 
-template<class T>
+template <class T>
 using joystick_mappings = simplified_map<std::string, T>;
 
 typedef joystick_mappings<unsigned int> joystick_button_mappings;

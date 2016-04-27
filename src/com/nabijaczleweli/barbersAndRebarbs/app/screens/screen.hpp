@@ -30,19 +30,19 @@
 
 class application;
 class screen {
-	protected:
-		application * app;
+protected:
+	application * app;
 
-	public:
-		virtual void setup();
-		virtual int loop() = 0;
-		virtual int draw() = 0;
-		virtual int handle_event(const sf::Event & event);
+public:
+	virtual void setup();
+	virtual int loop() = 0;
+	virtual int draw() = 0;
+	virtual int handle_event(const sf::Event & event);
 
-		screen(application * theapp);
-		screen(const screen & other);
-		screen(screen && other);
-		virtual ~screen();
+	screen(application * theapp);
+	screen(const screen & other);
+	screen(screen && other);
+	virtual ~screen();
 };
 
 

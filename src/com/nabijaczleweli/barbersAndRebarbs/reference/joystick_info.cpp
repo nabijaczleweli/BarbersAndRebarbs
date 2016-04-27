@@ -26,25 +26,13 @@
 using namespace sf;
 
 
-const joystick_button_mappings X360_button_mappings({
-	{"A", 0},
-	{"B", 1},
-	{"X", 2},
-	{"Y", 3},
-	{"LB", 4},
-	{"RB", 5},
-	{"Back", 6},
-	{"Start", 7},
-	{"LeftStick", 8},
-	{"RightStick", 9}
-});
+const joystick_button_mappings
+    X360_button_mappings({{"A", 0}, {"B", 1}, {"X", 2}, {"Y", 3}, {"LB", 4}, {"RB", 5}, {"Back", 6}, {"Start", 7}, {"LeftStick", 8}, {"RightStick", 9}});
 
-const joystick_axis_mappings X360_axis_mappings({
-	{"LeftStickHorizontal", {Joystick::X, 1, -1}},
-	{"LeftStickVertical", {Joystick::Y, -1, 1}},
-	{"Triggers", {Joystick::Z, -1, 1}},
-	{"RightStickVertical", {Joystick::R, -1, 1}},
-	{"RightStickHorizontal", {Joystick::U, 1, -1}},
-	{"DPadHorizontal", {Joystick::PovX, 1, -1}},
-	{"DPadVertical", {Joystick::PovY, 1, -1}}
-});
+const joystick_axis_mappings X360_axis_mappings({{"LeftStickHorizontal", {Joystick::X, 1, -1}},
+                                                 {"LeftStickVertical", {Joystick::Y, -1, 1}},
+                                                 {"Triggers", {Joystick::Z, -1, 1}},
+                                                 {"RightStickVertical", {Joystick::R, -1, 1}},
+                                                 {"RightStickHorizontal", {Joystick::U, 1, -1}},
+                                                 {"DPadHorizontal", {Joystick::PovX, 1, -1}},
+                                                 {"DPadVertical", {Joystick::PovY, 1, -1}}});

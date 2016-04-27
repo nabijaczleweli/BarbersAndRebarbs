@@ -37,22 +37,22 @@ using namespace cpponfig;
 
 
 static sequential_music * open_sequential_application_music(bool sound) {
-	return (sound ? [&]() {																															//  If sounds shall be played
-		auto files = list_files(sound_root + "/main_menu");																	//  list all files
+	return (sound ? [&]() {                                                             //  If sounds shall be played
+		auto files = list_files(sound_root + "/main_menu");                                 //  list all files
 		files.erase(remove_if(files.begin(), files.end(), [&](const string & val) {
-			return val.find("music");																													//  filter out all that are not prefixed with "music"
+			return val.find("music");                                                         //  filter out all that are not prefixed with "music"
 		}), files.end());
 		files.shrink_to_fit();
-		return files.size() ? new sequential_music(files.size(), [&](unsigned int id) {			//  if any matches
-			static const auto files_music = files;																							//  get only ones prefixed with "music"
+		return files.size() ? new sequential_music(files.size(), [&](unsigned int id) {     //  if any matches
+			static const auto files_music = files;                                              //  get only ones prefixed with "music"
 			return sound_root + "/main_menu/" + files_music[id];
-		}) : silent_music.get();																														//  else silent
-	}() : silent_music.get());																													//  else silent
+		}) : silent_music.get();                                                            //  else silent
+	}() : silent_music.get());                                                          //  else silent
 }
 
 
-static unsigned int actual_fps = 0;
-const unsigned int & application::FPS = actual_fps;
+static unsigned int actual_fps            = 0;
+const unsigned int & application::FPS     = actual_fps;
 const unsigned int application::vsync_FPS = 60;
 
 
@@ -80,7 +80,8 @@ int application::run() {
 	Image * icon = new Image;
 	if(icon->loadFromFile(textures_root + "/gui/general/window_main.png"))
 		window.setIcon(icon->getSize().x, icon->getSize().x, icon->getPixelsPtr());
-	delete icon; icon = nullptr;
+	delete icon;
+	icon = nullptr;
 
 	schedule_screen<splash_screen>(splash_length * effective_FPS());
 	return loop();
@@ -133,6 +134,6 @@ void application::retry_music() {
 void application::config(configuration & cfg) {
 	actual_fps = cfg.get("application:FPS", property("0", "0 -> VSYNC; Not 0 -> value (60 HIGHLY recommended)")).unsigned_integer();
 
-	play_sounds = &cfg.get("application:play_sounds", "true");
+	play_sounds   = &cfg.get("application:play_sounds", "true");
 	splash_length = cfg.get("application:splash_length", property("2", "Seconds")).unsigned_integer();
 }

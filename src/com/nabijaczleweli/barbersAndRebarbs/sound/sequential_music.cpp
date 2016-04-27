@@ -55,13 +55,11 @@ void sequential_music::go_to_next() {
 	play();
 }
 
-sequential_music::sequential_music(unsigned int maximal_id, function<string(unsigned int)> getter): output_stream(OpenSound(audio_device, getter(0).c_str(), true)),
-                                                                                                  max_id(maximal_id), getter_algo(getter) {
+sequential_music::sequential_music(unsigned int maximal_id, function<string(unsigned int)> getter)
+      : output_stream(OpenSound(audio_device, getter(0).c_str(), true)), max_id(maximal_id), getter_algo(getter) {
 	setRepeat(true);
 }
-sequential_music::sequential_music(unsigned int maximal_id, const string & filename) : sequential_music(maximal_id, [=](unsigned int) {
-	return filename;
-}) {}
+sequential_music::sequential_music(unsigned int maximal_id, const string & filename) : sequential_music(maximal_id, [=](unsigned int) { return filename; }) {}
 sequential_music::sequential_music() {}
 sequential_music::~sequential_music() {}
 

@@ -39,7 +39,7 @@ extern const std::string localization_root;
 
 extern const std::string app_name;
 extern const std::string app_language;
-extern       configurables_configuration app_configuration;
+extern /***/ configurables_configuration app_configuration;
 
 
 extern const sf::Font font_pixelish;

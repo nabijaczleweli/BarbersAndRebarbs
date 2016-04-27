@@ -30,34 +30,34 @@
 #include <unordered_map>
 
 class localizer {
-	private:
-		std::unordered_map<std::string, std::string> language;
-		mutable std::unordered_map<std::string, std::string>::const_iterator end;
+private:
+	std::unordered_map<std::string, std::string> language;
+	mutable std::unordered_map<std::string, std::string>::const_iterator end;
 
-		void init(std::istream & from);
+	void init(std::istream & from);
 
-	public:
-		localizer();
-		/** Used to disambugate the opening and non-opening constructors */
-		explicit localizer(std::nothrow_t);
-		explicit localizer(std::istream & from);
-		explicit localizer(const std::string & locale);
-		localizer(localizer && loc);
-		localizer(const localizer & loc);
-		/** Turns out to be loc0.merge(loc1) */
-		explicit localizer(const localizer & loc0, const localizer & loc1);
+public:
+	localizer();
+	/** Used to disambugate the opening and non-opening constructors */
+	explicit localizer(std::nothrow_t);
+	explicit localizer(std::istream & from);
+	explicit localizer(const std::string & locale);
+	localizer(localizer && loc);
+	localizer(const localizer & loc);
+	/** Turns out to be loc0.merge(loc1) */
+	explicit localizer(const localizer & loc0, const localizer & loc1);
 
-		/** Adds keys from `loc` for which there are no elements in `this` */
-		localizer & merge(const localizer & loc);
-		localizer & open(const std::string & locale = "en_US");
+	/** Adds keys from `loc` for which there are no elements in `this` */
+	localizer & merge(const localizer & loc);
+	localizer & open(const std::string & locale = "en_US");
 
-		bool has_any_key() const;
+	bool has_any_key() const;
 
-		bool can_translate_key(const std::string & key) const;
+	bool can_translate_key(const std::string & key) const;
 
-		const std::string & translate_key(const std::string & key) const;
-		//template<class... T>
-		//std::string translate_key_format(const std::string & key, const T &... args) const;
+	const std::string & translate_key(const std::string & key) const;
+	// template<class... T>
+	// std::string translate_key_format(const std::string & key, const T &... args) const;
 };
 
 extern const localizer fallback_izer;

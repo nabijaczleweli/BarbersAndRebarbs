@@ -29,23 +29,22 @@
 
 
 class player : public entity, public sf::Drawable {
-	protected:
-		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const;
+protected:
+	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const;
 
-	private:
+private:
+public:
+	player();
+	player(const cpp_nbt::nbt_compound & from);
+	player(const player & other);
+	player(player && other);
 
-	public:
-		player();
-		player(const cpp_nbt::nbt_compound & from);
-		player(const player & other);
-		player(player && other);
+	virtual ~player();
 
-		virtual ~player();
+	virtual void read_from_nbt(const cpp_nbt::nbt_compound & from) override;
+	virtual void write_to_nbt(cpp_nbt::nbt_compound & to) const override;
 
-		virtual void read_from_nbt(const cpp_nbt::nbt_compound & from) override;
-		virtual void write_to_nbt(cpp_nbt::nbt_compound & to) const override;
-
-		virtual void tick(float max_x, float max_y) override;
+	virtual void tick(float max_x, float max_y) override;
 };
 
 

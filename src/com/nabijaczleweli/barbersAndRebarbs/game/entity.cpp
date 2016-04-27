@@ -60,7 +60,7 @@ void entity::tick(float max_x, float max_y) {
 
 	if(max_x && max_y) {
 		if(x < 0) {
-			x = fabs(x);
+			x        = fabs(x);
 			motion_x = -motion_x;
 		}
 		if(x > max_x) {
@@ -68,7 +68,7 @@ void entity::tick(float max_x, float max_y) {
 			motion_x = -motion_x;
 		}
 		if(y < 0) {
-			y = fabs(y);
+			y        = fabs(y);
 			motion_y = -motion_y;
 		}
 		if(y > max_y) {

@@ -29,36 +29,30 @@
 
 
 class xbox_drawing : public sf::Drawable {
-	private:
-		sf::Vector2f own_scale;
-		// Clockwise order
-		bezier_curve top_left_handle,
-		             top_between_handles,
-		             top_right_handle,
-		             right_right_handle,
-		             bottom_right_handle,
-		             bottom_between_handles,
-		             bottom_left_handle,
-		             left_left_handle;
+private:
+	sf::Vector2f own_scale;
+	// Clockwise order
+	bezier_curve top_left_handle, top_between_handles, top_right_handle, right_right_handle, bottom_right_handle, bottom_between_handles, bottom_left_handle,
+	    left_left_handle;
 
-	public:
-		xbox_drawing(const sf::Vector2f & start);
-		xbox_drawing(const sf::Vector2f & start, const sf::Vector2f & size);
-		template<class T>
-		inline xbox_drawing(const sf::Vector2f & start, const sf::Vector2<T> & size) : xbox_drawing(start, static_cast<sf::Vector2f>(size)) {}
-		xbox_drawing(const xbox_drawing & other);
-		xbox_drawing(xbox_drawing && other);
+public:
+	xbox_drawing(const sf::Vector2f & start);
+	xbox_drawing(const sf::Vector2f & start, const sf::Vector2f & size);
+	template <class T>
+	inline xbox_drawing(const sf::Vector2f & start, const sf::Vector2<T> & size) : xbox_drawing(start, static_cast<sf::Vector2f>(size)) {}
+	xbox_drawing(const xbox_drawing & other);
+	xbox_drawing(xbox_drawing && other);
 
-		~xbox_drawing();
+	~xbox_drawing();
 
-		xbox_drawing & operator=(const xbox_drawing & from);
-		void swap(xbox_drawing & with);
+	xbox_drawing & operator=(const xbox_drawing & from);
+	void swap(xbox_drawing & with);
 
-		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
+	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 
-		void move(float x, float y);
-		void scale_size(sf::Vector2f factor);
-		sf::Vector2f size() const;
+	void move(float x, float y);
+	void scale_size(sf::Vector2f factor);
+	sf::Vector2f size() const;
 };
 
 

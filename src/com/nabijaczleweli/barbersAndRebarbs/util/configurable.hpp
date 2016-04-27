@@ -30,19 +30,19 @@
 
 
 class configurable {
-	public:
-		virtual void config(cpponfig::configuration & cfg) = 0;
+public:
+	virtual void config(cpponfig::configuration & cfg) = 0;
 
-	private:
-		configurable(bool do_load);
+private:
+	configurable(bool do_load);
 
-		bool load = true;
+	bool load = true;
 
-	protected:
-		configurable();
-		configurable(std::nothrow_t);
-		configurable(const configurable & other);
-		configurable(configurable && other);
+protected:
+	configurable();
+	configurable(std::nothrow_t);
+	configurable(const configurable & other);
+	configurable(configurable && other);
 };
 
 

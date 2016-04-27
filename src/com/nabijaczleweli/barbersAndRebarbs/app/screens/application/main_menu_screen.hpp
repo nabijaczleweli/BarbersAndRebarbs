@@ -34,31 +34,31 @@
 
 
 class main_menu_screen : public screen {
-	public:
-		enum class direction : unsigned char {up, down};
-		typedef std::pair<sf::Text, std::function<void(sf::Text &)>> button_clickable;
+public:
+	enum class direction : unsigned char { up, down };
+	typedef std::pair<sf::Text, std::function<void(sf::Text &)>> button_clickable;
 
-	private:
-		std::list<button_clickable> main_buttons;
-		unsigned int selected, control_frames_counter;
-		bool joystick_up;
-		std::pair<bool, xbox_drawing> joystick_drawing;
-		keyboard_drawing keys_drawing;
+private:
+	std::list<button_clickable> main_buttons;
+	unsigned int selected, control_frames_counter;
+	bool joystick_up;
+	std::pair<bool, xbox_drawing> joystick_drawing;
+	keyboard_drawing keys_drawing;
 
-		void move_selection(direction dir);
-		void press_button();
-		void try_drawings();
+	void move_selection(direction dir);
+	void press_button();
+	void try_drawings();
 
-	public:
-		virtual void setup() override;
-		virtual int loop() override;
-		virtual int draw() override;
-		virtual int handle_event(const sf::Event & event) override;
+public:
+	virtual void setup() override;
+	virtual int loop() override;
+	virtual int draw() override;
+	virtual int handle_event(const sf::Event & event) override;
 
-		main_menu_screen(application * theapp);
-		main_menu_screen(const main_menu_screen & other);
-		main_menu_screen(main_menu_screen && other);
-		virtual ~main_menu_screen();
+	main_menu_screen(application * theapp);
+	main_menu_screen(const main_menu_screen & other);
+	main_menu_screen(main_menu_screen && other);
+	virtual ~main_menu_screen();
 };
 
 

@@ -42,40 +42,40 @@
 
 
 class bezier_curve : public sf::Drawable {
-	private:
-		std::vector<sf::Vertex> vertices;
-		sf::Transformable transform;
+private:
+	std::vector<sf::Vertex> vertices;
+	sf::Transformable transform;
 
-	public:
-		static float bezier_step;
-		static bool optimize_points;
-		static float optimize_prettily;
-
-
-		sf::Vector2f start_point;
-		sf::Vector2f control_point;
-		sf::Vector2f end_point;
-
-		bezier_curve(sf::Vector2f the_start_point, sf::Vector2f the_control_point, sf::Vector2f the_end_point);
-		bezier_curve(sf::Vector2f * points);
-		bezier_curve(const bezier_curve & other);
-		bezier_curve(bezier_curve && other);
-
-		~bezier_curve();
-
-		bezier_curve & operator=(const bezier_curve & from);
-		void swap(bezier_curve & with);
-
-		virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
-
-		void compute_vertices();  // Call after messing with `*_point`s
+public:
+	static float bezier_step;
+	static bool optimize_points;
+	static float optimize_prettily;
 
 
-		void move(float x, float y);
-		void scale(const sf::Vector2f & factor);
-		void scale(float factor_x, float factor_y);
-		void set_scale(float factor_x, float factor_y);
-		inline const sf::Vector2f & get_scale() const { return transform.getScale(); }
+	sf::Vector2f start_point;
+	sf::Vector2f control_point;
+	sf::Vector2f end_point;
+
+	bezier_curve(sf::Vector2f the_start_point, sf::Vector2f the_control_point, sf::Vector2f the_end_point);
+	bezier_curve(sf::Vector2f * points);
+	bezier_curve(const bezier_curve & other);
+	bezier_curve(bezier_curve && other);
+
+	~bezier_curve();
+
+	bezier_curve & operator=(const bezier_curve & from);
+	void swap(bezier_curve & with);
+
+	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
+
+	void compute_vertices();  // Call after messing with `*_point`s
+
+
+	void move(float x, float y);
+	void scale(const sf::Vector2f & factor);
+	void scale(float factor_x, float factor_y);
+	void set_scale(float factor_x, float factor_y);
+	inline const sf::Vector2f & get_scale() const { return transform.getScale(); }
 };
 
 

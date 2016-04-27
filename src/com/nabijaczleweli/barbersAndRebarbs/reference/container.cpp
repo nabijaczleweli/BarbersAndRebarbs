@@ -36,7 +36,7 @@ const string localization_root("./assets/lang");
 
 const string app_name("BarbersAndRebarbs");
 const string app_language("en_US");
-      configurables_configuration app_configuration("./" + app_name + ".cfg");
+/***/ configurables_configuration app_configuration("./" + app_name + ".cfg");
 
 
 const Font font_pixelish([&]() {

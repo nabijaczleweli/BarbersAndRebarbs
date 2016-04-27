@@ -59,11 +59,12 @@ configurables_configuration & configurables_configuration::operator-=(const conf
 }
 
 size_t configurables_configuration::hash_code() const {
-	#define COLHASH(col, hash, prime) if(col.empty()) \
-	                             result ^= prime; \
-	                           else \
-	                             for(const auto & elem : col) \
-	                                result ^= hash(elem);
+#define COLHASH(col, hash, prime) \
+	if(col.empty())                 \
+		result ^= prime;              \
+	else                            \
+		for(const auto & elem : col)  \
+			result ^= hash(elem);
 
 	static const salt slt;
 	static const hash<configurable *> cfgblptr_hash;
@@ -74,7 +75,7 @@ size_t configurables_configuration::hash_code() const {
 
 	return result ^ configuration::hash_code() ^ slt;
 
-	#undef COLHASH
+#undef COLHASH
 }
 
 void configurables_configuration::swap(configurables_configuration & cfg) {

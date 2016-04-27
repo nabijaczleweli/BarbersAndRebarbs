@@ -30,21 +30,21 @@
 
 
 class splash_screen : public screen {
-	private:
-		unsigned int frames = 0;
-		managed_sprite background;
-		sf::Text text;
+private:
+	unsigned int frames = 0;
+	managed_sprite background;
+	sf::Text text;
 
-	public:
-		virtual void setup() override;
-		virtual int loop() override;
-		virtual int draw() override;
-		virtual int handle_event(const sf::Event & event) override;
+public:
+	virtual void setup() override;
+	virtual int loop() override;
+	virtual int draw() override;
+	virtual int handle_event(const sf::Event & event) override;
 
-		splash_screen(application * theapp, unsigned int frame_amt);
-		splash_screen(const splash_screen & other);
-		splash_screen(splash_screen && other);
-		virtual ~splash_screen();
+	splash_screen(application * theapp, unsigned int frame_amt);
+	splash_screen(const splash_screen & other);
+	splash_screen(splash_screen && other);
+	virtual ~splash_screen();
 };
 
 
