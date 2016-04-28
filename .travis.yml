@@ -2,8 +2,6 @@ language: generic
 sudo: false
 cache:
   apt: true
-  directories:
-    - /tmp
 
 env:
   global:
@@ -62,46 +60,32 @@ install:
   - export SFML_TAG_CMDLINE=$(base64 -d <<< $SFML_TAG_CMDLINE)
   - echo $SFML_TAG_CMDLINE; eval $SFML_TAG_CMDLINE
   - echo Using SFML ver $SFML_TAG
-  - if [[ ! -d "/tmp/SFML-$SFML_TAG" ]]; then
-      pushd "/tmp";
-      curl -SL https://github.com/SFML/SFML/archive/$SFML_TAG.tar.gz | tar -xzf-;
-      cd "SFML-$SFML_TAG";
-      mkdir build && cd build;
-      cmake -G"Unix Makefiles" .. -DCMAKE_INSTALL_PREFIX:PATH="$LIB_INSTALLDIR";
-      popd;
-    fi
-  - pushd "/tmp/SFML-$SFML_TAG/build"
+  - pushd "/tmp"
+  - curl -SL https://github.com/SFML/SFML/archive/$SFML_TAG.tar.gz | tar -xzf-
+  - cd "SFML-$SFML_TAG"
+  - mkdir build && cd build
+  - cmake -G"Unix Makefiles" .. -DCMAKE_INSTALL_PREFIX:PATH="$LIB_INSTALLDIR"
   - make -j$(nproc) install
   - popd
   -
-  - if [[ ! -d "/tmp/speex-$SPEEX_VER" ]]; then
-      pushd "/tmp";
-      curl -SL "http://downloads.xiph.org/releases/speex/speex-$SPEEX_VER.tar.gz" | tar -xzf-;
-      cd "speex-$SPEEX_VER";
-      curl -SL "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD" > config.sub;
-      curl -SL "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD" > config.guess;
-      ./configure --prefix="$LIB_INSTALLDIR";
-      make -j$(nproc);
-      popd;
-    fi
-  - pushd "/tmp/speex-$SPEEX_VER"
+  - pushd "/tmp"
+  - curl -SL "http://downloads.xiph.org/releases/speex/speex-$SPEEX_VER.tar.gz" | tar -xzf-
+  - cd "speex-$SPEEX_VER"
+  - curl -SL "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD" > config.sub
+  - curl -SL "http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD" > config.guess
+  - ./configure --prefix="$LIB_INSTALLDIR"
   - make -j$(nproc) install
   - popd
   -
-  - if [[ ! -d "/tmp/audiere-$AUDIERE_TAG" ]]; then
-      pushd "/tmp";
-      curl -SL "http://kent.dl.sourceforge.net/project/audiere/audiere/$AUDIERE_TAG/audiere-$AUDIERE_TAG-src.tar.bz2" | tar -xjf-;
-      mv "audiere" "audiere-$AUDIERE_TAG";
-      cd "audiere-$AUDIERE_TAG";
-      sed -i "s/'-Wno-non-virtual-dtor']/'-Wno-non-virtual-dtor'])\nif ARGUMENTS.has_key('CXXFLAGS'):\n  env.Append(CXXFLAGS=ARGUMENTS['CXXFLAGS'])/" SConstruct;
-      sed -i "s/#include <string>/#include <string>\n#include <cstring>/" src/audiere.h;
-      sed -i "s/#include <stdio.h>/#include <stdio.h>\n#include <stdlib.h>/" src/debug.h;
-      sed -i "s:#include <speex:#include <speex/speex:g" src/speexfile/speexfile.h;
-      sed -i "s/#include <ctype.h>/#include <ctype.h>\n#include <stdio.h>/" src/utility.cpp;
-      scons CXXFLAGS="-isystem$LIB_INSTALLDIR/include -L$LIB_INSTALLDIR/lib" use_flac=no use_dumb=no;
-      popd;
-    fi
-  - pushd "/tmp/audiere-$AUDIERE_TAG"
+  - pushd "/tmp"
+  - curl -SL "http://kent.dl.sourceforge.net/project/audiere/audiere/$AUDIERE_TAG/audiere-$AUDIERE_TAG-src.tar.bz2" | tar -xjf-
+  - mv "audiere" "audiere-$AUDIERE_TAG"
+  - cd "audiere-$AUDIERE_TAG"
+  - sed -i "s/'-Wno-non-virtual-dtor']/'-Wno-non-virtual-dtor'])\nif ARGUMENTS.has_key('CXXFLAGS'):\n  env.Append(CXXFLAGS=ARGUMENTS['CXXFLAGS'])/" SConstruct
+  - sed -i "s/#include <string>/#include <string>\n#include <cstring>/" src/audiere.h
+  - sed -i "s/#include <stdio.h>/#include <stdio.h>\n#include <stdlib.h>/" src/debug.h
+  - sed -i "s:#include <speex:#include <speex/speex:g" src/speexfile/speexfile.h
+  - sed -i "s/#include <ctype.h>/#include <ctype.h>\n#include <stdio.h>/" src/utility.cpp
   # Doesn't work with `libFLAC.a` installed (gvia libflac-dev) either: https://travis-ci.org/nabijaczleweli/BarbersAndRebarbs/jobs/126249508#L709-L710
   # dumb is unavailable as package on Travis
   - scons CXXFLAGS="-isystem$LIB_INSTALLDIR/include -L$LIB_INSTALLDIR/lib" use_flac=no use_dumb=no prefix="$LIB_INSTALLDIR" install
