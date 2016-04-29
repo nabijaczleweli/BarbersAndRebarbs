@@ -23,16 +23,13 @@
 #include "screen.hpp"
 #include "../../reference/container.hpp"
 #include "../../reference/joystick_info.hpp"
-#include "../../util/configurable.hpp"
 #include "../application.hpp"
 
 
 using namespace sf;
 
 
-void screen::setup() {
-	app_configuration.configure();
-}
+void screen::setup() {}
 
 int screen::handle_event(const Event & event) {
 	if(event.type == Event::Closed || (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) ||

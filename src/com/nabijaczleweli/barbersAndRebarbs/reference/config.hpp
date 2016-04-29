@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 
-// Copyright (c) 2014 nabijaczleweli
+// Copyright (c) 2016 nabijaczleweli
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -21,29 +21,30 @@
 
 
 #pragma once
-#ifndef CONFIGURABLE_HPP
-#define CONFIGURABLE_HPP
+#ifndef CONFIG_HPP
+#define CONFIG_HPP
 
 
-#include <cpponfiguration/configuration.hpp>
-#include <new>
+#include <string>
 
 
-class configurable {
+class config {
 public:
-	virtual void config(cpponfig::configuration & cfg) = 0;
+	std::string app_language = "en_US";
+
+	unsigned int FPS           = 60;
+	bool play_sounds           = true;
+	unsigned int splash_length = 2;
+
+	config(const config &) = default;
+	config(config &&) = default;
+	config(std::string path);
+
+	~config();
 
 private:
-	configurable(bool do_load);
-
-	bool load = true;
-
-protected:
-	configurable();
-	configurable(std::nothrow_t);
-	configurable(const configurable & other);
-	configurable(configurable && other);
+	std::string path;
 };
 
 
-#endif  // CONFIGURABLE_HPP
+#endif  // CONFIG_HPP

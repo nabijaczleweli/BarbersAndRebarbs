@@ -24,8 +24,8 @@ include configMakefile
 
 
 SUBSYSTEMS_SFML = system window graphics
-CUSTOM_DLLS = p:/C++/Utilities/Cpponfiguration/out/cpponfig$(DLL) p:/C++/Utilities/Cpp-NBT/out/cpp-nbt$(DLL)
-LDDLLS = audiere $(foreach subsystem,$(SUBSYSTEMS_SFML),sfml-$(subsystem)-2) cpponfig cpp-nbt
+CUSTOM_DLLS = p:/C++/Utilities/Cpp-NBT/out/cpp-nbt$(DLL)
+LDDLLS = audiere $(foreach subsystem,$(SUBSYSTEMS_SFML),sfml-$(subsystem)-2) cpp-nbt
 LDAR = -fpic -L"p:/C++/Utilities/Cpponfiguration/out" -L"p:/C++/Utilities/Cpp-NBT/out" $(foreach dll,$(LDDLLS),-l$(dll))
 SOURCES = $(sort $(filter-out ./old/% ./ext/%,$(wildcard src/**/**/**/*.cpp src/**/**/**/**/*.cpp src/**/**/**/**/**/*.cpp src/**/**/**/**/**/**/*.cpp)))
 
@@ -44,12 +44,11 @@ release : clean all
 	@mkdir $(RELEASEDIR)
 	cp $(OUTDIR)BarbersAndRebarbs$(EXE) $(RELEASEDIR)
 	cp -r $(ASSETDIR) $(RELEASEDIR)
-	cp --target-directory=$(RELEASEDIR) $(foreach lib,$(filter-out cpponfig cpp-nbt,$(LDDLLS) libgcc_s_dw2-1 libstdc++-6), $(DLLDIR)$(lib)$(DLL)) $(CUSTOM_DLLS)
+	cp --target-directory=$(RELEASEDIR) $(foreach lib,$(filter-out cpp-nbt,$(LDDLLS) libgcc_s_dw2-1 libstdc++-6), $(DLLDIR)$(lib)$(DLL)) $(CUSTOM_DLLS)
 	$(STRIP) $(STRIPAR) $(RELEASEDIR)/*$(EXE) $(RELEASEDIR)/*$(DLL)
 	7z a -r -y $(RELEASEDIR)/release.zip $(RELEASEDIR)/*
 
 git :
-	@pushd "ext/Cpponfiguration" 1>$(devnull) 2>$(devnull) && git pull -q -n && popd 1>$(devnull) 2>$(devnull)
 	@pushd "ext/Cpp-NBT" 1>$(devnull) 2>$(devnull) && git pull -q -n && popd 1>$(devnull) 2>$(devnull)
 
 

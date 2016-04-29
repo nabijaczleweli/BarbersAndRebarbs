@@ -172,10 +172,10 @@ main_menu_screen::main_menu_screen(application * theapp)
 
 	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text.start"), font_swirly),
 	                           [&](Text &) { app->schedule_screen<main_game_screen>(); });
-	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text."s + (app->play_sounds->boolean() ? "" : "un") + "mute"), font_swirly),
+	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text."s + (app_config.play_sounds ? "" : "un") + "mute"), font_swirly),
 	                           [&](Text & txt) {
-		                           app->play_sounds->boolean() ^= 1;
-		                           txt.setString(global_izer.translate_key("gui.application.text."s + (app->play_sounds->boolean() ? "" : "un") + "mute"));
+		                           app_config.play_sounds = !app_config.play_sounds;
+		                           txt.setString(global_izer.translate_key("gui.application.text."s + (app_config.play_sounds ? "" : "un") + "mute"));
 		                           app->retry_music();
 		                         });
 	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text.quit"), font_swirly), [&](Text &) { app->window.close(); });

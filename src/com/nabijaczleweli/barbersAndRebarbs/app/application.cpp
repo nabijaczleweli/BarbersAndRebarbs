@@ -22,8 +22,6 @@
 #include "application.hpp"
 #include "../reference/container.hpp"
 #include "../resource/localizer.hpp"
-#include "../util/broken_gcc.hpp"
-#include "../util/configurable.hpp"
 #include "../util/file.hpp"
 #include "screens/application/splash_screen.hpp"
 #include <algorithm>
@@ -33,7 +31,6 @@
 
 using namespace sf;
 using namespace std;
-using namespace cpponfig;
 
 
 static sequential_music * open_sequential_application_music(bool sound) {
@@ -63,8 +60,6 @@ application::~application() {
 		delete current_screen;
 		current_screen = nullptr;
 	}
-	play_sounds->update_from_boolean();
-	play_sounds = nullptr;
 }
 
 int application::run() {
@@ -127,13 +122,6 @@ int application::draw() {
 }
 
 void application::retry_music() {
-	music = open_sequential_application_music(play_sounds->boolean());
+	music = open_sequential_application_music(app_configuration.play_sounds);
 	music->play();
-}
-
-void application::config(configuration & cfg) {
-	actual_fps = cfg.get("application:FPS", property("0", "0 -> VSYNC; Not 0 -> value (60 HIGHLY recommended)")).unsigned_integer();
-
-	play_sounds   = &cfg.get("application:play_sounds", "true");
-	splash_length = cfg.get("application:splash_length", property("2", "Seconds")).unsigned_integer();
 }

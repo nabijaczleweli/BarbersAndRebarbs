@@ -27,12 +27,11 @@
 
 #include "../render/managed_sprite.hpp"
 #include "../sound/sequential_music.hpp"
-#include "../util/configurable.hpp"
 #include "screens/screen.hpp"
 #include <SFML/Graphics.hpp>
 
 
-class application : configurable {
+class application {
 private:
 	friend screen;
 	friend class main_game_screen;
@@ -48,16 +47,12 @@ private:
 	int loop();
 	int draw();
 
-	virtual void config(cpponfig::configuration & cfg) override;
-
 public:
 	static const unsigned int & FPS;  // 0: vsync
 	static const unsigned int vsync_FPS;
 
 	static inline unsigned int effective_FPS() __attribute__((always_inline)) { return FPS ? FPS : vsync_FPS; }
 
-
-	cpponfig::property * play_sounds = nullptr;
 
 	int run();
 

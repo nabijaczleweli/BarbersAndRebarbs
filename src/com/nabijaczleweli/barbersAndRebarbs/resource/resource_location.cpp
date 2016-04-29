@@ -22,7 +22,6 @@
 
 #include "resource_location.hpp"
 #include "../reference/container.hpp"
-#include "../util/broken_gcc.hpp"
 #include "../util/file.hpp"
 #include <algorithm>
 #include <stdexcept>

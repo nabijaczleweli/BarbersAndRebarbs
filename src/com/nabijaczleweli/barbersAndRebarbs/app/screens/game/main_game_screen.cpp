@@ -30,8 +30,6 @@ using namespace std;
 using namespace sf;
 
 
-void main_game_screen::config(cpponfig::configuration &) {}
-
 void main_game_screen::setup() {
 	screen::setup();
 	const auto & winsize(app->window.getView().getSize());
@@ -69,8 +67,8 @@ int main_game_screen::handle_event(const Event & event) {
 
 main_game_screen::main_game_screen(application * theapp) : screen(theapp), hp_stat(Color::Red, 1), energy_stat(Color(50, 200, 200), 1) {}
 main_game_screen::main_game_screen(const main_game_screen & other)
-      : screen(other), configurable(other), hp_stat(other.hp_stat), energy_stat(other.energy_stat) {}
+      : screen(other), hp_stat(other.hp_stat), energy_stat(other.energy_stat) {}
 main_game_screen::main_game_screen(main_game_screen && other)
-      : screen(move(other)), configurable(move(other)), hp_stat(move(other.hp_stat)), energy_stat(move(other.energy_stat)) {}
+      : screen(move(other)), hp_stat(move(other.hp_stat)), energy_stat(move(other.energy_stat)) {}
 
 main_game_screen::~main_game_screen() {}

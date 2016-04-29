@@ -25,7 +25,7 @@
 #define CONTAINER_HPP
 
 
-#include "../resource/configurables_configuration.hpp"
+#include "config.hpp"
 #include <audiere.h>
 #include <SFML/Graphics.hpp>
 #include <string>
@@ -38,8 +38,7 @@ extern const std::string sound_root;
 extern const std::string localization_root;
 
 extern const std::string app_name;
-extern const std::string app_language;
-extern /***/ configurables_configuration app_configuration;
+extern /***/ config app_configuration;
 
 
 extern const sf::Font font_pixelish;

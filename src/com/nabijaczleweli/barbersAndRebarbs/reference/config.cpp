@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 
-// Copyright (c) 2014 nabijaczleweli
+// Copyright (c) 2016 nabijaczleweli
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -20,18 +20,26 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#include "configurable.hpp"
-#include "../reference/container.hpp"
+#include "config.hpp"
 
 
 using namespace std;
 
 
-configurable::configurable(bool do_load) : load(do_load) {
-	if(load)
-		app_configuration.add(this);
+config::config(string path) : path(path) {
+	// TODO: cereal load
+/*
+	if(cfg.contains("system:language"))
+		const_cast<string &>(app_language) = cfg.get("system:language").textual();
+	else {
+		string files;
+		for(const auto & name : list_files(localization_root))
+			if(name[0] != '.' && name.size() == 10 && name.find(".lang") == 5)
+				files += name.substr(0, name.find(".lang")) + ", ";
+		cfg.get("system:language", property(app_language, "Available languages: " + files.substr(0, files.size() - 2)));
+	}*/
 }
-configurable::configurable() : configurable(true) {}
-configurable::configurable(nothrow_t) : configurable(false) {}
-configurable::configurable(const configurable & other) : configurable(other.load) {}
-configurable::configurable(configurable && other) : configurable(other.load) {}
+
+config::~config() {
+	// TODO: cereal save
+}

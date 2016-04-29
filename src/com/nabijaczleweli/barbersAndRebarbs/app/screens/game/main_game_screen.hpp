@@ -30,15 +30,12 @@
 #include "../../../game/player.hpp"
 #include "../../../render/managed_sprite.hpp"
 #include "../../../render/stat_bar.hpp"
-#include "../../../util/configurable.hpp"
 #include <deque>
 #include <memory>
 
 
-class main_game_screen : public screen, configurable {
+class main_game_screen : public screen {
 private:
-	virtual void config(cpponfig::configuration & cfg) override;
-
 	stat_bar hp_stat, energy_stat;
 	player the_player;
 	std::deque<std::unique_ptr<entity>> entities;

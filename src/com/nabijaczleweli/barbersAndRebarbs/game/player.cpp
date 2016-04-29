@@ -22,7 +22,6 @@
 
 #include "player.hpp"
 #include "../reference/joystick_info.hpp"
-#include "../util/broken_gcc.hpp"
 #include <SFML/Window.hpp>
 
 

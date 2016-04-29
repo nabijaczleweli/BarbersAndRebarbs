@@ -2,7 +2,7 @@
 	"build_systems":
 	[
 		{
-			"cmd": "make -C\"$project_path\" -j10 git clean all",
+			"cmd": "make -C\"$project_path\" -j10",
 			"name": "Make all the things"
 		}
 	],
