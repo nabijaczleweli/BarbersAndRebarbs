@@ -40,7 +40,7 @@ public:
 
 private:
 	std::list<button_clickable> main_buttons;
-	unsigned int selected, control_frames_counter;
+	std::size_t selected, control_frames_counter;
 	bool joystick_up;
 	std::pair<bool, xbox_drawing> joystick_drawing;
 	keyboard_drawing keys_drawing;

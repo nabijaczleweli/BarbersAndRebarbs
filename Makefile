@@ -23,11 +23,11 @@
 include configMakefile
 
 
-SUBSYSTEMS_SFML = system window graphics
-CUSTOM_DLLS = p:/C++/Utilities/Cpp-NBT/out/cpp-nbt$(DLL)
-LDDLLS = audiere $(foreach subsystem,$(SUBSYSTEMS_SFML),sfml-$(subsystem)-2) cpp-nbt
-LDAR = -fpic -L"p:/C++/Utilities/Cpponfiguration/out" -L"p:/C++/Utilities/Cpp-NBT/out" $(foreach dll,$(LDDLLS),-l$(dll))
-SOURCES = $(sort $(filter-out ./old/% ./ext/%,$(wildcard src/**/**/**/*.cpp src/**/**/**/**/*.cpp src/**/**/**/**/**/*.cpp src/**/**/**/**/**/**/*.cpp)))
+SUBSYSTEMS_SFML := system window graphics
+CUSTOM_DLLS := p:/C++/Utilities/Cpp-NBT/out/cpp-nbt$(DLL)
+LDDLLS := audiere $(foreach subsystem,$(SUBSYSTEMS_SFML),sfml-$(subsystem)-2) cpp-nbt
+LDAR := -fpic -L"p:/C++/Utilities/Cpponfiguration/out" -L"p:/C++/Utilities/Cpp-NBT/out" $(foreach dll,$(LDDLLS),-l$(dll))
+SOURCES := $(sort $(wildcard src/**/**/**/*.cpp src/**/**/**/**/*.cpp src/**/**/**/**/**/*.cpp src/**/**/**/**/**/**/*.cpp))
 
 
 .PHONY : clean all release git
@@ -54,4 +54,4 @@ git :
 
 $(OBJDIR)%$(OBJ) : $(SRCDIR)%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CPPAR) -c -o$@ $^
+	$(CXX) $(CPPAR) -Iext/All -Iext/cereal/include -DCEREAL_VERSION='$(CEREAL_VERSION)' -c -o$@ $^

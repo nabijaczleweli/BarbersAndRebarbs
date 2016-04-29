@@ -30,7 +30,7 @@
 
 class config {
 public:
-	std::string app_language = "en_US";
+	std::string language = "en_US";
 
 	unsigned int FPS           = 60;
 	bool play_sounds           = true;
@@ -38,7 +38,7 @@ public:
 
 	config(const config &) = default;
 	config(config &&) = default;
-	config(std::string path);
+	config(std::string && path);
 
 	~config();
 

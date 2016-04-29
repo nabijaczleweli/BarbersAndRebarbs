@@ -2,8 +2,9 @@
 	"build_systems":
 	[
 		{
-			"cmd": "make -C\"$project_path\" -j10",
-			"name": "Make all the things"
+			"working_dir": "$project_path",
+			"cmd": "make -j10",
+			"name": "Build BarbersAndRebarbs"
 		}
 	],
 	"folders":

@@ -21,25 +21,41 @@
 
 
 #include "config.hpp"
+#include <fstream>
+#include <utility>
+#include "cereal/cereal.hpp"
+#include "cereal/types/vector.hpp"
+#include "cereal/archives/json.hpp"
+#include "container.hpp"
+#include "../util/file.hpp"
 
 
 using namespace std;
 
 
-config::config(string path) : path(path) {
-	// TODO: cereal load
-/*
-	if(cfg.contains("system:language"))
-		const_cast<string &>(app_language) = cfg.get("system:language").textual();
-	else {
-		string files;
-		for(const auto & name : list_files(localization_root))
-			if(name[0] != '.' && name.size() == 10 && name.find(".lang") == 5)
-				files += name.substr(0, name.find(".lang")) + ", ";
-		cfg.get("system:language", property(app_language, "Available languages: " + files.substr(0, files.size() - 2)));
-	}*/
+template <class Archive>
+void serialize(Archive & archive, config & cc) {
+	auto langs = list_files(localization_root);
+	transform(begin(langs), end(langs), begin(langs), [](const string & lang) { return lang.substr(0, lang.find(".lang")); });
+
+	archive(cereal::make_nvp("application:FPS", cc.FPS), cereal::make_nvp("application:play_sounds", cc.play_sounds),
+	        cereal::make_nvp("application:splash_length", cc.splash_length), cereal::make_nvp("system:language", cc.language),
+	        cereal::make_nvp("system:available_languages", langs));
+}
+
+config::config(string && path) : path(move(path)) {
+	ifstream configfile(path);
+	if(configfile.is_open()) {
+		cereal::JSONInputArchive archive(configfile);
+		try {
+			archive(*this);
+		} catch(cereal::RapidJSONException &) {
+		}
+	}
 }
 
 config::~config() {
-	// TODO: cereal save
+	ofstream configfile(path);
+	cereal::JSONOutputArchive archive(configfile);
+	archive(cereal::make_nvp(app_name + " configuration", *this));
 }

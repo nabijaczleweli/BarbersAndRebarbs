@@ -23,7 +23,6 @@
 #include "app/application.hpp"
 #include "reference/container.hpp"
 #include "resource/localizer.hpp"
-#include "util/file.hpp"
 #include <audiere.h>
 #include <stdexcept>
 #include <iostream>
@@ -52,7 +51,7 @@ int main(int argc, char * argv[]) {
 
 void init_app(int, char * []) {
 	const_cast<localizer &>(fallback_izer).open();
-	const_cast<localizer &>(local_izer).open(app_configuration.app_language);
+	const_cast<localizer &>(local_izer).open(app_configuration.language);
 	const_cast<localizer &>(global_izer).merge(local_izer).merge(fallback_izer);
 }
 
@@ -77,8 +76,9 @@ void init_deps() {
 	cout << "GCC version " << __GNUC__ << '.' << __GNUC_MINOR__ << '.' << __GNUC_PATCHLEVEL__ << " doesn\'t need initialization.\n"
 	     << "SFML version " << SFML_VERSION_MAJOR << '.' << SFML_VERSION_MINOR << " doesn\'t need initialization.\n"
 	     << "audiere version " << audiere::GetVersion() << " doesn\'t need initialization.\n"
-	     << "Cpp-NBT doesn\'t need initialization.\n";
+	     << "cereal version " << CEREAL_VERSION << " doesn\'t need initialization.\n"
+	     << "Cpp-NBT doesn\'t need initialization.\n"
 
-	cout << "\n"
+	     << "\n"
 	     << "All dependencies initialized.\n\n";
 }
