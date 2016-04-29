@@ -1,0 +1,4 @@
+[submodule "cereal"]
+	path = ext/cereal
+	url = https://github.com/USCiLab/cereal.git
+	branch = v1.1.2
