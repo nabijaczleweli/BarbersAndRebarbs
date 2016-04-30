@@ -91,7 +91,7 @@ install:
   - scons CXXFLAGS="-isystem$LIB_INSTALLDIR/include -L$LIB_INSTALLDIR/lib" use_flac=no use_dumb=no prefix="$LIB_INSTALLDIR" install
   - popd
 
-script: ADDITIONAL_INCLUDE_DIR="$LIB_INSTALLDIR/include" make -j$(nproc)
+script: ADDITIONAL_INCLUDE_DIR="$LIB_INSTALLDIR/include" ADDITIONAL_LINK_DIR="$LIB_INSTALLDIR/lib" make -j$(nproc)
 
 before_deploy:
   - mkdir release

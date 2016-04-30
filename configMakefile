@@ -34,10 +34,10 @@ else
 	INCCPPAR :=
 endif
 
-ifneq "$(ADDITIONAL_INCLUDE_DIR)" ""
-	INCCPPAR := -isystem$(ADDITIONAL_INCLUDE_DIR)
+ifneq "$(ADDITIONAL_LINK_DIR)" ""
+	LNCPPAR := -L$(ADDITIONAL_LINK_DIR)
 else
-	INCCPPAR :=
+	LNCPPAR :=
 endif
 
 CEREAL_VERSION := "$(shell cd ext/cereal && git describe --tags | sed "s/v//")"
@@ -46,7 +46,7 @@ CPP_NBT_VERSION := "$(shell cd ext/Cpp-NBT && git log -1 --pretty=format:%h)"
 OBJ := .o
 ARCH := .a
 AR := ar
-CPPAR := -O3 -fomit-frame-pointer -std=c++14 -pedantic -Wall -Wextra -pipe $(ADDCPPAR) $(PIC)
+CPPAR := -O3 -fomit-frame-pointer -std=c++14 -pedantic -Wall -Wextra -pipe $(INCCPPAR) $(LNCPPAR) $(PIC)
 STRIP := strip
 STRIPAR := --strip-all --remove-section=.comment --remove-section=.note
 
