@@ -36,7 +36,8 @@ using namespace std;
 template <class Archive>
 void serialize(Archive & archive, config & cc) {
 	auto langs = list_files(localization_root);
-	transform(begin(langs), end(langs), begin(langs), [](const string & lang) { return lang.substr(0, lang.find(".lang")); });
+	langs.erase(remove_if(begin(langs), end(langs), [](const auto & lang) { return lang[0] == '.'; }), end(langs));
+	transform(begin(langs), end(langs), begin(langs), [](const auto & lang) { return lang.substr(0, lang.find(".lang")); });
 
 	archive(cereal::make_nvp("application:FPS", cc.FPS), cereal::make_nvp("application:play_sounds", cc.play_sounds),
 	        cereal::make_nvp("application:splash_length", cc.splash_length), cereal::make_nvp("system:language", cc.language),
