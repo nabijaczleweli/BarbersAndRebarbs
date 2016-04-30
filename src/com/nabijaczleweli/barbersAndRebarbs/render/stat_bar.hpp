@@ -24,7 +24,7 @@
 #define STAT_BAR_HPP
 
 
-#include <sfml/Graphics.hpp>
+#include <SFML/Graphics.hpp>
 
 
 class stat_bar : public sf::Drawable, public sf::Transformable {

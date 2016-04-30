@@ -47,7 +47,7 @@ cpp-nbt : $(OUTDIR)/Cpp-NBT/libcpp-nbt$(ARCH)
 $(OUTDIR)BarbersAndRebarbs$(EXE) : $(subst $(SRCDIR),$(OBJDIR),$(subst .cpp,$(OBJ),$(SOURCES)))
 	$(CXX) $(CPPAR) -o$@ $(subst $(SRCDIR),$(OBJDIR),$^) $(PIC) $(LDAR)
 
-$(OUTDIR)/Cpp-NBT/libcpp-nbt$(ARCH) : ext/Cpp-NBT/Makefile
+$(OUTDIR)Cpp-NBT/libcpp-nbt$(ARCH) : ext/Cpp-NBT/Makefile
 	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@))
 
 
