@@ -24,7 +24,7 @@ include configMakefile
 
 
 SUBSYSTEMS_SFML := system window graphics
-LDDLLS := audiere $(foreach subsystem,$(SUBSYSTEMS_SFML),sfml-$(subsystem)-2) cpp-nbt
+LDDLLS := audiere $(foreach subsystem,$(SUBSYSTEMS_SFML),sfml-$(subsystem)$(SFML_LINK_SUFF)) cpp-nbt
 LDAR := -L$(OUTDIR)/Cpp-NBT $(foreach dll,$(LDDLLS),-l$(dll))
 SOURCES := $(sort $(wildcard src/**/**/**/*.cpp src/**/**/**/**/*.cpp src/**/**/**/**/**/*.cpp src/**/**/**/**/**/**/*.cpp))
 
@@ -41,7 +41,7 @@ assets :
 	@cp -r $(ASSETDIR) $(OUTDIR)
 
 exe : $(OUTDIR)BarbersAndRebarbs$(EXE)
-cpp-nbt : $(OUTDIR)/Cpp-NBT/libcpp-nbt$(ARCH)
+cpp-nbt : $(OUTDIR)Cpp-NBT/libcpp-nbt$(ARCH)
 
 
 $(OUTDIR)BarbersAndRebarbs$(EXE) : $(subst $(SRCDIR),$(OBJDIR),$(subst .cpp,$(OBJ),$(SOURCES)))

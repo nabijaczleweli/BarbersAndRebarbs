@@ -23,9 +23,11 @@
 ifeq "$(OS)" "Windows_NT"
 	EXE := .exe
 	PIC :=
+	SFML_LINK_SUFF := -2
 else
 	EXE := .out
 	PIC := -fPIC
+	SFML_LINK_SUFF :=
 endif
 
 ifneq "$(ADDITIONAL_INCLUDE_DIR)" ""
