@@ -23,6 +23,7 @@
 #include "app/application.hpp"
 #include "reference/container.hpp"
 #include "resource/localizer.hpp"
+#include "cimpoler-meta.hpp"
 #include <audiere.h>
 #include <stdexcept>
 #include <iostream>
@@ -56,29 +57,15 @@ void init_app(int, char * []) {
 }
 
 void init_deps() {
-	cout << "Initializing dependencies under "
-#ifdef _WIN32
-	        "Windows"
-#elif defined(unix) || defined(__unix__) || defined(__unix)
-	        "UNIX"
-#elif defined(__APPLE__)
-	        "Mac OS X"
-#elif defined(__linux__)
-	        "Linux"
-#elif defined(__FreeBSD__)
-	        "FreeBSD"
-#else
-	        "an unknown OS"
-#endif
-	        "...\n\n";
+	cout << "Initializing dependencies under " << CIMPOLER_META_OS_NAME << "...\n\n"
 
-
-	cout << "GCC version " << __GNUC__ << '.' << __GNUC_MINOR__ << '.' << __GNUC_PATCHLEVEL__ << " doesn\'t need initialization.\n"
+	     << CIMPOLER_META_COMPILER_NAME " version " << cimpoler_meta::version() << " doesn\'t need initialization.\n"
 	     << "SFML version " << SFML_VERSION_MAJOR << '.' << SFML_VERSION_MINOR << " doesn\'t need initialization.\n"
 	     << "audiere version " << audiere::GetVersion() << " doesn\'t need initialization.\n"
 	     << "cereal version " << CEREAL_VERSION << " doesn\'t need initialization.\n"
+	     << "cimpoler-meta version " << CIMPOLER_META_VERSION << " doesn\'t need initialization.\n"
 	     << "Cpp-NBT version " << CPP_NBT_VERSION << " doesn\'t need initialization.\n"
-
 	     << "\n"
+
 	     << "All dependencies initialized.\n\n";
 }

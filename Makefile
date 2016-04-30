@@ -53,4 +53,4 @@ $(OUTDIR)Cpp-NBT/libcpp-nbt$(ARCH) : ext/Cpp-NBT/Makefile
 
 $(OBJDIR)%$(OBJ) : $(SRCDIR)%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CPPAR) -Iext/cereal/include -Iext/Cpp-NBT/include -DCEREAL_VERSION='$(CEREAL_VERSION)' -DCPP_NBT_VERSION='$(CPP_NBT_VERSION)' -c -o$@ $^
+	$(CXX) $(CPPAR) -Iext/cereal/include -Iext/cimpoler-meta/include -Iext/Cpp-NBT/include -DCEREAL_VERSION='$(CEREAL_VERSION)' -DCPP_NBT_VERSION='$(CPP_NBT_VERSION)' -DCIMPOLER_META_VERSION='$(CIMPOLER_META_VERSION)' -c -o$@ $^
