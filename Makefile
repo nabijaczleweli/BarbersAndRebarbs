@@ -24,34 +24,33 @@ include configMakefile
 
 
 SUBSYSTEMS_SFML := system window graphics
-CUSTOM_DLLS := p:/C++/Utilities/Cpp-NBT/out/cpp-nbt$(DLL)
 LDDLLS := audiere $(foreach subsystem,$(SUBSYSTEMS_SFML),sfml-$(subsystem)-2) cpp-nbt
-LDAR := -fpic -L"p:/C++/Utilities/Cpponfiguration/out" -L"p:/C++/Utilities/Cpp-NBT/out" $(foreach dll,$(LDDLLS),-l$(dll))
+LDAR := -L$(OUTDIR)/Cpp-NBT $(foreach dll,$(LDDLLS),-l$(dll))
 SOURCES := $(sort $(wildcard src/**/**/**/*.cpp src/**/**/**/**/*.cpp src/**/**/**/**/**/*.cpp src/**/**/**/**/**/**/*.cpp))
 
 
-.PHONY : clean all release git
+.PHONY : all clean assets exe cpp-nbt
 
 
-all : $(subst $(SRCDIR),$(OBJDIR),$(subst .cpp,$(OBJ),$(SOURCES)))
-	$(CXX) $(CPPAR) -o$(OUTDIR)BarbersAndRebarbs$(EXE) $(subst $(SRCDIR),$(OBJDIR),$^) $(LDAR)
-	@cp -r $(ASSETDIR) $(OUTDIR)
+all : assets cpp-nbt exe
 
 clean :
-	rm -rf $(OUTDIR) $(RELEASEDIR)
+	rm -rf $(OUTDIR)
 
-release : clean all
-	@mkdir $(RELEASEDIR)
-	cp $(OUTDIR)BarbersAndRebarbs$(EXE) $(RELEASEDIR)
-	cp -r $(ASSETDIR) $(RELEASEDIR)
-	cp --target-directory=$(RELEASEDIR) $(foreach lib,$(filter-out cpp-nbt,$(LDDLLS) libgcc_s_dw2-1 libstdc++-6), $(DLLDIR)$(lib)$(DLL)) $(CUSTOM_DLLS)
-	$(STRIP) $(STRIPAR) $(RELEASEDIR)/*$(EXE) $(RELEASEDIR)/*$(DLL)
-	7z a -r -y $(RELEASEDIR)/release.zip $(RELEASEDIR)/*
+assets :
+	@cp -r $(ASSETDIR) $(OUTDIR)
 
-git :
-	@pushd "ext/Cpp-NBT" 1>$(devnull) 2>$(devnull) && git pull -q -n && popd 1>$(devnull) 2>$(devnull)
+exe : $(OUTDIR)BarbersAndRebarbs$(EXE)
+cpp-nbt : $(OUTDIR)/Cpp-NBT/libcpp-nbt$(ARCH)
+
+
+$(OUTDIR)BarbersAndRebarbs$(EXE) : $(subst $(SRCDIR),$(OBJDIR),$(subst .cpp,$(OBJ),$(SOURCES)))
+	$(CXX) $(CPPAR) -o$@ $(subst $(SRCDIR),$(OBJDIR),$^) $(PIC) $(LDAR)
+
+$(OUTDIR)/Cpp-NBT/libcpp-nbt$(ARCH) : ext/Cpp-NBT/Makefile
+	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@))
 
 
 $(OBJDIR)%$(OBJ) : $(SRCDIR)%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CPPAR) -Iext/All -Iext/cereal/include -DCEREAL_VERSION='$(CEREAL_VERSION)' -c -o$@ $^
+	$(CXX) $(CPPAR) -Iext/cereal/include -Iext/Cpp-NBT/include -DCEREAL_VERSION='$(CEREAL_VERSION)' -DCPP_NBT_VERSION='$(CPP_NBT_VERSION)' -c -o$@ $^

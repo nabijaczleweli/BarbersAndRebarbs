@@ -22,34 +22,31 @@
 
 ifeq "$(OS)" "Windows_NT"
 	EXE := .exe
-	SYSLDAR :=
-	devnull := nul
-	nop := echo > $(devnull)
-	DLL := .dll
+	PIC :=
 else
 	EXE := .out
-	SYSLDAR :=
-	devnull := /dev/null
-	nop := echo > $(devnull)
-	ifeq "$(OS)" "Darwin"
-		DLL := .dylib
-	else
-		DLL := .so
-	endif
+	PIC := -fPIC
 endif
 
 ifneq "$(ADDITIONAL_INCLUDE_DIR)" ""
-	ADDCPPAR := -isystem$(ADDITIONAL_INCLUDE_DIR)
+	INCCPPAR := -isystem$(ADDITIONAL_INCLUDE_DIR)
 else
-	ADDCPPAR :=
+	INCCPPAR :=
+endif
+
+ifneq "$(ADDITIONAL_INCLUDE_DIR)" ""
+	INCCPPAR := -isystem$(ADDITIONAL_INCLUDE_DIR)
+else
+	INCCPPAR :=
 endif
 
 CEREAL_VERSION := "$(shell cd ext/cereal && git describe --tags | sed "s/v//")"
+CPP_NBT_VERSION := "$(shell cd ext/Cpp-NBT && git log -1 --pretty=format:%h)"
 
 OBJ := .o
 ARCH := .a
 AR := ar
-CPPAR := -O3 -fomit-frame-pointer -std=c++14 -pedantic -Wall -Wextra -pipe $(ADDCPPAR)
+CPPAR := -O3 -fomit-frame-pointer -std=c++14 -pedantic -Wall -Wextra -pipe $(ADDCPPAR) $(PIC)
 STRIP := strip
 STRIPAR := --strip-all --remove-section=.comment --remove-section=.note
 
@@ -57,5 +54,3 @@ OUTDIR := out/
 OBJDIR := $(OUTDIR)obj/
 SRCDIR := src/
 ASSETDIR := assets/
-RELEASEDIR := release
-DLLDIR := d:/Programy/Programowanie/TDM-GCC-32/bin/

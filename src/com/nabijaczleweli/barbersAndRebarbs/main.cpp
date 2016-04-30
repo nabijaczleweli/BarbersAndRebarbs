@@ -77,7 +77,7 @@ void init_deps() {
 	     << "SFML version " << SFML_VERSION_MAJOR << '.' << SFML_VERSION_MINOR << " doesn\'t need initialization.\n"
 	     << "audiere version " << audiere::GetVersion() << " doesn\'t need initialization.\n"
 	     << "cereal version " << CEREAL_VERSION << " doesn\'t need initialization.\n"
-	     << "Cpp-NBT doesn\'t need initialization.\n"
+	     << "Cpp-NBT version " << CPP_NBT_VERSION << " doesn\'t need initialization.\n"
 
 	     << "\n"
 	     << "All dependencies initialized.\n\n";
