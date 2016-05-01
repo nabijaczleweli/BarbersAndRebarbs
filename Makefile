@@ -26,7 +26,7 @@ include configMakefile
 SUBSYSTEMS_SFML := system window graphics
 LDDLLS := audiere $(foreach subsystem,$(SUBSYSTEMS_SFML),sfml-$(subsystem)$(SFML_LINK_SUFF)) cpp-nbt
 LDAR := $(LNCPPAR) -L$(OUTDIR)Cpp-NBT $(foreach dll,$(LDDLLS),-l$(dll))
-SOURCES := $(sort $(wildcard src/**/**/**/*.cpp src/**/**/**/**/*.cpp src/**/**/**/**/**/*.cpp src/**/**/**/**/**/**/*.cpp))
+SOURCES := $(sort $(wildcard src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp))
 
 
 .PHONY : all clean assets exe cpp-nbt
