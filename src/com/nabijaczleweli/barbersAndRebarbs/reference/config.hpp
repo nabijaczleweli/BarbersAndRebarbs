@@ -32,6 +32,7 @@ class config {
 public:
 	std::string language = "en_US";
 
+	bool vsync                 = true;
 	unsigned int FPS           = 60;
 	bool play_sounds           = true;
 	unsigned int splash_length = 2;

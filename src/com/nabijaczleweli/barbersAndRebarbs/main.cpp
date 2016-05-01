@@ -27,22 +27,28 @@
 #include <audiere.h>
 #include <stdexcept>
 #include <iostream>
-#include <random>
 
 
 using namespace std;
 
 
-static application app;
-
-
-void init_app(int argc, char * argv[]);
-void init_deps();
+static pair<string, int> check_config();
+static void init_app(application & app, int argc, char * argv[]);
+static void init_deps(application & app);
 
 
 int main(int argc, char * argv[]) {
-	init_deps();
-	init_app(argc, argv);
+	{
+		const auto cfg_result = check_config();
+		if(cfg_result.second) {
+			cerr << "Configuration error: " << cfg_result.first << '\n';
+			return cfg_result.second;
+		}
+	}
+
+	application app;
+	init_deps(app);
+	init_app(app, argc, argv);
 	const auto result = app.run();
 	if(result)
 		cerr << "`app.run()` failed with " << result << "! Oh noes!";
@@ -50,13 +56,20 @@ int main(int argc, char * argv[]) {
 }
 
 
-void init_app(int, char * []) {
+static pair<string, int> check_config() {
+	if(!app_configuration.vsync && !app_configuration.FPS)
+		return {"VSync not enabled and FPS set to 0", -1};
+
+	return {"", 0};
+}
+
+static void init_app(application &, int, char * []) {
 	const_cast<localizer &>(fallback_izer).open();
 	const_cast<localizer &>(local_izer).open(app_configuration.language);
 	const_cast<localizer &>(global_izer).merge(local_izer).merge(fallback_izer);
 }
 
-void init_deps() {
+static void init_deps(application &) {
 	cout << "Initializing dependencies under " << CIMPOLER_META_OS_NAME << "...\n\n"
 
 	     << CIMPOLER_META_COMPILER_NAME " version " << cimpoler_meta::version() << " doesn\'t need initialization.\n"

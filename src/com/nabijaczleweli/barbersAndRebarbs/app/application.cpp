@@ -48,10 +48,9 @@ static sequential_music * open_sequential_application_music(bool sound) {
 }
 
 
-static unsigned int actual_fps            = 0;
-const unsigned int & application::FPS     = actual_fps;
-const unsigned int application::vsync_FPS = 60;
-
+unsigned int application::effective_FPS() {
+	return app_configuration.vsync ? 60 : app_configuration.FPS;
+}
 
 application::application() {}
 
@@ -64,10 +63,10 @@ application::~application() {
 
 int application::run() {
 	window.create(VideoMode::getDesktopMode(), app_name, Style::Fullscreen);
-	if(FPS)
-		window.setFramerateLimit(FPS);
-	else
+	if(app_configuration.vsync)
 		window.setVerticalSyncEnabled(true);
+	else
+		window.setFramerateLimit(app_configuration.FPS);
 	window.setMouseCursorVisible(false);
 	mouse_pointer.loadFromFile(textures_root + "/gui/general/cursor.png");
 

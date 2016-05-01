@@ -48,10 +48,7 @@ private:
 	int draw();
 
 public:
-	static const unsigned int & FPS;  // 0: vsync
-	static const unsigned int vsync_FPS;
-
-	static inline unsigned int effective_FPS() __attribute__((always_inline)) { return FPS ? FPS : vsync_FPS; }
+	static inline unsigned int effective_FPS();
 
 
 	int run();
