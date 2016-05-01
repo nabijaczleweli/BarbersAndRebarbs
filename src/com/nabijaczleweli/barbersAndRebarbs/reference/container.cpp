@@ -38,15 +38,15 @@ const string app_name("BarbersAndRebarbs");
 /***/ config app_configuration("./" + app_name + ".cfg");
 
 
-const Font font_pixelish([&]() {
+const Font font_pixelish([] {
 	Font tmp;
 	tmp.loadFromFile(font_root + "/04B_30.ttf");
-	return move(tmp);
+	return tmp;
 }());
-const Font font_swirly([&]() {
+const Font font_swirly([] {
 	Font tmp;
 	tmp.loadFromFile(font_root + "/MACABRA_.ttf");
-	return move(tmp);
+	return tmp;
 }());
 
 
