@@ -20,8 +20,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#ifndef STAT_BAR_HPP
-#define STAT_BAR_HPP
+#pragma once
 
 
 #include <SFML/Graphics.hpp>
@@ -53,6 +52,3 @@ public:
 	virtual void setPosition(float x, float y) /*override*/;
 	virtual void setPosition(const sf::Vector2f & position) /*override*/;
 };
-
-
-#endif  // STAT_BAR_HPP

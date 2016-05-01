@@ -21,8 +21,6 @@
 
 
 #pragma once
-#ifndef RESOURCE_LOCATION_HPP
-#define RESOURCE_LOCATION_HPP
 
 
 #include <string>
@@ -42,6 +40,3 @@ public:
 	std::string path() const;
 	bool exists() const;
 };
-
-
-#endif  // RESOURCE_LOCATION_HPP

@@ -21,8 +21,6 @@
 
 
 #pragma once
-#ifndef CONFIG_HPP
-#define CONFIG_HPP
 
 
 #include <string>
@@ -46,6 +44,3 @@ public:
 private:
 	std::string path;
 };
-
-
-#endif  // CONFIG_HPP

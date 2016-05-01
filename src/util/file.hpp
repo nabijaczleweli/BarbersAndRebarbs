@@ -21,8 +21,6 @@
 
 
 #pragma once
-#ifndef FILE_HPP
-#define FILE_HPP
 
 
 #include <string>
@@ -33,6 +31,3 @@
 std::vector<std::string> list_files(std::string directory);
 
 bool file_exists(const std::string & path);
-
-
-#endif  // FILE_HPP

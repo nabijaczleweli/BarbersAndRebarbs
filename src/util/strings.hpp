@@ -21,8 +21,6 @@
 
 
 #pragma once
-#ifndef STRINGS_HPP
-#define STRINGS_HPP
 
 
 #include <algorithm>
@@ -59,6 +57,3 @@ static inline std::string & rtrim(std::string && s) {
 static inline std::string & trim(std::string && s) {
 	return trim(s);
 }
-
-
-#endif  // STRINGS_HPP

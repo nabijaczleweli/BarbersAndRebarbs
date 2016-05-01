@@ -21,8 +21,6 @@
 
 
 #pragma once
-#ifndef CONTAINER_HPP
-#define CONTAINER_HPP
 
 
 #include "config.hpp"
@@ -51,6 +49,3 @@ extern const sf::Font font_swirly;
 
 
 extern const audiere::AudioDevicePtr audio_device;
-
-
-#endif  // CONTAINER_HPP

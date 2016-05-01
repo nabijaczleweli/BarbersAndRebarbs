@@ -20,8 +20,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#ifndef BEZIER_CURVE_HPP
-#define BEZIER_CURVE_HPP
+#pragma once
 
 
 #include <SFML/Graphics.hpp>
@@ -76,6 +75,3 @@ public:
 	void set_scale(float factor_x, float factor_y);
 	inline const sf::Vector2f & get_scale() const { return transform.getScale(); }
 };
-
-
-#endif  // BEZIER_CURVE_HPP

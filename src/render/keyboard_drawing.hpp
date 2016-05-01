@@ -20,8 +20,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#ifndef KEYBOARD_DRAWING_HPP
-#define KEYBOARD_DRAWING_HPP
+#pragma once
 
 
 #include <SFML/Graphics.hpp>
@@ -58,6 +57,3 @@ public:
 	void scale_size(sf::Vector2f factor);
 	sf::Vector2f size() const;
 };
-
-
-#endif  // KEYBOARD_DRAWING_HPP

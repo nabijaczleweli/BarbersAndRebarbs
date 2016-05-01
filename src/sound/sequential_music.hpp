@@ -21,8 +21,6 @@
 
 
 #pragma once
-#ifndef SEQUENCED_MUSIC_HPP
-#define SEQUENCED_MUSIC_HPP
 
 
 #include <audiere.h>
@@ -96,6 +94,3 @@ public:
 
 typedef audiere::RefPtr<sequential_music> SequentialMusicPtr;
 extern const std::unique_ptr<quiet_music> silent_music;
-
-
-#endif  // SEQUENCED_MUSIC_HPP

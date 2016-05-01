@@ -21,8 +21,6 @@
 
 
 #pragma once
-#ifndef MANAGED_SPRITE_HPP
-#define MANAGED_SPRITE_HPP
 
 
 #include <SFML/Graphics.hpp>
@@ -54,6 +52,3 @@ public:
 		return ret;
 	}
 };
-
-
-#endif  // MANAGED_SPRITE_HPP

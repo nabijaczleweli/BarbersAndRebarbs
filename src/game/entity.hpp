@@ -20,8 +20,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#ifndef ENTITY_HPP
-#define ENTITY_HPP
+#pragma once
 
 
 #include "cpp-nbt/tags/complex/nbt_compound.hpp"
@@ -51,6 +50,3 @@ public:
 
 	virtual float speed() const;
 };
-
-
-#endif  // ENTITY_HPP

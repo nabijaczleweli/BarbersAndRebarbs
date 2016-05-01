@@ -21,13 +21,12 @@
 
 
 #pragma once
-#ifndef LOCALIZER_HPP
-#define LOCALIZER_HPP
 
 
 #include <istream>
 #include <string>
 #include <unordered_map>
+
 
 class localizer {
 private:
@@ -59,6 +58,3 @@ public:
 	// template<class... T>
 	// std::string translate_key_format(const std::string & key, const T &... args) const;
 };
-
-
-#endif  // LOCALIZER_HPP

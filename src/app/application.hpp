@@ -21,8 +21,6 @@
 
 
 #pragma once
-#ifndef APPLICATION_HPP
-#define APPLICATION_HPP
 
 
 #include "../render/managed_sprite.hpp"
@@ -62,6 +60,3 @@ public:
 		temp_screen = std::make_unique<T>(*this, std::forward<A>(args)...);
 	}
 };
-
-
-#endif  // APPLICATION_HPP

@@ -21,8 +21,6 @@
 
 
 #pragma once
-#ifndef SPLASH_SCREEN_HPP
-#define SPLASH_SCREEN_HPP
 
 
 #include "../screen.hpp"
@@ -46,6 +44,3 @@ public:
 	splash_screen(splash_screen && other);
 	virtual ~splash_screen() = default;
 };
-
-
-#endif  // SPLASH_SCREEN_HPP

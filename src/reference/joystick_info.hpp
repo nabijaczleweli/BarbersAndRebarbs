@@ -20,8 +20,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#ifndef JOYSTICK_INFO_HPP
-#define JOYSTICK_INFO_HPP
+#pragma once
 
 
 #include "../util/simplified_map.hpp"
@@ -42,6 +41,3 @@ typedef joystick_mappings<directional_axis> joystick_axis_mappings;
 
 extern const joystick_button_mappings X360_button_mappings;
 extern const joystick_axis_mappings X360_axis_mappings;
-
-
-#endif  // JOYSTICK_INFO_HPP

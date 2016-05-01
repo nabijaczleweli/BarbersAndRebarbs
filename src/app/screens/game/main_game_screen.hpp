@@ -21,8 +21,6 @@
 
 
 #pragma once
-#ifndef MAIN_GAME_SCREEN_HPP
-#define MAIN_GAME_SCREEN_HPP
 
 
 #include "../screen.hpp"
@@ -51,6 +49,3 @@ public:
 	main_game_screen(main_game_screen && other);
 	virtual ~main_game_screen() = default;
 };
-
-
-#endif  // MAIN_GAME_SCREEN_HPP

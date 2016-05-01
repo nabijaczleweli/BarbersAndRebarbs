@@ -20,10 +20,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#ifndef XBOX_DRAWING_HPP
-#define XBOX_DRAWING_HPP
-
-
 #include "bezier_curve.hpp"
 #include <SFML/Graphics.hpp>
 
@@ -54,6 +50,3 @@ public:
 	void scale_size(sf::Vector2f factor);
 	sf::Vector2f size() const;
 };
-
-
-#endif  // XBOX_DRAWING_HPP

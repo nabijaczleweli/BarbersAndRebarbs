@@ -20,8 +20,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#ifndef PLAYER_HPP
-#define PLAYER_HPP
+#pragma once
 
 
 #include "entity.hpp"
@@ -46,6 +45,3 @@ public:
 
 	virtual void tick(float max_x, float max_y) override;
 };
-
-
-#endif  // PLAYER_HPP
