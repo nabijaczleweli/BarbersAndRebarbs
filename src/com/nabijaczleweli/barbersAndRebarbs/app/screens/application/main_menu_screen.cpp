@@ -69,7 +69,7 @@ void main_menu_screen::setup() {
 }
 
 int main_menu_screen::loop() {
-	const auto & winsize(app->window.getSize());
+	const auto & winsize(app.window.getSize());
 
 	unsigned int buttid = 0;
 	for(auto & button : main_buttons) {
@@ -85,12 +85,12 @@ int main_menu_screen::loop() {
 
 int main_menu_screen::draw() {
 	for(const auto & button : main_buttons)
-		app->window.draw(button.first);
+		app.window.draw(button.first);
 
 	try_drawings();
 	if(joystick_drawing.first)
-		app->window.draw(joystick_drawing.second);
-	app->window.draw(keys_drawing);
+		app.window.draw(joystick_drawing.second);
+	app.window.draw(keys_drawing);
 
 	return 0;
 }
@@ -163,22 +163,22 @@ int main_menu_screen::handle_event(const Event & event) {
 	return 0;
 }
 
-main_menu_screen::main_menu_screen(application * theapp)
-      : screen(theapp), control_frames_counter(0), joystick_up(false), joystick_drawing(0, xbox_drawing(Vector2f(0, 0), app->window.getSize())),
-        keys_drawing(Vector2f(0, 0), app->window.getSize()) {
-	keys_drawing.move(app->window.getSize().x / 4 - keys_drawing.size().x / 2, app->window.getSize().y / 2 - keys_drawing.size().y / 2);
-	joystick_drawing.second.move(app->window.getSize().x / 4 - joystick_drawing.second.size().x / 2,
-	                             app->window.getSize().y / 2 - joystick_drawing.second.size().y / 2);
+main_menu_screen::main_menu_screen(application & theapp)
+      : screen(theapp), control_frames_counter(0), joystick_up(false), joystick_drawing(0, xbox_drawing(Vector2f(0, 0), app.window.getSize())),
+        keys_drawing(Vector2f(0, 0), app.window.getSize()) {
+	keys_drawing.move(app.window.getSize().x / 4 - keys_drawing.size().x / 2, app.window.getSize().y / 2 - keys_drawing.size().y / 2);
+	joystick_drawing.second.move(app.window.getSize().x / 4 - joystick_drawing.second.size().x / 2,
+	                             app.window.getSize().y / 2 - joystick_drawing.second.size().y / 2);
 
 	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text.start"), font_swirly),
-	                           [&](Text &) { app->schedule_screen<main_game_screen>(); });
+	                           [&](Text &) { app.schedule_screen<main_game_screen>(); });
 	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"), font_swirly),
 	                           [&](Text & txt) {
 		                           app_configuration.play_sounds = !app_configuration.play_sounds;
 		                           txt.setString(global_izer.translate_key("gui.application.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"));
-		                           app->retry_music();
+		                           app.retry_music();
 		                         });
-	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text.quit"), font_swirly), [&](Text &) { app->window.close(); });
+	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text.quit"), font_swirly), [&](Text &) { app.window.close(); });
 
 	selected = main_buttons.size() - 1;
 }
@@ -188,5 +188,3 @@ main_menu_screen::main_menu_screen(const main_menu_screen & other)
 main_menu_screen::main_menu_screen(main_menu_screen && other)
       : screen(move(other)), main_buttons(move(other.main_buttons)), selected(other.selected), control_frames_counter(other.control_frames_counter),
         joystick_up(other.joystick_up), joystick_drawing(move(other.joystick_drawing)), keys_drawing(move(other.keys_drawing)) {}
-
-main_menu_screen::~main_menu_screen() {}

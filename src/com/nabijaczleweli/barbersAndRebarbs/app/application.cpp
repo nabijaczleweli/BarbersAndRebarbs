@@ -52,15 +52,6 @@ unsigned int application::effective_FPS() {
 	return app_configuration.vsync ? 60 : app_configuration.FPS;
 }
 
-application::application() {}
-
-application::~application() {
-	if(current_screen) {
-		delete current_screen;
-		current_screen = nullptr;
-	}
-}
-
 int application::run() {
 	window.create(VideoMode::getDesktopMode(), app_name, Style::Fullscreen);
 	if(app_configuration.vsync)
@@ -71,11 +62,11 @@ int application::run() {
 	mouse_pointer.loadFromFile(textures_root + "/gui/general/cursor.png");
 
 
-	Image * icon = new Image;
-	if(icon->loadFromFile(textures_root + "/gui/general/window_main.png"))
-		window.setIcon(icon->getSize().x, icon->getSize().x, icon->getPixelsPtr());
-	delete icon;
-	icon = nullptr;
+	{
+		Image icon;
+		if(icon.loadFromFile(textures_root + "/gui/general/window_main.png"))
+			window.setIcon(icon.getSize().x, icon.getSize().x, icon.getPixelsPtr());
+	}
 
 	schedule_screen<splash_screen>(splash_length * effective_FPS());
 	return loop();
@@ -86,10 +77,8 @@ int application::loop() {
 
 	while(window.isOpen()) {
 		while(temp_screen) {
-			delete current_screen;
-			current_screen = temp_screen;
+			current_screen = move(temp_screen);
 			current_screen->setup();
-			temp_screen = nullptr;
 		}
 
 		if(const int i = current_screen->loop())

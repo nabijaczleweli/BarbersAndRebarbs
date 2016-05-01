@@ -55,10 +55,10 @@ public:
 	virtual int draw() override;
 	virtual int handle_event(const sf::Event & event) override;
 
-	main_menu_screen(application * theapp);
+	main_menu_screen(application & theapp);
 	main_menu_screen(const main_menu_screen & other);
 	main_menu_screen(main_menu_screen && other);
-	virtual ~main_menu_screen();
+	virtual ~main_menu_screen() = default;
 };
 
 

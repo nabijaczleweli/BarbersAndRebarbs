@@ -29,6 +29,7 @@
 #include "../sound/sequential_music.hpp"
 #include "screens/screen.hpp"
 #include <SFML/Graphics.hpp>
+#include <memory>
 
 
 class application {
@@ -38,7 +39,8 @@ private:
 	friend class main_menu_screen;
 	friend class splash_screen;
 
-	screen *current_screen = nullptr, *temp_screen = nullptr;
+	std::unique_ptr<screen> current_screen;
+	std::unique_ptr<screen> temp_screen;
 	sf::RenderWindow window;
 	managed_sprite mouse_pointer;
 	SequentialMusicPtr music;
@@ -56,12 +58,9 @@ public:
 	void retry_music();
 
 	template <class T, class... A>
-	inline void schedule_screen(const A &... args) {
-		temp_screen = new T(this, args...);
+	inline void schedule_screen(A &&... args) {
+		temp_screen = std::make_unique<T>(*this, std::forward<A>(args)...);
 	}
-
-	application();
-	virtual ~application();
 };
 
 

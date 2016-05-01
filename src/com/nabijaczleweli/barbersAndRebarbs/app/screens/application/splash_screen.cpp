@@ -33,25 +33,25 @@ using namespace sf;
 void splash_screen::setup() {
 	screen::setup();
 	if(!frames)
-		app->schedule_screen<main_menu_screen>();
+		app.schedule_screen<main_menu_screen>();
 
 	background.loadFromFile(textures_root + "/gui/main/splash.png");
-	const float scale = static_cast<float>(app->window.getSize().y - text.getGlobalBounds().height * 1.5f) / background.getSize().y;
+	const float scale = static_cast<float>(app.window.getSize().y - text.getGlobalBounds().height * 1.5f) / background.getSize().y;
 	background.setScale(scale, scale);
-	background.setPosition(app->window.getSize().x / 2 - background.getGlobalBounds().width / 2, 0);
+	background.setPosition(app.window.getSize().x / 2 - background.getGlobalBounds().width / 2, 0);
 
-	text.setPosition(app->window.getSize().x / 2 - text.getGlobalBounds().width / 2, app->window.getSize().y - text.getGlobalBounds().height * 1.25);
+	text.setPosition(app.window.getSize().x / 2 - text.getGlobalBounds().width / 2, app.window.getSize().y - text.getGlobalBounds().height * 1.25);
 }
 
 int splash_screen::loop() {
 	if(!frames)
-		app->schedule_screen<main_menu_screen>();
+		app.schedule_screen<main_menu_screen>();
 	return 0;
 }
 
 int splash_screen::draw() {
-	app->window.draw(background);
-	app->window.draw(text);
+	app.window.draw(background);
+	app.window.draw(text);
 
 	--frames;
 	return 0;
@@ -60,14 +60,12 @@ int splash_screen::draw() {
 int splash_screen::handle_event(const Event & event) {
 	if((event.type == Event::KeyPressed && !event.key.alt && !event.key.control && !event.key.shift && !event.key.system) ||
 	   event.type == Event::MouseButtonPressed || event.type == Event::JoystickButtonPressed)
-		app->schedule_screen<main_menu_screen>();
+		app.schedule_screen<main_menu_screen>();
 	else if(event.type == Event::Closed)
-		app->window.close();
+		app.window.close();
 	return 0;
 }
 
-splash_screen::splash_screen(application * theapp, unsigned int frame_amt) : screen(theapp), frames(frame_amt), text(app_name, font_pixelish) {}
+splash_screen::splash_screen(application & theapp, unsigned int frame_amt) : screen(theapp), frames(frame_amt), text(app_name, font_pixelish) {}
 splash_screen::splash_screen(const splash_screen & other) : screen(other), frames(other.frames), background(other.background), text(other.text) {}
 splash_screen::splash_screen(splash_screen && other) : screen(move(other)), frames(other.frames), background(move(other.background)), text(move(other.text)) {}
-
-splash_screen::~splash_screen() {}

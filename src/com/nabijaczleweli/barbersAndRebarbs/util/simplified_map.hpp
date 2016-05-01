@@ -33,36 +33,27 @@ private:
 	typedef std::unordered_map<K, V> mapping_map;
 	typedef typename mapping_map::value_type mapping_single;
 
-	const mapping_map * mappings;
+	const mapping_map mappings;
 
 public:
-	simplified_map(std::initializer_list<mapping_single> init) : mappings(new mapping_map(init)) {}
-	simplified_map(const simplified_map<K, V> & other) : mappings(new mapping_map(*other.mappings)) {}
-	simplified_map(simplified_map<K, V> && other) : mappings(std::move(other.mappings)) { other.mappings = nullptr; }
+	simplified_map(std::initializer_list<mapping_single> init) : mappings(init) {}
+	simplified_map(const simplified_map<K, V> & other) : mappings(other.mappings) {}
+	simplified_map(simplified_map<K, V> && other) : mappings(std::move(other.mappings)) {}
 
-	~simplified_map() {
-		delete mappings;
-		mappings = nullptr;
-	}
-
-	simplified_map<K, V> & operator=(const simplified_map<K, V> & from) {
-		simplified_map<K, V> temp(from);
-		swap(temp);
+	simplified_map<K, V> & operator=(simplified_map<K, V> from) {
+		swap(from);
 		return *this;
 	}
 
 	void swap(simplified_map<K, V> & with) {
-		mapping_map * temp = mappings;
-		mappings           = with.mappings;
-		with.mappings      = temp;
+		std::swap(mappings, with.mappings);
 	}
 
 
-	inline V operator[](const K & key) const { return mappings->at(key); }
+	inline V operator[](const K & key) const { return mappings.at(key); }
+	inline V operator[](K && key) const { return mappings.at(std::move(key)); }
 
-	inline V operator[](K && key) const { return mappings->at(std::move(key)); }
-
-	inline const mapping_map & get() const { return *mappings; }
+	inline const mapping_map & get() const { return mappings; }
 };
 
 

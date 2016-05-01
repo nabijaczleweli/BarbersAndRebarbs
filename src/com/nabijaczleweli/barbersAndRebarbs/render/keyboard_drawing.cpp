@@ -39,21 +39,21 @@ inline Vector2<T> operator*(const Vector2<T> & lhs, const Vector2<T> & rhs) {
 // WIDTH = border.x
 // HEIGHT = border.y
 keyboard_drawing::keyboard_drawing(const Vector2f & s)
-      : own_scale(1, 1), border_top({Vector2f(0, 0) + s}, {Vector2f(190, 0) + s}), border_right({Vector2f(190, 0) + s}, {Vector2f(190, 130) + s}),
-        border_bottom({Vector2f(190, 130) + s}, {Vector2f(0, 130) + s}), border_left({Vector2f(0, 130) + s}, {Vector2f(0, 0) + s}),
-        up_arrow_top({Vector2f(70, 10) + s}, {Vector2f(120, 10) + s}), up_arrow_right({Vector2f(120, 10) + s}, {Vector2f(120, 60) + s}),
-        up_arrow_bottom({Vector2f(120, 60) + s}, {Vector2f(70, 60) + s}), up_arrow_left({Vector2f(70, 60) + s}, {Vector2f(70, 10) + s}),
-        left_arrow_top({Vector2f(10, 70) + s}, {Vector2f(60, 70) + s}), left_arrow_right({Vector2f(60, 70) + s}, {Vector2f(60, 120) + s}),
-        left_arrow_bottom({Vector2f(60, 120) + s}, {Vector2f(10, 120) + s}), left_arrow_left({Vector2f(10, 120) + s}, {Vector2f(10, 70) + s}),
-        down_arrow_top({Vector2f(70, 70) + s}, {Vector2f(120, 70) + s}), down_arrow_right({Vector2f(120, 70) + s}, {Vector2f(120, 120) + s}),
-        down_arrow_bottom({Vector2f(120, 120) + s}, {Vector2f(70, 120) + s}), down_arrow_left({Vector2f(70, 120) + s}, {Vector2f(70, 70) + s}),
-        right_arrow_top({Vector2f(130, 70) + s}, {Vector2f(180, 70) + s}), right_arrow_right({Vector2f(180, 70) + s}, {Vector2f(180, 120) + s}),
-        right_arrow_bottom({Vector2f(180, 120) + s}, {Vector2f(130, 120) + s}), right_arrow_left({Vector2f(130, 120) + s}, {Vector2f(130, 70) + s}),
+      : own_scale(1, 1), border_top{{Vector2f(0, 0) + s, Vector2f(190, 0) + s}}, border_right{{Vector2f(190, 0) + s, Vector2f(190, 130) + s}},
+        border_bottom{{Vector2f(190, 130) + s, Vector2f(0, 130) + s}}, border_left{{Vector2f(0, 130) + s, Vector2f(0, 0) + s}},
+        up_arrow_top{{Vector2f(70, 10) + s, Vector2f(120, 10) + s}}, up_arrow_right{{Vector2f(120, 10) + s, Vector2f(120, 60) + s}},
+        up_arrow_bottom{{Vector2f(120, 60) + s, Vector2f(70, 60) + s}}, up_arrow_left{{Vector2f(70, 60) + s, Vector2f(70, 10) + s}},
+        left_arrow_top{{Vector2f(10, 70) + s, Vector2f(60, 70) + s}}, left_arrow_right{{Vector2f(60, 70) + s, Vector2f(60, 120) + s}},
+        left_arrow_bottom{{Vector2f(60, 120) + s, Vector2f(10, 120) + s}}, left_arrow_left{{Vector2f(10, 120) + s, Vector2f(10, 70) + s}},
+        down_arrow_top{{Vector2f(70, 70) + s, Vector2f(120, 70) + s}}, down_arrow_right{{Vector2f(120, 70) + s, Vector2f(120, 120) + s}},
+        down_arrow_bottom{{Vector2f(120, 120) + s, Vector2f(70, 120) + s}}, down_arrow_left{{Vector2f(70, 120) + s, Vector2f(70, 70) + s}},
+        right_arrow_top{{Vector2f(130, 70) + s, Vector2f(180, 70) + s}}, right_arrow_right{{Vector2f(180, 70) + s, Vector2f(180, 120) + s}},
+        right_arrow_bottom{{Vector2f(180, 120) + s, Vector2f(130, 120) + s}}, right_arrow_left{{Vector2f(130, 120) + s, Vector2f(130, 70) + s}},
         // Tip -> clockwise
-        up_arrow_arrow({Vector2f(95, 27) + s}, {Vector2f(103, 43) + s}, {Vector2f(87, 43) + s}),
-        left_arrow_arrow({Vector2f(27, 95) + s}, {Vector2f(43, 103) + s}, {Vector2f(43, 87) + s}),
-        down_arrow_arrow({Vector2f(95, 103) + s}, {Vector2f(103, 87) + s}, {Vector2f(87, 87) + s}),
-        right_arrow_arrow({Vector2f(163, 95) + s}, {Vector2f(147, 103) + s}, {Vector2f(147, 87) + s}) {}
+        up_arrow_arrow{{Vector2f(95, 27) + s, Vector2f(103, 43) + s, Vector2f(87, 43) + s}},
+        left_arrow_arrow{{Vector2f(27, 95) + s, Vector2f(43, 103) + s, Vector2f(43, 87) + s}},
+        down_arrow_arrow{{Vector2f(95, 103) + s, Vector2f(103, 87) + s, Vector2f(87, 87) + s}},
+        right_arrow_arrow{{Vector2f(163, 95) + s, Vector2f(147, 103) + s, Vector2f(147, 87) + s}} {}
 keyboard_drawing::keyboard_drawing(const Vector2f & start, const Vector2f & size) : keyboard_drawing(start) {
 	scale_size(size);
 }
@@ -72,11 +72,8 @@ keyboard_drawing::keyboard_drawing(keyboard_drawing && other)
 #undef CPY
 #undef MOV
 
-keyboard_drawing::~keyboard_drawing() {}
-
-keyboard_drawing & keyboard_drawing::operator=(const keyboard_drawing & from) {
-	keyboard_drawing temp(from);
-	swap(temp);
+keyboard_drawing & keyboard_drawing::operator=(keyboard_drawing from) {
+	swap(from);
 	return *this;
 }
 
@@ -112,28 +109,24 @@ void keyboard_drawing::swap(keyboard_drawing & with) {
 }
 
 void keyboard_drawing::draw(RenderTarget & target, RenderStates) const {
-	const Vertex * lines_start = static_cast<const Vertex *>(static_cast<const void *>(&border_top));
-	const Vertex * triangle_start = static_cast<const Vertex *>(static_cast<const void *>(&up_arrow_arrow));
-	target.draw(lines_start, 20 * 2, PrimitiveType::Lines);
-	target.draw(triangle_start, 4 * 3, PrimitiveType::Triangles);
+	target.draw(border_top.data(), 20 * border_top.size(), PrimitiveType::Lines);
+	target.draw(up_arrow_arrow.data(), 4 * up_arrow_arrow.size(), PrimitiveType::Triangles);
 }
 
 void keyboard_drawing::move(float x, float y) {
-	Vertex * start = static_cast<Vertex *>(static_cast<void *>(&border_top));
 	Vector2f offset(x, y);
 
 	for(unsigned int i = 0; i < 2 * 20 + 4 * 3; ++i)
-		start[i].position = start[i].position + offset;
+		border_top[i].position = border_top[i].position + offset;
 }
 
 void keyboard_drawing::scale_size(Vector2f factor) {
-	Vertex * start = static_cast<Vertex *>(static_cast<void *>(&border_top));
 	factor.x /= 1600.f;
 	factor.y /= 900.f;
 	own_scale = own_scale * factor;
 
 	for(unsigned int i = 0; i < 2 * 20 + 4 * 3; ++i)
-		start[i].position = start[i].position * factor;
+		border_top[i].position = border_top[i].position * factor;
 }
 
 Vector2f keyboard_drawing::size() const {

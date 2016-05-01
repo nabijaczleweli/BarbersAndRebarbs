@@ -29,18 +29,19 @@ using namespace std;
 using namespace sf;
 
 
-bool bar_frame_texture_loaded = false;
-bool bar_fill_texture_loaded  = false;
-Texture stat_bar::bar_frame_texture;
-Texture stat_bar::bar_fill_texture;
-
 const Texture & stat_bar::load_bar_frame_texture() {
+	static Texture bar_frame_texture;
+	static bool bar_frame_texture_loaded = false;
+
 	if(!bar_frame_texture_loaded)
 		bar_frame_texture_loaded = bar_frame_texture.loadFromFile(textures_root + "/gui/game/stat_bar_frame.png");
 	return bar_frame_texture;
 }
 
 const Texture & stat_bar::load_bar_fill_texture() {
+	static Texture bar_fill_texture;
+	static bool bar_fill_texture_loaded = false;
+
 	if(!bar_fill_texture_loaded)
 		bar_fill_texture_loaded = bar_fill_texture.loadFromFile(textures_root + "/gui/game/stat_bar_fill.png");
 	return bar_fill_texture;
@@ -68,7 +69,7 @@ stat_bar & stat_bar::operator=(const stat_bar & from) {
 void stat_bar::draw(RenderTarget & target, RenderStates) const {
 	auto rect  = bar_fill_sprite.getTextureRect();
 	rect.width = bar_fill_sprite.getTexture()->getSize().x * min(1.f, abs(filled));
-	const_cast<stat_bar *>(this)->bar_fill_sprite.setTextureRect(static_cast<IntRect>(rect));
+	bar_fill_sprite.setTextureRect(static_cast<IntRect>(rect));
 	target.draw(bar_fill_sprite);
 
 	target.draw(bar_frame_sprite);

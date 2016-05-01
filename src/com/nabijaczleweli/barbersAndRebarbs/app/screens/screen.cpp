@@ -34,20 +34,14 @@ void screen::setup() {}
 int screen::handle_event(const Event & event) {
 	if(event.type == Event::Closed || (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) ||
 	   (event.type == Event::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings["Back"]))
-		app->window.close();
+		app.window.close();
 	else if(event.type == Event::MouseButtonPressed)
-		app->window.requestFocus();
+		app.window.requestFocus();
 	else if(event.type == Event::Count)
 		throw Event::Count;
 	return 0;
 }
 
-screen::screen(application * theapp) : app(theapp) {}
+screen::screen(application & theapp) : app(theapp) {}
 screen::screen(const screen & other) : app(other.app) {}
-screen::screen(screen && other) : app(other.app) {
-	other.app = nullptr;
-}
-
-screen::~screen() {
-	app = nullptr;
-}
+screen::screen(screen && other) : app(other.app) {}

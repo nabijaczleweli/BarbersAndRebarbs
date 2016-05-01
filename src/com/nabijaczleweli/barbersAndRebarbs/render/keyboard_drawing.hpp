@@ -25,12 +25,13 @@
 
 
 #include <SFML/Graphics.hpp>
+#include <array>
 
 
 class keyboard_drawing : public sf::Drawable {
 public:
-	typedef std::pair<sf::Vertex, sf::Vertex> line;
-	typedef std::tuple<sf::Vertex, sf::Vertex, sf::Vertex> triangle;
+	typedef std::array<sf::Vertex, 2> line;
+	typedef std::array<sf::Vertex, 3> triangle;
 
 private:
 	sf::Vector2f own_scale;
@@ -48,9 +49,7 @@ public:
 	keyboard_drawing(const keyboard_drawing & other);
 	keyboard_drawing(keyboard_drawing && other);
 
-	~keyboard_drawing();
-
-	keyboard_drawing & operator=(const keyboard_drawing & from);
+	keyboard_drawing & operator=(keyboard_drawing from);
 	void swap(keyboard_drawing & with);
 
 	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;

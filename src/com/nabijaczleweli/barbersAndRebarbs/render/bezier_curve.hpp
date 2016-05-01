@@ -57,7 +57,6 @@ public:
 	sf::Vector2f end_point;
 
 	bezier_curve(sf::Vector2f the_start_point, sf::Vector2f the_control_point, sf::Vector2f the_end_point);
-	bezier_curve(sf::Vector2f * points);
 	bezier_curve(const bezier_curve & other);
 	bezier_curve(bezier_curve && other);
 

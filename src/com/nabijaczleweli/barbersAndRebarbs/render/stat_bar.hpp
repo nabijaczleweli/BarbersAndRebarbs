@@ -32,13 +32,11 @@ protected:
 	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 
 private:
-	static sf::Texture bar_frame_texture;
 	static const sf::Texture & load_bar_frame_texture();
-	static sf::Texture bar_fill_texture;
 	static const sf::Texture & load_bar_fill_texture();
 
 	sf::Sprite bar_frame_sprite;
-	sf::Sprite bar_fill_sprite;
+	mutable sf::Sprite bar_fill_sprite;
 
 public:
 	float filled;

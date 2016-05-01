@@ -5,6 +5,11 @@
 			"working_dir": "$project_path",
 			"cmd": "make -j10",
 			"name": "Build BarbersAndRebarbs"
+		},
+		{
+			"working_dir": "$project_path",
+			"cmd": "make -j10 clean",
+			"name": "Clean BarbersAndRebarbs"
 		}
 	],
 	"folders":

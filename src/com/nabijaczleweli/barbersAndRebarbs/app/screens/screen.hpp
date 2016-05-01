@@ -31,7 +31,7 @@
 class application;
 class screen {
 protected:
-	application * app;
+	application & app;
 
 public:
 	virtual void setup();
@@ -39,10 +39,10 @@ public:
 	virtual int draw() = 0;
 	virtual int handle_event(const sf::Event & event);
 
-	screen(application * theapp);
+	screen(application & theapp);
 	screen(const screen & other);
 	screen(screen && other);
-	virtual ~screen();
+	virtual ~screen() = default;
 };
 
 

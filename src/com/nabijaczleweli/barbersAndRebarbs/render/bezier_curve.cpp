@@ -48,7 +48,6 @@ bezier_curve::bezier_curve(Vector2f the_start_point, Vector2f the_control_point,
       : start_point(the_start_point), control_point(the_control_point), end_point(the_end_point) {
 	compute_vertices();
 }
-bezier_curve::bezier_curve(Vector2f * points) : start_point(points[0]), control_point(points[1]), end_point(points[2]) {}
 bezier_curve::bezier_curve(const bezier_curve & other)
       : vertices(other.vertices), start_point(other.start_point), control_point(other.control_point), end_point(other.end_point) {}
 bezier_curve::bezier_curve(bezier_curve && other)
