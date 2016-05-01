@@ -44,7 +44,7 @@ void serialize(Archive & archive, config & cc) {
 	        cereal::make_nvp("system:available_languages", langs));
 }
 
-config::config(string && path) : path(move(path)) {
+config::config(string && ppath) : path(move(ppath)) {
 	ifstream configfile(path);
 	if(configfile.is_open()) {
 		cereal::JSONInputArchive archive(configfile);
