@@ -25,7 +25,7 @@ include configMakefile
 
 SUBSYSTEMS_SFML := system window graphics
 LDDLLS := audiere $(foreach subsystem,$(SUBSYSTEMS_SFML),sfml-$(subsystem)$(SFML_LINK_SUFF)) cpp-nbt
-LDAR := $(LNCPPAR) -L$(OUTDIR)Cpp-NBT $(foreach dll,$(LDDLLS),-l$(dll))
+LDAR := $(LNCXXAR) -L$(BLDDIR)Cpp-NBT $(foreach dll,$(LDDLLS),-l$(dll))
 SOURCES := $(sort $(wildcard src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp))
 
 
@@ -41,16 +41,16 @@ assets :
 	@cp -r $(ASSETDIR) $(OUTDIR)
 
 exe : $(OUTDIR)BarbersAndRebarbs$(EXE)
-cpp-nbt : $(OUTDIR)Cpp-NBT/libcpp-nbt$(ARCH)
+cpp-nbt : $(BLDDIR)Cpp-NBT/libcpp-nbt$(ARCH)
 
 
 $(OUTDIR)BarbersAndRebarbs$(EXE) : $(subst $(SRCDIR),$(OBJDIR),$(subst .cpp,$(OBJ),$(SOURCES)))
-	$(CXX) $(CPPAR) -o$@ $(subst $(SRCDIR),$(OBJDIR),$^) $(PIC) $(LDAR)
+	$(CXX) $(CXXAR) -o$@ $(subst $(SRCDIR),$(OBJDIR),$^) $(PIC) $(LDAR)
 
-$(OUTDIR)Cpp-NBT/libcpp-nbt$(ARCH) : ext/Cpp-NBT/Makefile
+$(BLDDIR)Cpp-NBT/libcpp-nbt$(ARCH) : ext/Cpp-NBT/Makefile
 	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@)) stlib
 
 
 $(OBJDIR)%$(OBJ) : $(SRCDIR)%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CPPAR) -Iext/cereal/include -Iext/cimpoler-meta/include -Iext/Cpp-NBT/include -DCEREAL_VERSION='$(CEREAL_VERSION)' -DCPP_NBT_VERSION='$(CPP_NBT_VERSION)' -DCIMPOLER_META_VERSION='$(CIMPOLER_META_VERSION)' -c -o$@ $^
+	$(CXX) $(CXXAR) -Iext/cereal/include -Iext/cimpoler-meta/include -Iext/Cpp-NBT/include -DCEREAL_VERSION='$(CEREAL_VERSION)' -DCPP_NBT_VERSION='$(CPP_NBT_VERSION)' -DCIMPOLER_META_VERSION='$(CIMPOLER_META_VERSION)' -c -o$@ $^

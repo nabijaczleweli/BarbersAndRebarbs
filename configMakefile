@@ -31,15 +31,15 @@ else
 endif
 
 ifneq "$(ADDITIONAL_INCLUDE_DIR)" ""
-	INCCPPAR := -isystem$(ADDITIONAL_INCLUDE_DIR)
+	INCCXXAR := -isystem$(ADDITIONAL_INCLUDE_DIR)
 else
-	INCCPPAR :=
+	INCCXXAR :=
 endif
 
 ifneq "$(ADDITIONAL_LINK_DIR)" ""
-	LNCPPAR := -L$(ADDITIONAL_LINK_DIR)
+	LNCXXAR := -L$(ADDITIONAL_LINK_DIR)
 else
-	LNCPPAR :=
+	LNCXXAR :=
 endif
 
 CEREAL_VERSION := "$(shell cd ext/cereal && git describe --tags | sed "s/v//")"
@@ -49,11 +49,12 @@ CIMPOLER_META_VERSION := "$(shell cd ext/cimpoler-meta && git log -1 --pretty=fo
 OBJ := .o
 ARCH := .a
 AR := ar
-CPPAR := -O3 -fomit-frame-pointer -std=c++14 -pedantic -Wall -Wextra -pipe $(INCCPPAR) $(PIC)
+CXXAR := -O3 -fomit-frame-pointer -std=c++14 -pedantic -Wall -Wextra -pipe $(INCCXXAR) $(PIC)
 STRIP := strip
 STRIPAR := --strip-all --remove-section=.comment --remove-section=.note
 
 OUTDIR := out/
-OBJDIR := $(OUTDIR)obj/
+BLDDIR := out/build/
+OBJDIR := $(BLDDIR)obj/
 SRCDIR := src/
 ASSETDIR := assets/
