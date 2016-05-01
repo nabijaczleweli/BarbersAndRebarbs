@@ -39,10 +39,14 @@ entity::entity(entity && other) : x(other.x), y(other.y) {}
 entity::~entity() {}
 
 void entity::read_from_nbt(const nbt_compound & from) {
-	x = *(from.get_float("x") ?: &x);
-	y = *(from.get_float("y") ?: &y);
-	motion_x = *(from.get_float("motion_x") ?: &motion_x);
-	motion_y = *(from.get_float("motion_y") ?: &motion_y);
+	if(auto fx = from.get_float("x"))
+		x = *fx;
+	if(auto fy = from.get_float("y"))
+		y = *fy;
+	if(auto fmotion_x = from.get_float("motion_x"))
+		motion_x = *fmotion_x;
+	if(auto fmotion_y = from.get_float("motion_y"))
+		motion_y = *fmotion_y;
 }
 
 void entity::write_to_nbt(nbt_compound & to) const {

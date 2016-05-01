@@ -38,7 +38,7 @@ resource_location::resource_location(const string & domain, const string & path)
 resource_location::resource_location(const string & bundle) {
 	string domain(app_name);
 	string path(bundle);
-	unsigned int colon_id = bundle.find(':');
+	auto colon_id = bundle.find(':');
 
 	if(colon_id != string::npos) {
 		path = bundle.substr(colon_id + 1, bundle.length());

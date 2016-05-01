@@ -34,8 +34,6 @@ protected:
 	sequential_music();
 
 private:
-	unsigned int refcount = 0;
-
 	bool loop = true;
 	audiere::OutputStreamPtr output_stream;
 	unsigned int music_id = 0;
