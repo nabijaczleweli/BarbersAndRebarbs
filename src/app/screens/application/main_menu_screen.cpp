@@ -23,7 +23,6 @@
 #include "main_menu_screen.hpp"
 #include "../../../reference/container.hpp"
 #include "../../../reference/joystick_info.hpp"
-#include "../../../resource/localizer.hpp"
 #include "../../application.hpp"
 #include "../game/main_game_screen.hpp"
 

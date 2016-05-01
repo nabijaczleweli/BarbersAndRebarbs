@@ -37,6 +37,10 @@ const string localization_root("./assets/lang");
 const string app_name("BarbersAndRebarbs");
 /***/ config app_configuration("./" + app_name + ".cfg");
 
+const localizer fallback_izer;
+const localizer local_izer(app_configuration.language);
+const localizer global_izer(local_izer, fallback_izer);
+
 
 const Font font_pixelish([] {
 	Font tmp;

@@ -22,7 +22,6 @@
 
 #include "app/application.hpp"
 #include "reference/container.hpp"
-#include "resource/localizer.hpp"
 #include "cimpoler-meta.hpp"
 #include <audiere.h>
 #include <stdexcept>
@@ -63,11 +62,7 @@ static pair<string, int> check_config() {
 	return {"", 0};
 }
 
-static void init_app(application &, int, char * []) {
-	const_cast<localizer &>(fallback_izer).open();
-	const_cast<localizer &>(local_izer).open(app_configuration.language);
-	const_cast<localizer &>(global_izer).merge(local_izer).merge(fallback_izer);
-}
+static void init_app(application &, int, char * []) {}
 
 static void init_deps(application &) {
 	cout << "Initializing dependencies under " << CIMPOLER_META_OS_NAME << "...\n\n"

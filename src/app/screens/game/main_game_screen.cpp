@@ -22,7 +22,6 @@
 
 #include "main_game_screen.hpp"
 #include "../../../reference/container.hpp"
-#include "../../../resource/localizer.hpp"
 #include "../../application.hpp"
 
 

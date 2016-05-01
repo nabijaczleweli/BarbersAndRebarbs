@@ -21,7 +21,6 @@
 
 #include "application.hpp"
 #include "../reference/container.hpp"
-#include "../resource/localizer.hpp"
 #include "../util/file.hpp"
 #include "screens/application/splash_screen.hpp"
 #include <algorithm>

@@ -25,12 +25,9 @@
 #include "../util/strings.hpp"
 #include <fstream>
 
+
 using namespace std;
 
-
-const localizer fallback_izer(nothrow);
-const localizer local_izer(nothrow);
-const localizer global_izer(nothrow);
 
 localizer::localizer() : localizer("en_US") {}
 

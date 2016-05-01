@@ -60,9 +60,5 @@ public:
 	// std::string translate_key_format(const std::string & key, const T &... args) const;
 };
 
-extern const localizer fallback_izer;
-extern const localizer local_izer;
-extern const localizer global_izer;
-
 
 #endif  // LOCALIZER_HPP
