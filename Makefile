@@ -24,15 +24,15 @@ include configMakefile
 
 
 SUBSYSTEMS_SFML := system window graphics
-LDDLLS := audiere $(foreach subsystem,$(SUBSYSTEMS_SFML),sfml-$(subsystem)$(SFML_LINK_SUFF)) cpp-nbt
-LDAR := $(LNCXXAR) -L$(BLDDIR)Cpp-NBT $(foreach dll,$(LDDLLS),-l$(dll))
+LDDLLS := audiere $(foreach subsystem,$(SUBSYSTEMS_SFML),sfml-$(subsystem)$(SFML_LINK_SUFF)) cpp-nbt whereami++
+LDAR := $(LNCXXAR) -L$(BLDDIR)Cpp-NBT -L$(BLDDIR)whereami-cpp $(foreach dll,$(LDDLLS),-l$(dll))
 SOURCES := $(sort $(wildcard src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp))
 
 
-.PHONY : all clean assets exe cpp-nbt
+.PHONY : all clean assets exe cpp-nbt whereami-cpp
 
 
-all : assets cpp-nbt exe
+all : assets cpp-nbt whereami-cpp exe
 
 clean :
 	rm -rf $(OUTDIR)
@@ -42,6 +42,7 @@ assets :
 
 exe : $(OUTDIR)BarbersAndRebarbs$(EXE)
 cpp-nbt : $(BLDDIR)Cpp-NBT/libcpp-nbt$(ARCH)
+whereami-cpp : $(BLDDIR)whereami-cpp/libwhereami++$(ARCH)
 
 
 $(OUTDIR)BarbersAndRebarbs$(EXE) : $(subst $(SRCDIR),$(OBJDIR),$(subst .cpp,$(OBJ),$(SOURCES)))
@@ -50,7 +51,10 @@ $(OUTDIR)BarbersAndRebarbs$(EXE) : $(subst $(SRCDIR),$(OBJDIR),$(subst .cpp,$(OB
 $(BLDDIR)Cpp-NBT/libcpp-nbt$(ARCH) : ext/Cpp-NBT/Makefile
 	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@)) stlib
 
+$(BLDDIR)whereami-cpp/libwhereami++$(ARCH) : ext/whereami-cpp/Makefile
+	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@)) stlib
+
 
 $(OBJDIR)%$(OBJ) : $(SRCDIR)%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXAR) -Iext/cereal/include -Iext/cimpoler-meta/include -Iext/Cpp-NBT/include -DCEREAL_VERSION='$(CEREAL_VERSION)' -DCPP_NBT_VERSION='$(CPP_NBT_VERSION)' -DCIMPOLER_META_VERSION='$(CIMPOLER_META_VERSION)' -c -o$@ $^
+	$(CXX) $(CXXAR) -Iext/cereal/include -Iext/cimpoler-meta/include -Iext/Cpp-NBT/include -Iext/whereami-cpp/include -DCEREAL_VERSION='$(CEREAL_VERSION)' -DCPP_NBT_VERSION='$(CPP_NBT_VERSION)' -DCIMPOLER_META_VERSION='$(CIMPOLER_META_VERSION)' -DWHEREAMI_CPP_VERSION='$(WHEREAMI_CPP_VERSION)' -c -o$@ $^

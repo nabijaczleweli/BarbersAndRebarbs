@@ -11,4 +11,4 @@
 [submodule "whereami-cpp"]
 	path = ext/whereami-cpp
 	url = https://github.com/nabijaczleweli/whereami-cpp.git
-	branch = v1.0.0
+	branch = v1.1.0
