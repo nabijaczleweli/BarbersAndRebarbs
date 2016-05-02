@@ -21,21 +21,23 @@
 
 
 #include "container.hpp"
+#include "whereami++.hpp"
 
 
 using namespace sf;
 using namespace std;
 using namespace audiere;
+using namespace whereami;
 
 
-const string assets_root("./assets");
-const string textures_root("./assets/textures");
-const string font_root("./assets/fonts");
-const string sound_root("./assets/sound");
-const string localization_root("./assets/lang");
+const string assets_root(executable_dir() + "/assets");
+const string textures_root(assets_root + "/textures");
+const string font_root(assets_root + "/fonts");
+const string sound_root(assets_root + "/sound");
+const string localization_root(assets_root + "/lang");
 
 const string app_name("BarbersAndRebarbs");
-/***/ config app_configuration("./" + app_name + ".cfg");
+/***/ config app_configuration(executable_dir() + "/" + app_name + ".cfg");
 
 const localizer fallback_izer;
 const localizer local_izer(app_configuration.language);
