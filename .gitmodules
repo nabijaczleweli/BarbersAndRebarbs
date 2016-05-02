@@ -8,3 +8,7 @@
 [submodule "cimpoler-meta"]
 	path = ext/cimpoler-meta
 	url = https://github.com/nabijaczleweli/cimpoler-meta.git
+[submodule "whereami-cpp"]
+	path = ext/whereami-cpp
+	url = https://github.com/nabijaczleweli/whereami-cpp.git
+	branch = v1.0.0
