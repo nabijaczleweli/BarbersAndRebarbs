@@ -97,8 +97,9 @@ script: ADDITIONAL_INCLUDE_DIR="$LIB_INSTALLDIR/include" ADDITIONAL_LINK_DIR="$L
 
 before_deploy:
   - mkdir release
+  - mv out/BarbersAndRebarbs.out out/BarbersAndRebarbs
   - cp -r out/BarbersAndRebarbs assets release/
-  - LD_LIBRARY_PATH="$LIB_INSTALLDIR/lib" ldd release/BarbersAndRebarbs | grep sfml | awk '{system("cp " $3 " release/")}'
+  - LD_LIBRARY_PATH="$LIB_INSTALLDIR/lib" ldd release/BarbersAndRebarbs | awk '{print($3)}' | grep ".so" | xargs cp -t release/
   - strip --strip-all --remove-section=.comment --remove-section=.note release/BarbersAndRebarbs
   - mv release "BarbersAndRebarbs-$TRAVIS_TAG"
   - tar -caf "BarbersAndRebarbs-$TRAVIS_TAG.tbz2" "BarbersAndRebarbs-$TRAVIS_TAG"
