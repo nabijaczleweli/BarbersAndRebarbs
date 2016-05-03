@@ -31,9 +31,9 @@ using namespace sf;
 
 void main_game_screen::setup() {
 	screen::setup();
-	const auto & winsize(app.window.getView().getSize());
-	const auto & hp_bounds(hp_stat.getLocalBounds());
-	const auto & energy_bounds(energy_stat.getLocalBounds());
+	const auto & winsize       = app.window.getView().getSize();
+	const auto & hp_bounds     = hp_stat.getLocalBounds();
+	const auto & energy_bounds = energy_stat.getLocalBounds();
 
 	hp_stat.setPosition(winsize.x / 4 - hp_bounds.width / 2, (59.f / 60.f) * winsize.y - hp_bounds.height / 2);
 	energy_stat.setPosition((winsize.x / 4) * 3 - energy_bounds.width / 2, (59.f / 60.f) * winsize.y - energy_bounds.height / 2);
@@ -60,6 +60,10 @@ int main_game_screen::handle_event(const Event & event) {
 	return screen::handle_event(event);
 }
 
-main_game_screen::main_game_screen(application & theapp) : screen(theapp), hp_stat(Color::Red, 1), energy_stat(Color(50, 200, 200), 1) {}
-main_game_screen::main_game_screen(const main_game_screen & other) : screen(other), hp_stat(other.hp_stat), energy_stat(other.energy_stat) {}
-main_game_screen::main_game_screen(main_game_screen && other) : screen(move(other)), hp_stat(move(other.hp_stat)), energy_stat(move(other.energy_stat)) {}
+main_game_screen::main_game_screen(application & theapp)
+      : screen(theapp), hp_stat(Color::Red, 1), energy_stat(Color(50, 200, 200), 1),
+        the_player([this](unique_ptr<entity> e) { entities.emplace_back(move(e)); }) {}
+main_game_screen::main_game_screen(const main_game_screen & other)
+      : screen(other), hp_stat(other.hp_stat), energy_stat(other.energy_stat), the_player(other.the_player) {}
+main_game_screen::main_game_screen(main_game_screen && other)
+      : screen(move(other)), hp_stat(move(other.hp_stat)), energy_stat(move(other.energy_stat)), the_player(move(other.the_player)) {}

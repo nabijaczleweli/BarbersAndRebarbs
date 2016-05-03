@@ -21,7 +21,9 @@
 
 
 #include "player.hpp"
+#include "bullet.hpp"
 #include "../reference/joystick_info.hpp"
+#include "../reference/container.hpp"
 #include <SFML/Window.hpp>
 
 
@@ -31,18 +33,17 @@ using namespace sf;
 
 
 void player::draw(RenderTarget & target, RenderStates states) const {
-	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x, y), Color::White)), 1, PrimitiveType::Points, states);
+	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x - 1, y), Color(231, 158, 109))), 1, PrimitiveType::Points, states);
+	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x, y - 1), Color(231, 158, 109))), 1, PrimitiveType::Points, states);
+	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x + 1, y), Color(231, 158, 109))), 1, PrimitiveType::Points, states);
+	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x, y + 1), Color(231, 158, 109))), 1, PrimitiveType::Points, states);
+	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x - 2, y - 2), Color(200, 200, 200))), 1, PrimitiveType::Points, states);
+	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x + 2, y - 2), Color(200, 200, 200))), 1, PrimitiveType::Points, states);
+	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x + 2, y + 2), Color(200, 200, 200))), 1, PrimitiveType::Points, states);
+	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x - 2, y + 2), Color(200, 200, 200))), 1, PrimitiveType::Points, states);
 }
 
-player::player() : entity() {
-	motion_x = 1000;
-	motion_y = 200;
-}
-player::player(const nbt_compound & from) : entity(from) {}
-player::player(const player & other) : entity(other) {}
-player::player(player && other) : entity(move(other)) {}
-
-player::~player() {}
+player::player(function<void(unique_ptr<entity>)> spawn) : entity(spawn), was_clicked(Mouse::isButtonPressed(Mouse::Button::Left)) {}
 
 void player::read_from_nbt(const cpp_nbt::nbt_compound & from) {
 	entity::read_from_nbt(from);
@@ -55,12 +56,26 @@ void player::write_to_nbt(cpp_nbt::nbt_compound & to) const {
 void player::tick(float max_x, float max_y) {
 	entity::tick(max_x, max_y);
 
-	if(Keyboard::isKeyPressed(Keyboard::Key::Left))
-		motion_x -= 1;
-	if(Keyboard::isKeyPressed(Keyboard::Key::Right))
-		motion_x += 1;
-	if(Keyboard::isKeyPressed(Keyboard::Key::Up))
-		motion_y -= 1;
-	if(Keyboard::isKeyPressed(Keyboard::Key::Down))
-		motion_y += 1;
+	auto delta_speed_x = 0;
+	auto delta_speed_y = 0;
+
+	if(Keyboard::isKeyPressed(Keyboard::Key::A))
+		delta_speed_x -= 1;
+	if(Keyboard::isKeyPressed(Keyboard::Key::D))
+		delta_speed_x += 1;
+	if(Keyboard::isKeyPressed(Keyboard::Key::W))
+		delta_speed_y -= 1;
+	if(Keyboard::isKeyPressed(Keyboard::Key::S))
+		delta_speed_y += 1;
+
+	start_movement(delta_speed_x, delta_speed_y);
+
+	const auto is_clicked = Mouse::isButtonPressed(Mouse::Button::Left);
+	if(is_clicked && !was_clicked)
+		spawn(bullet::create(spawn, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), x, y));
+	was_clicked = is_clicked;
+}
+
+float player::speed() const {
+	return app_configuration.player_speed;
 }

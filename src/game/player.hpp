@@ -32,16 +32,18 @@ protected:
 	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 
 private:
-public:
-	player();
-	player(const cpp_nbt::nbt_compound & from);
-	player(const player & other);
-	player(player && other);
+	bool was_clicked;
 
-	virtual ~player();
+public:
+	using entity::entity;
+	player(std::function<void(std::unique_ptr<entity>)> spawn);
+
+	virtual ~player() = default;
 
 	virtual void read_from_nbt(const cpp_nbt::nbt_compound & from) override;
 	virtual void write_to_nbt(cpp_nbt::nbt_compound & to) const override;
 
 	virtual void tick(float max_x, float max_y) override;
+
+	virtual float speed() const override;
 };

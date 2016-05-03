@@ -25,20 +25,22 @@
 
 #include "cpp-nbt/tags/complex/nbt_compound.hpp"
 #include "cpp-nbt/nbt_reloadable.hpp"
+#include <utility>
 
 
 class entity : public cpp_nbt::nbt_reloadable {
 protected:
 	float x, y;
 	float motion_x, motion_y;
+	std::function<void(std::unique_ptr<entity>)> spawn;
 
 public:
-	entity();
-	entity(const cpp_nbt::nbt_compound & from);
-	entity(const entity & other);
-	entity(entity && other);
+	entity(std::function<void(std::unique_ptr<entity>)> spawn);
+	entity(std::function<void(std::unique_ptr<entity>)> spawn, const cpp_nbt::nbt_compound & from);
+	entity(const entity & other) = default;
+	entity(entity && other) = default;
 
-	virtual ~entity();
+	virtual ~entity() = default;
 
 	virtual void read_from_nbt(const cpp_nbt::nbt_compound & from);
 	virtual void write_to_nbt(cpp_nbt::nbt_compound & to) const;
@@ -49,4 +51,5 @@ public:
 	void start_movement(float amt_x, float amt_y);
 
 	virtual float speed() const;
+	virtual float speed_loss() const;
 };

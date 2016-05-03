@@ -29,14 +29,10 @@ using namespace std;
 using namespace cpp_nbt;
 
 
-entity::entity() : x(0), y(0), motion_x(0), motion_y(0) {}
-entity::entity(const nbt_compound & from) : entity() {
+entity::entity(function<void(unique_ptr<entity>)> spawn_f) : x(0), y(0), motion_x(0), motion_y(0), spawn(move(spawn_f)) {}
+entity::entity(function<void(unique_ptr<entity>)> spawn, const nbt_compound & from) : entity(spawn) {
 	read_from_nbt(from);
 }
-entity::entity(const entity & other) : x(other.x), y(other.y) {}
-entity::entity(entity && other) : x(other.x), y(other.y) {}
-
-entity::~entity() {}
 
 void entity::read_from_nbt(const nbt_compound & from) {
 	if(auto fx = from.get_float("x"))
@@ -57,10 +53,11 @@ void entity::write_to_nbt(nbt_compound & to) const {
 }
 
 void entity::tick(float max_x, float max_y) {
-	x += motion_x * .15f * speed();
-	y += motion_y * .15f * speed();
-	motion_x *= .85f;
-	motion_y *= .85f;
+	const auto resisted_speed = 1 - speed_loss();
+	x += motion_x * .15 * speed();
+	y += motion_y * .15 * speed();
+	motion_x *= resisted_speed;
+	motion_y *= resisted_speed;
 
 	if(max_x && max_y) {
 		if(x < 0) {
@@ -83,10 +80,15 @@ void entity::tick(float max_x, float max_y) {
 }
 
 void entity::start_movement(float amt_x, float amt_y) {
-	motion_x += amt_x;
-	motion_y += amt_y;
+	const auto spd = speed();
+	motion_x += amt_x * spd;
+	motion_y += amt_y * spd;
 }
 
 float entity::speed() const {
 	return 1;
+}
+
+float entity::speed_loss() const {
+	return .15f;
 }

@@ -20,29 +20,42 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#pragma once
+#include "bullet.hpp"
+#include "../reference/joystick_info.hpp"
+#include "../reference/container.hpp"
+#include "../util/vector.hpp"
+#include <SFML/Window.hpp>
 
 
-#include <string>
+using namespace cpp_nbt;
+using namespace std;
+using namespace sf;
 
 
-class config {
-public:
-	std::string language = "en_US";
+unique_ptr<bullet> bullet::create(function<void(unique_ptr<entity>)> spawn, Vector2f aim, unsigned int x, unsigned int y) {
+	auto bull = make_unique<bullet>(spawn, x, y);
 
-	bool vsync                 = true;
-	unsigned int FPS           = 60;
-	bool play_sounds           = true;
-	unsigned int splash_length = 2;
+	aim = normalised(aim);
+	bull->start_movement(aim.x, aim.y);
 
-	float player_speed = 1;
+	return bull;
+}
 
-	config(const config &) = default;
-	config(config &&) = default;
-	config(std::string && path);
+void bullet::draw(RenderTarget & target, RenderStates states) const {
+	CircleShape crcl(5);
+	crcl.setPosition(x - 2.5, y - 2.5);
+	target.draw(crcl, states);
+}
 
-	~config();
+bullet::bullet(function<void(unique_ptr<entity>)> spawn, unsigned int px, unsigned int py) : entity(spawn) {
+	x = px;
+	y = py;
+}
 
-private:
-	std::string path;
-};
+float bullet::speed() const {
+	return 5.5;
+}
+
+float bullet::speed_loss() const {
+	return .001;
+}

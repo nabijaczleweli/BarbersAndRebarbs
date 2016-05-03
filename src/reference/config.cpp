@@ -41,7 +41,8 @@ void serialize(Archive & archive, config & cc) {
 
 	archive(cereal::make_nvp("application:FPS", cc.FPS), cereal::make_nvp("application:vsync", cc.vsync),
 	        cereal::make_nvp("application:play_sounds", cc.play_sounds), cereal::make_nvp("application:splash_length", cc.splash_length),
-	        cereal::make_nvp("system:language", cc.language), cereal::make_nvp("system:available_languages", langs));
+	        cereal::make_nvp("system:language", cc.language), cereal::make_nvp("system:available_languages", langs),
+	        cereal::make_nvp("player:speed", cc.player_speed));
 }
 
 config::config(string && ppath) : path(move(ppath)) {
@@ -51,6 +52,7 @@ config::config(string && ppath) : path(move(ppath)) {
 		try {
 			archive(*this);
 		} catch(cereal::RapidJSONException &) {
+		} catch(cereal::Exception &) {
 		}
 	}
 }

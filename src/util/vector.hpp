@@ -23,26 +23,13 @@
 #pragma once
 
 
-#include <string>
+#include <SFML/System.hpp>
 
 
-class config {
-public:
-	std::string language = "en_US";
-
-	bool vsync                 = true;
-	unsigned int FPS           = 60;
-	bool play_sounds           = true;
-	unsigned int splash_length = 2;
-
-	float player_speed = 1;
-
-	config(const config &) = default;
-	config(config &&) = default;
-	config(std::string && path);
-
-	~config();
-
-private:
-	std::string path;
-};
+template <class T>
+sf::Vector2<T> normalised(const sf::Vector2<T> & vec) {
+	const T length = sqrt(vec.x * vec.x + vec.y * vec.y);
+	if(length)
+		return {vec.x / length, vec.y / length};
+	return vec;
+}

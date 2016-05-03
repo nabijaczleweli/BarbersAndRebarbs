@@ -23,26 +23,25 @@
 #pragma once
 
 
-#include <string>
+#include "entity.hpp"
+#include <SFML/Graphics.hpp>
 
 
-class config {
-public:
-	std::string language = "en_US";
-
-	bool vsync                 = true;
-	unsigned int FPS           = 60;
-	bool play_sounds           = true;
-	unsigned int splash_length = 2;
-
-	float player_speed = 1;
-
-	config(const config &) = default;
-	config(config &&) = default;
-	config(std::string && path);
-
-	~config();
+class bullet : public entity, public sf::Drawable {
+protected:
+	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 
 private:
-	std::string path;
+public:
+	static std::unique_ptr<bullet> create(std::function<void(std::unique_ptr<entity>)> spawn, sf::Vector2f aim, unsigned int x, unsigned int y);
+
+
+	using entity::entity;
+	bullet(std::function<void(std::unique_ptr<entity>)> spawn, unsigned int x, unsigned int y);
+
+	virtual ~bullet() = default;
+
+
+	virtual float speed() const override;
+	virtual float speed_loss() const override;
 };
