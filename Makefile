@@ -23,16 +23,16 @@
 include configMakefile
 
 
-SUBSYSTEMS_SFML := system window graphics
-LDDLLS := audiere $(foreach subsystem,$(SUBSYSTEMS_SFML),sfml-$(subsystem)$(SFML_LINK_SUFF)) cpp-nbt whereami++
+LDDLLS := audiere cpp-nbt whereami++
 LDAR := $(LNCXXAR) -L$(BLDDIR)Cpp-NBT -L$(BLDDIR)whereami-cpp $(foreach dll,$(LDDLLS),-l$(dll))
 SOURCES := $(sort $(wildcard src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp))
+HEADERS := $(sort $(wildcard src/*.hpp src/**/*.hpp src/**/**/*.hpp src/**/**/**/*.hpp))
 
 
-.PHONY : all clean assets exe cpp-nbt whereami-cpp
+.PHONY : all clean assets exe cpp-nbt whereami-cpp sfml-deplist
 
 
-all : assets cpp-nbt whereami-cpp exe
+all : assets cpp-nbt whereami-cpp sfml-deplist exe
 
 clean :
 	rm -rf $(OUTDIR)
@@ -43,16 +43,21 @@ assets :
 exe : $(OUTDIR)BarbersAndRebarbs$(EXE)
 cpp-nbt : $(BLDDIR)Cpp-NBT/libcpp-nbt$(ARCH)
 whereami-cpp : $(BLDDIR)whereami-cpp/libwhereami++$(ARCH)
+sfml-deplist : $(BLDDIR)sfml-modules
 
 
 $(OUTDIR)BarbersAndRebarbs$(EXE) : $(subst $(SRCDIR),$(OBJDIR),$(subst .cpp,$(OBJ),$(SOURCES)))
-	$(CXX) $(CXXAR) -o$@ $(subst $(SRCDIR),$(OBJDIR),$^) $(PIC) $(LDAR)
+	$(CXX) $(CXXAR) -o$@ $(subst $(SRCDIR),$(OBJDIR),$^) $(PIC) $(LDAR) @$(BLDDIR)sfml-modules
 
 $(BLDDIR)Cpp-NBT/libcpp-nbt$(ARCH) : ext/Cpp-NBT/Makefile
 	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@)) stlib
 
 $(BLDDIR)whereami-cpp/libwhereami++$(ARCH) : ext/whereami-cpp/Makefile
 	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@)) stlib
+
+$(BLDDIR)sfml-modules : $(HEADERS)
+	@mkdir -p $(dir $@)
+	grep "<SFML/" $^ | sed -r "s:.*#include <SFML/(.*).hpp>:-lsfml-\\1$(SFML_LINK_SUFF):" | tr '[:upper:]' '[:lower:]' | sort | uniq > $@
 
 
 $(OBJDIR)%$(OBJ) : $(SRCDIR)%.cpp

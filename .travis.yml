@@ -6,10 +6,10 @@ cache:
 env:
   global:
     - LIB_INSTALLDIR="$HOME"
+    - LD_LIBRARY_PATH="$LIB_INSTALLDIR/lib"
     - AUDIERE_TAG=1.9.4
     - SPEEX_VER=1.1.9
-    - SFML_TAG_CMDLINE=ZXhwb3J0IFNGTUxfVEFHPSQoY3VybCAtU3NMICdodHRwczovL2FwaS5naXRodWIuY29tL3JlcG9zL1NGTUwvU0ZNTC90YWdzP2NsaWVudF9pZD0kZ2hfYXBwX2lkJmNsaWVudF9zZWNyZXQ9JGdoX2FwcF9zZWNyZXQnIHwgcGVybCAtcGUgJ3MvW1s6c3BhY2U6XV0vL2cnIHwgcGVybCAtcGUgJ3MvXH1cfSxcey99fSxcbnsvZycgfCBwZXJsIC1wZSAncy8sLywgL2cnIHwgYXdrICd7cHJpbnQoJDMpfScgfCBzZWQgLWUgJ3MvXi4qIjoiLy9nJyAtZSAncy8iLC8vZycgLWUgJ3M6LzogLyA6ZycgfCBhd2sgJy9bWzpkaWdpdDpdLl0rJC8ge3ByaW50KCQxNCk7IGV4aXR9JykK
-    - LD_LIBRARY_PATH="$LIB_INSTALLDIR/lib"
+    - SFML_TAG=2.3.2
 
 matrix:
   include:
@@ -58,9 +58,6 @@ matrix:
           sources: *sources
 
 install:
-  - export SFML_TAG_CMDLINE=$(base64 -d <<< $SFML_TAG_CMDLINE)
-  - echo $SFML_TAG_CMDLINE; eval $SFML_TAG_CMDLINE
-  - echo Using SFML ver $SFML_TAG
   - pushd "/tmp"
   - curl -SL https://github.com/SFML/SFML/archive/$SFML_TAG.tar.gz | tar -xzf-
   - cd "SFML-$SFML_TAG"
