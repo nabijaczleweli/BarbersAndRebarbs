@@ -22,8 +22,8 @@
 
 #include "player.hpp"
 #include "bullet.hpp"
-#include "../reference/joystick_info.hpp"
-#include "../reference/container.hpp"
+#include "../../reference/joystick_info.hpp"
+#include "../../reference/container.hpp"
 #include <SFML/Window.hpp>
 
 

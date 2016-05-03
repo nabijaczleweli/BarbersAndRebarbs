@@ -21,9 +21,9 @@
 
 
 #include "bullet.hpp"
-#include "../reference/joystick_info.hpp"
-#include "../reference/container.hpp"
-#include "../util/vector.hpp"
+#include "../../reference/joystick_info.hpp"
+#include "../../reference/container.hpp"
+#include "../../util/vector.hpp"
 #include <SFML/Window.hpp>
 
 

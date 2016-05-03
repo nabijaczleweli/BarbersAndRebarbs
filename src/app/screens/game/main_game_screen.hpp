@@ -24,8 +24,8 @@
 
 
 #include "../screen.hpp"
-#include "../../../game/entity.hpp"
-#include "../../../game/player.hpp"
+#include "../../../game/entity/entity.hpp"
+#include "../../../game/entity/player.hpp"
 #include "../../../render/managed_sprite.hpp"
 #include "../../../render/stat_bar.hpp"
 #include <deque>
