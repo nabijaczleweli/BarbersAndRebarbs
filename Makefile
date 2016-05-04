@@ -59,7 +59,7 @@ $(BLDDIR)Cpp-NBT/libcpp-nbt$(ARCH) : ext/Cpp-NBT/Makefile
 $(BLDDIR)whereami-cpp/libwhereami++$(ARCH) : ext/whereami-cpp/Makefile
 	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@)) stlib
 
-$(BLDDIR)sfml-modules : $(HEADERS)
+$(BLDDIR)sfml-modules : $(HEADERS) $(SOURCES)
 	@mkdir -p $(dir $@)
 	grep "<SFML/" $^ | sed -r "s:.*#include <SFML/(.*).hpp>:-lsfml-\\1$(SFML_LINK_SUFF):" | tr '[:upper:]' '[:lower:]' | sort | uniq > $@
 
