@@ -24,10 +24,12 @@ ifeq "$(OS)" "Windows_NT"
 	EXE := .exe
 	PIC :=
 	SFML_LINK_SUFF := -2
+	SEED11_SYSTEM_TYPE := windows
 else
 	EXE := .out
 	PIC := -fPIC
 	SFML_LINK_SUFF :=
+	SEED11_SYSTEM_TYPE := linux
 endif
 
 ifneq "$(ADDITIONAL_INCLUDE_DIR)" ""
@@ -43,8 +45,9 @@ else
 endif
 
 CEREAL_VERSION := "$(shell cd ext/cereal && git describe --tags | sed "s/v//")"
-CPP_NBT_VERSION := "$(shell cd ext/Cpp-NBT && git log -1 --pretty=format:%h)"
 CIMPOLER_META_VERSION := "$(shell cd ext/cimpoler-meta && git log -1 --pretty=format:%h)"
+CPP_NBT_VERSION := "$(shell cd ext/Cpp-NBT && git log -1 --pretty=format:%h)"
+SEED11_VERSION := "$(shell cd ext/seed11 && git describe --tags | sed "s/v//")"
 WHEREAMI_CPP_VERSION := "$(shell cd ext/whereami-cpp && git describe --tags | sed "s/v//")"
 
 OBJ := .o
