@@ -15,4 +15,4 @@
 [submodule "seed11"]
 	path = ext/seed11
 	url = https://github.com/milleniumbug/seed11.git
-	branch = v1.0.0
+	branch = v1.0.1
