@@ -138,23 +138,24 @@ int main_menu_screen::handle_event(const Event & event) {
 			break;
 
 		case Event::JoystickMoved:
-			if(event.joystickMove.axis == X360_axis_mappings["LeftStickVertical"].axis || event.joystickMove.axis == X360_axis_mappings["DPadVertical"].axis) {
+			if(event.joystickMove.axis == X360_axis_mappings::LeftStickVertical || event.joystickMove.axis == X360_axis_mappings::DPadVertical) {
 				if(event.joystickMove.position && (event.joystickMove.position >= 25 || event.joystickMove.position <= -25)) {
 					if(joystick_up)
 						break;
 					joystick_up    = true;
 					const int sign = event.joystickMove.position / abs(event.joystickMove.position);
-					const auto & axis(
-					    X360_axis_mappings[(event.joystickMove.axis == X360_axis_mappings["LeftStickVertical"].axis) ? "LeftStickVertical" : "DPadVertical"]);
 
-					move_selection((sign == axis.up_right) ? direction::up : direction::down);
+					move_selection((sign == ((event.joystickMove.axis == X360_axis_mappings::LeftStickVertical) ? X360_axis_up_right_mappings::LeftStickVertical
+					                                                                                            : X360_axis_up_right_mappings::DPadVertical))
+					                   ? direction::up
+					                   : direction::down);
 				} else
 					joystick_up = false;
 			}
 			break;
 
 		case Event::JoystickButtonPressed:
-			if(event.joystickButton.button == X360_button_mappings["A"])
+			if(event.joystickButton.button == X360_button_mappings::A)
 				press_button();
 			break;
 	}

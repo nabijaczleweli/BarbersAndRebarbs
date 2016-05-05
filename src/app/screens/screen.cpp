@@ -33,7 +33,7 @@ void screen::setup() {}
 
 int screen::handle_event(const Event & event) {
 	if(event.type == Event::Closed || (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) ||
-	   (event.type == Event::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings["Back"]))
+	   (event.type == Event::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::Back))
 		app.window.close();
 	else if(event.type == Event::MouseButtonPressed)
 		app.window.requestFocus();

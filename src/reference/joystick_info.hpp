@@ -23,21 +23,48 @@
 #pragma once
 
 
-#include "../util/simplified_map.hpp"
 #include <SFML/Window.hpp>
 
 
-struct directional_axis {
-	sf::Joystick::Axis axis;
-	int up_right, down_left;
-};
+namespace X360_button_mappings {
+	static const constexpr auto A          = 0u;
+	static const constexpr auto B          = 1u;
+	static const constexpr auto X          = 2u;
+	static const constexpr auto Y          = 3u;
+	static const constexpr auto LB         = 4u;
+	static const constexpr auto RB         = 5u;
+	static const constexpr auto Back       = 6u;
+	static const constexpr auto Start      = 7u;
+	static const constexpr auto LeftStick  = 8u;
+	static const constexpr auto RightStick = 9u;
+}
 
-template <class T>
-using joystick_mappings = simplified_map<std::string, T>;
+namespace X360_axis_mappings {
+	static const constexpr auto LeftStickHorizontal  = sf::Joystick::X;
+	static const constexpr auto LeftStickVertical    = sf::Joystick::Y;
+	static const constexpr auto Triggers             = sf::Joystick::Z;
+	static const constexpr auto RightStickVertical   = sf::Joystick::R;
+	static const constexpr auto RightStickHorizontal = sf::Joystick::U;
+	static const constexpr auto DPadHorizontal       = sf::Joystick::PovX;
+	static const constexpr auto DPadVertical         = sf::Joystick::PovY;
+}
 
-typedef joystick_mappings<unsigned int> joystick_button_mappings;
-typedef joystick_mappings<directional_axis> joystick_axis_mappings;
+namespace X360_axis_up_right_mappings {
+	static const constexpr auto LeftStickHorizontal  = 1;
+	static const constexpr auto LeftStickVertical    = -1;
+	static const constexpr auto Triggers             = -1;
+	static const constexpr auto RightStickVertical   = -1;
+	static const constexpr auto RightStickHorizontal = 1;
+	static const constexpr auto DPadHorizontal       = 1;
+	static const constexpr auto DPadVertical         = 1;
+}
 
-
-extern const joystick_button_mappings X360_button_mappings;
-extern const joystick_axis_mappings X360_axis_mappings;
+namespace X360_axis_down_left_mappings {
+	static const constexpr auto LeftStickHorizontal  = -1;
+	static const constexpr auto LeftStickVertical    = 1;
+	static const constexpr auto Triggers             = 1;
+	static const constexpr auto RightStickVertical   = 1;
+	static const constexpr auto RightStickHorizontal = -1;
+	static const constexpr auto DPadHorizontal       = -1;
+	static const constexpr auto DPadVertical         = -1;
+}
