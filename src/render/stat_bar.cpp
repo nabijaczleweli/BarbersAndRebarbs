@@ -48,31 +48,28 @@ const Texture & stat_bar::load_bar_fill_texture() {
 }
 
 
-stat_bar::stat_bar(Color color, float filledness) : bar_frame_sprite(load_bar_frame_texture()), bar_fill_sprite(load_bar_fill_texture()), filled(filledness) {
+stat_bar::stat_bar() : filledness(nullptr) {}
+stat_bar::stat_bar(Color color, const float & filledness_r)
+      : bar_frame_sprite(load_bar_frame_texture()), bar_fill_sprite(load_bar_fill_texture()), filledness(&filledness_r) {
 	bar_fill_sprite.setColor(color);
-}
-stat_bar::stat_bar(const stat_bar & other)
-      : Drawable(other), Transformable(other), bar_frame_sprite(other.bar_frame_sprite), bar_fill_sprite(other.bar_fill_sprite),
-        filled(min(1.f, abs(other.filled))) {}
-stat_bar::stat_bar(stat_bar && other)
-      : Drawable(std::move(other)), Transformable(std::move(other)), bar_frame_sprite(std::move(other.bar_frame_sprite)),
-        bar_fill_sprite(std::move(other.bar_fill_sprite)), filled(min(1.f, abs(other.filled))) {}
-
-stat_bar & stat_bar::operator=(const stat_bar & from) {
-	bar_frame_sprite = from.bar_frame_sprite;
-	bar_fill_sprite  = from.bar_fill_sprite;
-	filled = min(1.f, abs(from.filled));
-
-	return *this;
 }
 
 void stat_bar::draw(RenderTarget & target, RenderStates) const {
-	auto rect  = bar_fill_sprite.getTextureRect();
-	rect.width = bar_fill_sprite.getTexture()->getSize().x * min(1.f, abs(filled));
-	bar_fill_sprite.setTextureRect(static_cast<IntRect>(rect));
-	target.draw(bar_fill_sprite);
+	if(filledness) {
+		auto rect  = bar_fill_sprite.getTextureRect();
+		rect.width = bar_fill_sprite.getTexture()->getSize().x * min(1.f, abs(*filledness));
+		bar_fill_sprite.setTextureRect(static_cast<IntRect>(rect));
+		target.draw(bar_fill_sprite);
+	}
 
 	target.draw(bar_frame_sprite);
+}
+
+FloatRect stat_bar::getGlobalBounds() const {
+	return bar_frame_sprite.getGlobalBounds();
+}
+FloatRect stat_bar::getLocalBounds() const {
+	return bar_frame_sprite.getLocalBounds();
 }
 
 void stat_bar::setPosition(float x, float y) {

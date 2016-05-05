@@ -37,8 +37,6 @@ private:
 	std::size_t spawn_p(std::size_t id, std::unique_ptr<entity> ep);
 
 public:
-	game_world();
-
 	entity & ent(std::size_t id);
 	const entity & ent(std::size_t id) const;
 

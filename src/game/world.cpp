@@ -52,10 +52,6 @@ size_t game_world::spawn_p(size_t id, unique_ptr<entity> ent) {
 	return id;
 }
 
-game_world::game_world() {
-	spawn<player>();
-}
-
 entity & game_world::ent(size_t id) {
 	return *entities.at(id);
 }

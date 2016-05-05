@@ -44,7 +44,7 @@ void player::draw(RenderTarget & target, RenderStates states) const {
 	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x - 2, y + 2), Color(200, 200, 200))), 1, PrimitiveType::Points, states);
 }
 
-player::player(game_world & world_r, size_t id_a) : entity(world_r, id_a), was_clicked(Mouse::isButtonPressed(Mouse::Button::Left)) {}
+player::player(game_world & world_r, size_t id_a) : entity(world_r, id_a), was_clicked(Mouse::isButtonPressed(Mouse::Button::Left)), hp(1), fp(1) {}
 
 void player::read_from_nbt(const cpp_nbt::nbt_compound & from) {
 	entity::read_from_nbt(from);
@@ -72,11 +72,29 @@ void player::tick(float max_x, float max_y) {
 	start_movement(delta_speed_x, delta_speed_y);
 
 	const auto is_clicked = Mouse::isButtonPressed(Mouse::Button::Left);
-	if(is_clicked && !was_clicked)
+	if(is_clicked && !was_clicked) {
+		fp -= .05;
 		world.spawn_create<bullet>(static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), x, y);
+	}
 	was_clicked = is_clicked;
 }
 
 float player::speed() const {
 	return app_configuration.player_speed;
+}
+
+float & player::health() noexcept {
+	return hp;
+}
+
+const float & player::health() const noexcept {
+	return hp;
+}
+
+float & player::stamina() noexcept {
+	return fp;
+}
+
+const float & player::stamina() const noexcept {
+	return fp;
 }

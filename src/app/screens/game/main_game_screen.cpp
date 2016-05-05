@@ -22,6 +22,7 @@
 
 #include "main_game_screen.hpp"
 #include "../../../reference/container.hpp"
+#include "../../../game/entity/player.hpp"
 #include "../../application.hpp"
 
 
@@ -55,6 +56,10 @@ int main_game_screen::handle_event(const Event & event) {
 	return screen::handle_event(event);
 }
 
-main_game_screen::main_game_screen(application & theapp) : screen(theapp), hp_stat(Color::Red, 1), energy_stat(Color(50, 200, 200), 1) {}
-main_game_screen::main_game_screen(main_game_screen && other)
-      : screen(move(other)), hp_stat(move(other.hp_stat)), energy_stat(move(other.energy_stat)), world(move(other.world)) {}
+main_game_screen::main_game_screen(application & theapp) : screen(theapp) {
+	player_id = world.spawn<player>();
+
+	const auto & plr = dynamic_cast<const player &>(world.ent(player_id));
+	hp_stat     = {Color::Red, plr.health()};
+	energy_stat = {Color(50, 200, 200), plr.stamina()};
+}

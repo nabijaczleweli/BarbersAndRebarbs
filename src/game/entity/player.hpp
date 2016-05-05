@@ -33,6 +33,8 @@ protected:
 
 private:
 	bool was_clicked;
+	float hp;
+	float fp;
 
 public:
 	using entity::entity;
@@ -46,4 +48,10 @@ public:
 	virtual void tick(float max_x, float max_y) override;
 
 	virtual float speed() const override;
+
+	float & health() noexcept;
+	const float & health() const noexcept;
+
+	float & stamina() noexcept;
+	const float & stamina() const noexcept;
 };

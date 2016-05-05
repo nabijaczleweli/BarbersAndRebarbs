@@ -35,6 +35,7 @@ class main_game_screen : public screen {
 private:
 	stat_bar hp_stat, energy_stat;
 	game_world world;
+	std::size_t player_id;
 
 public:
 	virtual void setup() override;
@@ -43,6 +44,5 @@ public:
 	virtual int handle_event(const sf::Event & event) override;
 
 	main_game_screen(application & theapp);
-	main_game_screen(main_game_screen && other);
 	virtual ~main_game_screen() = default;
 };

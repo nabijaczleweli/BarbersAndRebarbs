@@ -37,17 +37,14 @@ private:
 	sf::Sprite bar_frame_sprite;
 	mutable sf::Sprite bar_fill_sprite;
 
+	const float * filledness;
+
 public:
-	float filled;
+	stat_bar();
+	stat_bar(sf::Color color, const float & filledness);
 
-	stat_bar(sf::Color color, float filledness);
-	stat_bar(const stat_bar & other);
-	stat_bar(stat_bar && other);
-
-	stat_bar & operator=(const stat_bar & from);
-
-	inline sf::FloatRect getGlobalBounds() const { return bar_frame_sprite.getGlobalBounds(); }
-	inline sf::FloatRect getLocalBounds() const { return bar_frame_sprite.getLocalBounds(); }
+	sf::FloatRect getGlobalBounds() const;
+	sf::FloatRect getLocalBounds() const;
 
 	virtual void setPosition(float x, float y) /*override*/;
 	virtual void setPosition(const sf::Vector2f & position) /*override*/;
