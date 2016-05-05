@@ -47,6 +47,7 @@ endif
 CEREAL_VERSION := "$(shell cd ext/cereal && git describe --tags | sed "s/v//")"
 CIMPOLER_META_VERSION := "$(shell cd ext/cimpoler-meta && git log -1 --pretty=format:%h)"
 CPP_NBT_VERSION := "$(shell cd ext/Cpp-NBT && git log -1 --pretty=format:%h)"
+RAPIDJSON_VERSION := "$(shell cd ext/rapidjson && git describe --tags | sed "s/v//")"
 SEED11_VERSION := "$(shell cd ext/seed11 && git describe --tags | sed "s/v//")"
 WHEREAMI_CPP_VERSION := "$(shell cd ext/whereami-cpp && git describe --tags | sed "s/v//")"
 

@@ -73,6 +73,7 @@ static void init_deps(application &) {
 	     << "cereal version " << CEREAL_VERSION << " doesn\'t need initialization.\n"
 	     << "cimpoler-meta version " << CIMPOLER_META_VERSION << " doesn\'t need initialization.\n"
 	     << "Cpp-NBT version " << CPP_NBT_VERSION << " doesn\'t need initialization.\n"
+	     << "RapidJSON version " << RAPIDJSON_VERSION << " doesn\'t need initialization.\n"
 	     << "seed11 version " << SEED11_VERSION << " doesn\'t need initialization.\n"
 	     << "whereami-cpp version " << WHEREAMI_CPP_VERSION << " doesn\'t need initialization.\n"
 	     << "\n"

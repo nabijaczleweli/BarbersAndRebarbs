@@ -29,10 +29,10 @@ SOURCES := $(sort $(wildcard src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**
 HEADERS := $(sort $(wildcard src/*.hpp src/**/*.hpp src/**/**/*.hpp src/**/**/**/*.hpp))
 
 
-.PHONY : all clean assets exe seed11 cpp-nbt whereami-cpp sfml-deplist
+.PHONY : all clean assets exe cpp-nbt seed11 whereami-cpp sfml-deplist
 
 
-all : assets seed11 cpp-nbt whereami-cpp sfml-deplist exe
+all : assets cpp-nbt seed11 whereami-cpp sfml-deplist exe
 
 clean :
 	rm -rf $(OUTDIR)
@@ -41,8 +41,8 @@ assets :
 	@cp -r $(ASSETDIR) $(OUTDIR)
 
 exe : $(OUTDIR)BarbersAndRebarbs$(EXE)
-seed11 : $(BLDDIR)seed11/libseed11$(ARCH)
 cpp-nbt : $(BLDDIR)Cpp-NBT/libcpp-nbt$(ARCH)
+seed11 : $(BLDDIR)seed11/libseed11$(ARCH)
 whereami-cpp : $(BLDDIR)whereami-cpp/libwhereami++$(ARCH)
 sfml-deplist : $(BLDDIR)sfml-modules
 
@@ -50,11 +50,11 @@ sfml-deplist : $(BLDDIR)sfml-modules
 $(OUTDIR)BarbersAndRebarbs$(EXE) : $(subst $(SRCDIR),$(OBJDIR),$(subst .cpp,$(OBJ),$(SOURCES)))
 	$(CXX) $(CXXAR) -o$@ $(subst $(SRCDIR),$(OBJDIR),$^) $(PIC) $(LDAR) @$(BLDDIR)sfml-modules
 
-$(BLDDIR)seed11/libseed11$(ARCH) : $(foreach src,seed11_system_agnostic seed11_$(SEED11_SYSTEM_TYPE) deterministic_unsafe_seed_device,$(BLDDIR)seed11/obj/$(src).o)
-	$(AR) crs $@ $^
-
 $(BLDDIR)Cpp-NBT/libcpp-nbt$(ARCH) : ext/Cpp-NBT/Makefile
 	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@)) stlib
+
+$(BLDDIR)seed11/libseed11$(ARCH) : $(foreach src,seed11_system_agnostic seed11_$(SEED11_SYSTEM_TYPE) deterministic_unsafe_seed_device,$(BLDDIR)seed11/obj/$(src).o)
+	$(AR) crs $@ $^
 
 $(BLDDIR)whereami-cpp/libwhereami++$(ARCH) : ext/whereami-cpp/Makefile
 	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@)) stlib
@@ -66,7 +66,7 @@ $(BLDDIR)sfml-modules : $(HEADERS) $(SOURCES)
 
 $(OBJDIR)%$(OBJ) : $(SRCDIR)%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXAR) -Iext/cereal/include -Iext/cimpoler-meta/include -Iext/Cpp-NBT/include -Iext/seed11/include -Iext/whereami-cpp/include -DCEREAL_VERSION='$(CEREAL_VERSION)' -DCIMPOLER_META_VERSION='$(CIMPOLER_META_VERSION)' -DCPP_NBT_VERSION='$(CPP_NBT_VERSION)' -DSEED11_VERSION='$(SEED11_VERSION)' -DWHEREAMI_CPP_VERSION='$(WHEREAMI_CPP_VERSION)' -c -o$@ $^
+	$(CXX) $(CXXAR) -Iext/cereal/include -Iext/cimpoler-meta/include -Iext/Cpp-NBT/include -Iext/seed11/include -Iext/rapidjson/include -Iext/whereami-cpp/include -DCEREAL_VERSION='$(CEREAL_VERSION)' -DCIMPOLER_META_VERSION='$(CIMPOLER_META_VERSION)' -DCPP_NBT_VERSION='$(CPP_NBT_VERSION)' -DSEED11_VERSION='$(SEED11_VERSION)' -DRAPIDJSON_VERSION='$(RAPIDJSON_VERSION)' -DWHEREAMI_CPP_VERSION='$(WHEREAMI_CPP_VERSION)' -c -o$@ $^
 
 $(BLDDIR)seed11/obj/%.o : ext/seed11/src/%.cpp
 	@mkdir -p $(dir $@)
