@@ -61,7 +61,7 @@ $(BLDDIR)whereami-cpp/libwhereami++$(ARCH) : ext/whereami-cpp/Makefile
 
 $(BLDDIR)sfml-modules : $(HEADERS) $(SOURCES)
 	@mkdir -p $(dir $@)
-	grep "<SFML/" $^ | sed -r "s:.*#include <SFML/(.*).hpp>:-lsfml-\\1$(SFML_LINK_SUFF):" | tr '[:upper:]' '[:lower:]' | sort | uniq > $@
+	@grep "<SFML/" $^ | sed -r "s:.*#include <SFML/(.*).hpp>:-lsfml-\\1$(SFML_LINK_SUFF):" | tr '[:upper:]' '[:lower:]' | sort | uniq > $@
 
 
 $(OBJDIR)%$(OBJ) : $(SRCDIR)%.cpp

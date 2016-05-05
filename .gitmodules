@@ -19,4 +19,3 @@
 [submodule "rapidjson"]
 	path = ext/rapidjson
 	url = https://github.com/miloyip/rapidjson.git
-	branch = v1.0.2
