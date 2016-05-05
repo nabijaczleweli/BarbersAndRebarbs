@@ -32,8 +32,8 @@ using namespace std;
 using namespace sf;
 
 
-unique_ptr<bullet> bullet::create(function<void(unique_ptr<entity>)> spawn, Vector2f aim, unsigned int x, unsigned int y) {
-	auto bull = make_unique<bullet>(spawn, x, y);
+unique_ptr<bullet> bullet::create(game_world & world, size_t id, Vector2f aim, unsigned int x, unsigned int y) {
+	auto bull = make_unique<bullet>(ref(world), id, x, y);
 
 	aim = normalised(aim);
 	bull->start_movement(aim.x, aim.y);
@@ -47,7 +47,7 @@ void bullet::draw(RenderTarget & target, RenderStates states) const {
 	target.draw(crcl, states);
 }
 
-bullet::bullet(function<void(unique_ptr<entity>)> spawn, unsigned int px, unsigned int py) : entity(spawn) {
+bullet::bullet(game_world & world_r, size_t id_a, unsigned int px, unsigned int py) : entity(world_r, id_a) {
 	x = px;
 	y = py;
 }

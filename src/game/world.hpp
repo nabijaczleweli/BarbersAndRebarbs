@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 
-// Copyright (c) 2015 nabijaczleweli
+// Copyright (c) 2016 nabijaczleweli
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -23,27 +23,37 @@
 #pragma once
 
 
-#include "entity.hpp"
+#include "entity/entity.hpp"
 #include <SFML/Graphics.hpp>
+#include <map>
+#include <functional>
 
 
-class player : public entity, public sf::Drawable {
-protected:
-	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
-
+class game_world {
 private:
-	bool was_clicked;
+	std::map<std::size_t, std::unique_ptr<entity>> entities;
+
+	std::size_t reserve_eid();
+	std::size_t spawn_p(std::size_t id, std::unique_ptr<entity> ep);
 
 public:
-	using entity::entity;
-	player(game_world & world, std::size_t id);
+	game_world();
 
-	virtual ~player() = default;
+	entity & ent(std::size_t id);
+	const entity & ent(std::size_t id) const;
 
-	virtual void read_from_nbt(const cpp_nbt::nbt_compound & from) override;
-	virtual void write_to_nbt(cpp_nbt::nbt_compound & to) const override;
+	void tick(sf::Vector2u screen_size);
+	void draw(sf::RenderTarget & upon);
 
-	virtual void tick(float max_x, float max_y) override;
+	template <class ET, class... AT>
+	std::size_t spawn(AT &&... at) {
+		const auto id = reserve_eid();
+		return spawn_p(id, std::make_unique<ET>(std::ref(*this), id, std::forward<AT>(at)...));
+	}
 
-	virtual float speed() const override;
+	template <class ET, class... AT>
+	std::size_t spawn_create(AT &&... at) {
+		const auto id = reserve_eid();
+		return spawn_p(id, ET::create(*this, id, std::forward<AT>(at)...));
+	}
 };

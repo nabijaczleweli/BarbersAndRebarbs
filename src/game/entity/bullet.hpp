@@ -33,11 +33,11 @@ protected:
 
 private:
 public:
-	static std::unique_ptr<bullet> create(std::function<void(std::unique_ptr<entity>)> spawn, sf::Vector2f aim, unsigned int x, unsigned int y);
+	static std::unique_ptr<bullet> create(game_world & world, std::size_t id, sf::Vector2f aim, unsigned int x, unsigned int y);
 
 
 	using entity::entity;
-	bullet(std::function<void(std::unique_ptr<entity>)> spawn, unsigned int x, unsigned int y);
+	bullet(game_world & world, std::size_t id, unsigned int x, unsigned int y);
 
 	virtual ~bullet() = default;
 

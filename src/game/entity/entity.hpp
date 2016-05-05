@@ -28,15 +28,18 @@
 #include <utility>
 
 
+class game_world;
 class entity : public cpp_nbt::nbt_reloadable {
 protected:
 	float x, y;
 	float motion_x, motion_y;
-	std::function<void(std::unique_ptr<entity>)> spawn;
+
+	std::size_t id;
+	game_world & world;
 
 public:
-	entity(std::function<void(std::unique_ptr<entity>)> spawn);
-	entity(std::function<void(std::unique_ptr<entity>)> spawn, const cpp_nbt::nbt_compound & from);
+	entity(game_world & world, std::size_t id);
+	entity(game_world & world, std::size_t id, const cpp_nbt::nbt_compound & from);
 	entity(const entity & other) = default;
 	entity(entity && other) = default;
 

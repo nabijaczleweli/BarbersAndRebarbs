@@ -24,8 +24,7 @@
 
 
 #include "../screen.hpp"
-#include "../../../game/entity/entity.hpp"
-#include "../../../game/entity/player.hpp"
+#include "../../../game/world.hpp"
 #include "../../../render/managed_sprite.hpp"
 #include "../../../render/stat_bar.hpp"
 #include <deque>
@@ -35,8 +34,7 @@
 class main_game_screen : public screen {
 private:
 	stat_bar hp_stat, energy_stat;
-	player the_player;
-	std::deque<std::unique_ptr<entity>> entities;
+	game_world world;
 
 public:
 	virtual void setup() override;
@@ -45,7 +43,6 @@ public:
 	virtual int handle_event(const sf::Event & event) override;
 
 	main_game_screen(application & theapp);
-	main_game_screen(const main_game_screen & other);
 	main_game_screen(main_game_screen && other);
 	virtual ~main_game_screen() = default;
 };

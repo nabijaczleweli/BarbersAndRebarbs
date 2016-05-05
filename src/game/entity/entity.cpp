@@ -29,8 +29,8 @@ using namespace std;
 using namespace cpp_nbt;
 
 
-entity::entity(function<void(unique_ptr<entity>)> spawn_f) : x(0), y(0), motion_x(0), motion_y(0), spawn(move(spawn_f)) {}
-entity::entity(function<void(unique_ptr<entity>)> spawn, const nbt_compound & from) : entity(spawn) {
+entity::entity(game_world & world_r, size_t id_a) : x(0), y(0), motion_x(0), motion_y(0), id(id_a), world(world_r) {}
+entity::entity(game_world & world_r, size_t id_a, const nbt_compound & from) : entity(world_r, id_a) {
 	read_from_nbt(from);
 }
 
