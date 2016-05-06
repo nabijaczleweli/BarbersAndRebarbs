@@ -35,6 +35,7 @@ const string textures_root(assets_root + "/textures");
 const string font_root(assets_root + "/fonts");
 const string sound_root(assets_root + "/sound");
 const string localization_root(assets_root + "/lang");
+const string drawing_root(assets_root + "/drawings");
 
 const string app_name("BarbersAndRebarbs");
 /***/ config app_configuration(executable_dir() + "/" + app_name + ".cfg");

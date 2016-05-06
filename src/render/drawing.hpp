@@ -43,7 +43,7 @@ private:
 public:
 	sf::Vector2f own_scale;
 
-	drawing(const std::string & asset_subpath, const sf::Vector2f & start);
+	drawing(const std::string & model_name, const sf::Vector2f & start);
 
 	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 

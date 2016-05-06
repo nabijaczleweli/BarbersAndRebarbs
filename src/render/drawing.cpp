@@ -35,8 +35,8 @@ using namespace std;
 using namespace sf;
 
 
-drawing::drawing(const string & asset_subpath, const Vector2f & s) : own_scale(1, 1) {
-	ifstream drawing_file(assets_root + "/" + asset_subpath);
+drawing::drawing(const string & model_name, const Vector2f & s) : own_scale(1, 1) {
+	ifstream drawing_file(drawing_root + "/" + model_name + ".json");
 	IStreamWrapper drawing_file_wrap(drawing_file);
 
 	Document doc;

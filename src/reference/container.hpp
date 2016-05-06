@@ -35,6 +35,7 @@ extern const std::string textures_root;
 extern const std::string font_root;
 extern const std::string sound_root;
 extern const std::string localization_root;
+extern const std::string drawing_root;
 
 extern const std::string app_name;
 extern /***/ config app_configuration;
