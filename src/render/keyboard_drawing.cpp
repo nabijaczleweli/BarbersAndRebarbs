@@ -21,19 +21,11 @@
 
 
 #include "keyboard_drawing.hpp"
+#include "../util/vector.hpp"
 
 
 using namespace std;
 using namespace sf;
-
-
-template <class T>
-inline Vector2<T> operator*(const Vector2<T> & lhs, const Vector2<T> & rhs) {
-	Vector2<T> temp(lhs);
-	temp.x *= rhs.x;
-	temp.y *= rhs.y;
-	return temp;
-}
 
 
 // WIDTH = border.x

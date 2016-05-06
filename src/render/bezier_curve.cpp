@@ -21,8 +21,9 @@
 
 
 #include "bezier_curve.hpp"
-#include <algorithm>
+#include "../util/vector.hpp"
 #include <functional>
+#include <algorithm>
 #include <future>
 
 
@@ -33,15 +34,6 @@ using namespace sf;
 float bezier_curve::bezier_step       = .0001f;
 bool bezier_curve::optimize_points    = true;
 float bezier_curve::optimize_prettily = .01f;
-
-
-template <class T>
-inline Vector2<T> operator*(const Vector2<T> & lhs, const Vector2<T> & rhs) {
-	Vector2<T> temp(lhs);
-	temp.x *= rhs.x;
-	temp.y *= rhs.y;
-	return temp;
-}
 
 
 bezier_curve::bezier_curve(Vector2f the_start_point, Vector2f the_control_point, Vector2f the_end_point)

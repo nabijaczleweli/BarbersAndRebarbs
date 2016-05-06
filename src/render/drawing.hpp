@@ -23,22 +23,31 @@
 #pragma once
 
 
-#include <SFML/System.hpp>
-#include <type_traits>
+#include "bezier_curve.hpp"
+#include <SFML/Graphics.hpp>
+#include <vector>
+#include <array>
 
 
-template <class T>
-sf::Vector2<T> normalised(const sf::Vector2<T> & vec) {
-	const T length = sqrt(vec.x * vec.x + vec.y * vec.y);
-	if(length)
-		return {vec.x / length, vec.y / length};
-	return vec;
-}
+class drawing : public sf::Drawable {
+public:
+	using line     = std::array<sf::Vertex, 2>;
+	using triangle = std::array<sf::Vertex, 3>;
 
-template <class T, class U, class R = std::common_type_t<T, U>>
-inline sf::Vector2<R> operator*(const sf::Vector2<T> & lhs, const sf::Vector2<U> & rhs) {
-	sf::Vector2<R> temp(lhs);
-	temp.x *= rhs.x;
-	temp.y *= rhs.y;
-	return temp;
-}
+private:
+	sf::Vector2<double> loaded_size;
+	std::vector<line> lines;
+	std::vector<triangle> triangles;
+	std::vector<bezier_curve> curves;
+
+public:
+	sf::Vector2f own_scale;
+
+	drawing(const std::string & asset_subpath, const sf::Vector2f & start);
+
+	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
+
+	void move(float x, float y);
+	void scale_size(sf::Vector2f factor);
+	sf::Vector2f size() const;
+};
