@@ -62,10 +62,7 @@ static pair<string, int> check_config() {
 	return {"", 0};
 }
 
-#include "render/drawing.hpp"
-static void init_app(application &, int, char * []) {
-	drawing d("model.json", {200, 200});
-}
+static void init_app(application &, int, char * []) {}
 
 static void init_deps(application &) {
 	cout << "Initializing dependencies under " << CIMPOLER_META_OS_NAME << "...\n\n"

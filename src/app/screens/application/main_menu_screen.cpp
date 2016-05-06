@@ -165,8 +165,8 @@ int main_menu_screen::handle_event(const Event & event) {
 
 main_menu_screen::main_menu_screen(application & theapp)
       : screen(theapp), control_frames_counter(0), joystick_up(false), joystick_drawing(0, xbox_drawing(Vector2f(0, 0), app.window.getSize())),
-        keys_drawing(Vector2f(0, 0), app.window.getSize()) {
-	keys_drawing.move(app.window.getSize().x / 4 - keys_drawing.size().x / 2, app.window.getSize().y / 2 - keys_drawing.size().y / 2);
+        keys_drawing("keyboard", Vector2f(app.window.getSize().x / 4 - keys_drawing.size().x / 2, app.window.getSize().y / 2 - keys_drawing.size().y / 2)) {
+	keys_drawing.scale_size(static_cast<Vector2f>(app.window.getSize()));
 	joystick_drawing.second.move(app.window.getSize().x / 4 - joystick_drawing.second.size().x / 2,
 	                             app.window.getSize().y / 2 - joystick_drawing.second.size().y / 2);
 

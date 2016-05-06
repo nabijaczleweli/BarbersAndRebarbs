@@ -24,8 +24,8 @@
 
 
 #include "../screen.hpp"
+#include "../../../render/drawing.hpp"
 #include "../../../render/xbox_drawing.hpp"
-#include "../../../render/keyboard_drawing.hpp"
 #include <functional>
 #include <list>
 #include <utility>
@@ -41,7 +41,7 @@ private:
 	std::size_t selected, control_frames_counter;
 	bool joystick_up;
 	std::pair<bool, xbox_drawing> joystick_drawing;
-	keyboard_drawing keys_drawing;
+	drawing keys_drawing;
 
 	void move_selection(direction dir);
 	void press_button();

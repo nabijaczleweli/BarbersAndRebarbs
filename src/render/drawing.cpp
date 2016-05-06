@@ -53,19 +53,19 @@ drawing::drawing(const string & model_name, const Vector2f & s) : own_scale(1, 1
 
 		if(type == "line") {
 			line lne;
-			lne[0].position.x += data[0]["x"].GetDouble() + s.x;
-			lne[0].position.y += data[0]["y"].GetDouble() + s.y;
-			lne[1].position.x += data[1]["x"].GetDouble() + s.x;
-			lne[1].position.y += data[1]["y"].GetDouble() + s.y;
+			lne[0].position.x = data[0]["x"].GetDouble() + s.x;
+			lne[0].position.y = data[0]["y"].GetDouble() + s.y;
+			lne[1].position.x = data[1]["x"].GetDouble() + s.x;
+			lne[1].position.y = data[1]["y"].GetDouble() + s.y;
 			lines.emplace_back(lne);
 		} else if(type == "triangle") {
 			triangle trgl;
-			trgl[0].position.x += data[0]["x"].GetDouble() + s.x;
-			trgl[0].position.y += data[0]["y"].GetDouble() + s.y;
-			trgl[1].position.x += data[1]["x"].GetDouble() + s.x;
-			trgl[1].position.y += data[1]["y"].GetDouble() + s.y;
-			trgl[2].position.x += data[2]["x"].GetDouble() + s.x;
-			trgl[2].position.y += data[2]["y"].GetDouble() + s.y;
+			trgl[0].position.x = data[0]["x"].GetDouble() + s.x;
+			trgl[0].position.y = data[0]["y"].GetDouble() + s.y;
+			trgl[1].position.x = data[1]["x"].GetDouble() + s.x;
+			trgl[1].position.y = data[1]["y"].GetDouble() + s.y;
+			trgl[2].position.x = data[2]["x"].GetDouble() + s.x;
+			trgl[2].position.y = data[2]["y"].GetDouble() + s.y;
 			triangles.emplace_back(trgl);
 		} else if(type == "bezier_curve") {
 			Vector2f start_point;
