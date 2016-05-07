@@ -58,4 +58,4 @@ public:
 
 
 template <class T>
-drawing::drawing(const std::string & model_name, const sf::Vector2<T> & start) : drawing(model_name, static_cast<const sf::Vector2f &>(start)) {}
+drawing::drawing(const std::string & model_name, const sf::Vector2<T> & start) : drawing(model_name, static_cast<sf::Vector2f>(start)) {}
