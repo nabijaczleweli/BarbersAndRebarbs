@@ -31,7 +31,7 @@ template <class T>
 sf::Vector2<T> normalised(const sf::Vector2<T> & vec) {
 	const T length = sqrt(vec.x * vec.x + vec.y * vec.y);
 	if(length)
-		return {vec.x / length, vec.y / length};
+		return vec / length;
 	return vec;
 }
 
@@ -40,5 +40,13 @@ inline sf::Vector2<R> operator*(const sf::Vector2<T> & lhs, const sf::Vector2<U>
 	sf::Vector2<R> temp(lhs);
 	temp.x *= rhs.x;
 	temp.y *= rhs.y;
+	return temp;
+}
+
+template <class T, class U, class R = std::common_type_t<T, U>>
+inline sf::Vector2<R> operator/(const sf::Vector2<T> & lhs, const sf::Vector2<U> & rhs) {
+	sf::Vector2<R> temp(lhs);
+	temp.x /= rhs.x;
+	temp.y /= rhs.y;
 	return temp;
 }

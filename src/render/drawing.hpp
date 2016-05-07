@@ -35,6 +35,7 @@ public:
 	using triangle = std::array<sf::Vertex, 3>;
 
 private:
+	sf::Vector2<double> origin_size;
 	sf::Vector2<double> loaded_size;
 	std::vector<line> lines;
 	std::vector<triangle> triangles;

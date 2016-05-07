@@ -42,6 +42,7 @@ drawing::drawing(const string & model_name, const Vector2f & s) : own_scale(1, 1
 	Document doc;
 	doc.ParseStream(drawing_file_wrap);
 
+	origin_size = {doc["origin_size"]["x"].GetDouble(), doc["origin_size"]["y"].GetDouble()};
 	loaded_size = {doc["size"]["x"].GetDouble(), doc["size"]["y"].GetDouble()};
 
 	auto && elements = doc["elements"];
@@ -109,8 +110,7 @@ void drawing::move(float x, float y) {
 }
 
 void drawing::scale_size(Vector2f factor) {
-	factor.x /= 1600.f;
-	factor.y /= 900.f;
+	factor    = static_cast<Vector2f>(factor / origin_size);
 	own_scale = own_scale * factor;
 
 	for(auto && line : lines)

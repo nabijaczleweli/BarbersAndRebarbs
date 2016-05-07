@@ -1,8 +1,6 @@
 {
-	"size": {
-		"x": 190,
-		"y": 130
-	},
+	"origin_size": {"x": 1600, "y": 900},
+	"size": {"x": 190, "y": 130},
 	"elements": [
 		{
 			"desc": "border top",
