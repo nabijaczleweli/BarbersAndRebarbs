@@ -25,7 +25,6 @@
 
 #include "../screen.hpp"
 #include "../../../render/drawing.hpp"
-#include "../../../render/xbox_drawing.hpp"
 #include <functional>
 #include <list>
 #include <utility>
@@ -40,7 +39,7 @@ private:
 	std::list<button_clickable> main_buttons;
 	std::size_t selected, control_frames_counter;
 	bool joystick_up;
-	std::pair<bool, xbox_drawing> joystick_drawing;
+	std::pair<bool, drawing> joystick_drawing;
 	drawing keys_drawing;
 
 	void move_selection(direction dir);

@@ -35,20 +35,27 @@ public:
 	using triangle = std::array<sf::Vertex, 3>;
 
 private:
-	sf::Vector2<double> origin_size;
-	sf::Vector2<double> loaded_size;
+	sf::Vector2f origin_size;
+	sf::Vector2f loaded_size;
 	std::vector<line> lines;
 	std::vector<triangle> triangles;
 	std::vector<bezier_curve> curves;
 
+	void scale_size(sf::Vector2f factor);
+
 public:
 	sf::Vector2f own_scale;
 
-	drawing(const std::string & model_name, const sf::Vector2f & start);
+	drawing(const std::string & model_name, const sf::Vector2f & window_size);
+	template <class T>
+	drawing(const std::string & model_name, const sf::Vector2<T> & window_size);
 
 	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 
 	void move(float x, float y);
-	void scale_size(sf::Vector2f factor);
 	sf::Vector2f size() const;
 };
+
+
+template <class T>
+drawing::drawing(const std::string & model_name, const sf::Vector2<T> & start) : drawing(model_name, static_cast<const sf::Vector2f &>(start)) {}

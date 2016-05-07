@@ -1,0 +1,78 @@
+{
+	"origin_size": {"x": 1600, "y": 900},
+	"size": {"x": 315.333514, "y": 204.00709},
+	"elements": [
+		{
+			"desc": "top left handle",
+			"type": "bezier_curve",
+			"data": {
+				"start": {"x": 33, "y": 11},
+				"control": {"x": 62, "y": -10},
+				"end": {"x": 93, "y": 13}
+			}
+		},
+		{
+			"desc": "top between handles",
+			"type": "bezier_curve",
+			"data": {
+				"start": {"x": 93, "y": 13},
+				"control": {"x": 153, "y": 30},
+				"end": {"x": 223, "y": 13}
+			}
+		},
+		{
+			"desc": "top right handle",
+			"type": "bezier_curve",
+			"data": {
+				"start": {"x": 223, "y": 13},
+				"control": {"x": 254, "y": -10},
+				"end": {"x": 283, "y": 11}
+			}
+		},
+		{
+			"desc": "right right handle",
+			"type": "bezier_curve",
+			"data": {
+				"start": {"x": 283, "y": 11},
+				"control": {"x": 325, "y": 42},
+				"end": {"x": 313, "y": 150}
+			}
+		},
+		{
+			"desc": "bottom right handle",
+			"type": "bezier_curve",
+			"data": {
+				"start": {"x": 313, "y": 150},
+				"control": {"x": 296, "y": 239},
+				"end": {"x": 236, "y": 184}
+			}
+		},
+		{
+			"desc": "bottom between handles",
+			"type": "bezier_curve",
+			"data": {
+				"start": {"x": 236, "y": 184},
+				"control": {"x": 151, "y": 154},
+				"end": {"x": 80, "y": 184}
+			}
+		},
+		{
+			"desc": "bottom left handle",
+			"type": "bezier_curve",
+			"data": {
+				"start": {"x": 80, "y": 184},
+				"control": {"x": 20, "y": 239},
+				"end": {"x": 3, "y": 150}
+			}
+		},
+		{
+			"desc": "left left handle",
+			"type": "bezier_curve",
+			"data": {
+				"start": {"x": 3, "y": 150},
+				"control": {"x": -9, "y": 42},
+				"end": {"x": 33, "y": 11}
+			}
+		}
+	]
+}

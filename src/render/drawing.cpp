@@ -23,66 +23,63 @@
 #include "drawing.hpp"
 #include "../util/vector.hpp"
 #include "../reference/container.hpp"
-#include "rapidjson/document.h"
-#include "rapidjson/istreamwrapper.h"
+#include "jsonpp/parser.hpp"
 #include <iterator>
 #include <cassert>
 #include <fstream>
 
 
-using namespace rapidjson;
 using namespace std;
 using namespace sf;
 
-
-drawing::drawing(const string & model_name, const Vector2f & s) : own_scale(1, 1) {
+#include <iostream>
+drawing::drawing(const string & model_name, const Vector2f & window_size) : own_scale(1, 1) {
 	ifstream drawing_file(drawing_root + "/" + model_name + ".json");
-	IStreamWrapper drawing_file_wrap(drawing_file);
+	json::value doc;
+	json::parse(drawing_file, doc);
 
-	Document doc;
-	doc.ParseStream(drawing_file_wrap);
+	origin_size = {doc["origin_size"]["x"].as<float>(), doc["origin_size"]["y"].as<float>()};
+	loaded_size = {doc["size"]["x"].as<float>(), doc["size"]["y"].as<float>()};
 
-	origin_size = {doc["origin_size"]["x"].GetDouble(), doc["origin_size"]["y"].GetDouble()};
-	loaded_size = {doc["size"]["x"].GetDouble(), doc["size"]["y"].GetDouble()};
-
-	auto && elements = doc["elements"];
-	for(auto itr = elements.Begin(); itr != elements.End(); ++itr) {
-		auto && element = *itr;
-
-		auto && type = element["type"];
-		auto && data = element["data"];
+	for(auto && element : doc["elements"].as<json::array>()) {
+		auto && type = element["type"].as<string>();
 
 		if(type == "line") {
+			auto && data = element["data"].as<json::array>();
 			line lne;
-			lne[0].position.x = data[0]["x"].GetDouble() + s.x;
-			lne[0].position.y = data[0]["y"].GetDouble() + s.y;
-			lne[1].position.x = data[1]["x"].GetDouble() + s.x;
-			lne[1].position.y = data[1]["y"].GetDouble() + s.y;
+			lne[0].position.x = data[0]["x"].as<double>();
+			lne[0].position.y = data[0]["y"].as<double>();
+			lne[1].position.x = data[1]["x"].as<double>();
+			lne[1].position.y = data[1]["y"].as<double>();
 			lines.emplace_back(lne);
 		} else if(type == "triangle") {
+			auto && data = element["data"].as<json::array>();
 			triangle trgl;
-			trgl[0].position.x = data[0]["x"].GetDouble() + s.x;
-			trgl[0].position.y = data[0]["y"].GetDouble() + s.y;
-			trgl[1].position.x = data[1]["x"].GetDouble() + s.x;
-			trgl[1].position.y = data[1]["y"].GetDouble() + s.y;
-			trgl[2].position.x = data[2]["x"].GetDouble() + s.x;
-			trgl[2].position.y = data[2]["y"].GetDouble() + s.y;
+			trgl[0].position.x = data[0]["x"].as<double>();
+			trgl[0].position.y = data[0]["y"].as<double>();
+			trgl[1].position.x = data[1]["x"].as<double>();
+			trgl[1].position.y = data[1]["y"].as<double>();
+			trgl[2].position.x = data[2]["x"].as<double>();
+			trgl[2].position.y = data[2]["y"].as<double>();
 			triangles.emplace_back(trgl);
 		} else if(type == "bezier_curve") {
+			auto && data = element["data"];
 			Vector2f start_point;
 			Vector2f control_point;
 			Vector2f end_point;
 
-			start_point.x   = data["start"]["x"].GetDouble() + s.x;
-			start_point.y   = data["start"]["y"].GetDouble() + s.y;
-			control_point.x = data["control"]["x"].GetDouble() + s.x;
-			control_point.y = data["control"]["y"].GetDouble() + s.y;
-			end_point.x     = data["end"]["x"].GetDouble() + s.x;
-			end_point.y     = data["end"]["y"].GetDouble() + s.y;
+			start_point.x   = data["start"]["x"].as<double>();
+			start_point.y   = data["start"]["y"].as<double>();
+			control_point.x = data["control"]["x"].as<double>();
+			control_point.y = data["control"]["y"].as<double>();
+			end_point.x     = data["end"]["x"].as<double>();
+			end_point.y     = data["end"]["y"].as<double>();
 
 			curves.emplace_back(start_point, control_point, end_point);
 		}
 	}
+
+	scale_size(window_size);
 }
 
 void drawing::draw(RenderTarget & target, RenderStates states) const {
@@ -110,7 +107,7 @@ void drawing::move(float x, float y) {
 }
 
 void drawing::scale_size(Vector2f factor) {
-	factor    = static_cast<Vector2f>(factor / origin_size);
+	factor    = factor / origin_size;
 	own_scale = own_scale * factor;
 
 	for(auto && line : lines)
@@ -126,5 +123,5 @@ void drawing::scale_size(Vector2f factor) {
 }
 
 Vector2f drawing::size() const {
-	return static_cast<Vector2f>(loaded_size * own_scale);
+	return loaded_size * own_scale;
 }
