@@ -66,7 +66,7 @@ $(BLDDIR)sfml-modules : $(HEADERS) $(SOURCES)
 
 $(OBJDIR)%$(OBJ) : $(SRCDIR)%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXAR) -Iext/cereal/include -Iext/cimpoler-meta/include -Iext/Cpp-NBT/include -Iext/seed11/include -Iext/rapidjson/include -Iext/whereami-cpp/include -DCEREAL_VERSION='$(CEREAL_VERSION)' -DCIMPOLER_META_VERSION='$(CIMPOLER_META_VERSION)' -DCPP_NBT_VERSION='$(CPP_NBT_VERSION)' -DSEED11_VERSION='$(SEED11_VERSION)' -DRAPIDJSON_VERSION='$(RAPIDJSON_VERSION)' -DWHEREAMI_CPP_VERSION='$(WHEREAMI_CPP_VERSION)' -c -o$@ $^
+	$(CXX) $(CXXAR) -Iext/cereal/include -Iext/cimpoler-meta/include -Iext/Cpp-NBT/include -Iext/seed11/include -Iext/whereami-cpp/include -DCEREAL_VERSION='$(CEREAL_VERSION)' -DCIMPOLER_META_VERSION='$(CIMPOLER_META_VERSION)' -DCPP_NBT_VERSION='$(CPP_NBT_VERSION)' -DSEED11_VERSION='$(SEED11_VERSION)' -DWHEREAMI_CPP_VERSION='$(WHEREAMI_CPP_VERSION)' -c -o$@ $^
 
 $(BLDDIR)seed11/obj/%.o : ext/seed11/src/%.cpp
 	@mkdir -p $(dir $@)
