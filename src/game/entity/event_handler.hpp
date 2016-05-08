@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 
-// Copyright (c) 2015 nabijaczleweli
+// Copyright (c) 2016 nabijaczleweli
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -23,36 +23,10 @@
 #pragma once
 
 
-#include "entity.hpp"
-#include "event_handler.hpp"
-#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 
 
-class player : public entity, public event_handler, public sf::Drawable {
-protected:
-	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
-
-private:
-	float hp;
-	float fp;
-
+class event_handler {
 public:
-	using entity::entity;
-	player(game_world & world, std::size_t id);
-
-	virtual ~player() = default;
-
-	virtual void read_from_nbt(const cpp_nbt::nbt_compound & from) override;
-	virtual void write_to_nbt(cpp_nbt::nbt_compound & to) const override;
-
-	virtual void tick(float max_x, float max_y) override;
-	virtual void handle_event(const sf::Event & event) override;
-
-	virtual float speed() const override;
-
-	float & health() noexcept;
-	const float & health() const noexcept;
-
-	float & stamina() noexcept;
-	const float & stamina() const noexcept;
+	virtual void handle_event(const sf::Event & event) = 0;
 };

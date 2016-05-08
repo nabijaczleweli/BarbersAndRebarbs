@@ -21,6 +21,7 @@
 
 
 #include "world.hpp"
+#include "entity/event_handler.hpp"
 #include "entity/player.hpp"
 #include "seed11/seed11.hpp"
 #include <random>
@@ -63,6 +64,12 @@ const entity & game_world::ent(size_t id) const {
 void game_world::tick(Vector2u screen_size) {
 	for(auto & entity : entities)
 		entity.second->tick(screen_size.x, screen_size.y);
+}
+
+void game_world::handle_event(const Event & event) {
+	for(const auto & entity : entities)
+		if(auto handler = dynamic_cast<event_handler *>(entity.second.get()))
+			handler->handle_event(event);
 }
 
 void game_world::draw(RenderTarget & upon) {

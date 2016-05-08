@@ -25,6 +25,7 @@
 
 #include "entity/entity.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <map>
 #include <functional>
 
@@ -41,6 +42,7 @@ public:
 	const entity & ent(std::size_t id) const;
 
 	void tick(sf::Vector2u screen_size);
+	void handle_event(const sf::Event & event);
 	void draw(sf::RenderTarget & upon);
 
 	template <class ET, class... AT>

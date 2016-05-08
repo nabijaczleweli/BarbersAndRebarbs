@@ -53,6 +53,7 @@ int main_game_screen::draw() {
 }
 
 int main_game_screen::handle_event(const Event & event) {
+	world.handle_event(event);
 	return screen::handle_event(event);
 }
 
