@@ -5,7 +5,7 @@ A game in C++ using SFML 2.3
 ## Requirements
 1. Audiere, found [here](http://audiere.sourceforge.net), is required to be installed externally
 2. SFML, found [here](http://www.sfml-dev.org), is required to be installed externally
-3. All other dependencies are submodules, and as suck myst be explicitly initialised, be it by passing `--recursive` to `git-clone` or running `git submodule update --init --recursive`
+3. All other dependencies are submodules, and as such must be explicitly initialised, be it by passing `--recursive` to `git-clone` or running `git submodule update --init --recursive`
 
 "Externally" installed libraries need to be installed either globally or to pass `ADDITIONAL_{INCLUDE,LINK}_DIR` variable to GNU Make, as appropriate.
 
