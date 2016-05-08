@@ -31,14 +31,16 @@
 
 class drawing : public sf::Drawable {
 public:
-	using line     = std::array<sf::Vertex, 2>;
-	using triangle = std::array<sf::Vertex, 3>;
+	using line      = std::array<sf::Vertex, 2>;
+	using triangle  = std::array<sf::Vertex, 3>;
+	using rectangle = std::array<sf::Vertex, 5>;
 
 private:
 	sf::Vector2f origin_size;
 	sf::Vector2f loaded_size;
 	std::vector<line> lines;
 	std::vector<triangle> triangles;
+	std::vector<rectangle> rectangles;
 	std::vector<bezier_curve> curves;
 
 	void scale_size(sf::Vector2f factor);

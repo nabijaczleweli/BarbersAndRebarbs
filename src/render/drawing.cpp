@@ -32,7 +32,7 @@
 using namespace std;
 using namespace sf;
 
-#include <iostream>
+
 drawing::drawing(const string & model_name, const Vector2f & window_size) : own_scale(1, 1) {
 	ifstream drawing_file(drawing_root + "/" + model_name + ".json");
 	json::value doc;
@@ -62,6 +62,19 @@ drawing::drawing(const string & model_name, const Vector2f & window_size) : own_
 			trgl[2].position.x = data[2]["x"].as<double>();
 			trgl[2].position.y = data[2]["y"].as<double>();
 			triangles.emplace_back(trgl);
+		} else if(type == "rectangle") {
+			auto && data = element["data"].as<json::array>();
+			rectangle rctgl;
+			rctgl[0].position.x = data[0]["x"].as<double>();
+			rctgl[0].position.y = data[0]["y"].as<double>();
+			rctgl[1].position.x = data[1]["x"].as<double>();
+			rctgl[1].position.y = data[1]["y"].as<double>();
+			rctgl[2].position.x = data[2]["x"].as<double>();
+			rctgl[2].position.y = data[2]["y"].as<double>();
+			rctgl[3].position.x = data[3]["x"].as<double>();
+			rctgl[3].position.y = data[3]["y"].as<double>();
+			rctgl[4] = rctgl[0];
+			rectangles.emplace_back(rctgl);
 		} else if(type == "bezier_curve") {
 			auto && data = element["data"];
 			Vector2f start_point;
@@ -87,6 +100,8 @@ void drawing::draw(RenderTarget & target, RenderStates states) const {
 		target.draw(line.data(), line.size(), PrimitiveType::Lines);
 	for(auto && triangle : triangles)
 		target.draw(triangle.data(), triangle.size(), PrimitiveType::Triangles);
+	for(auto && rectangle : rectangles)
+		target.draw(rectangle.data(), rectangle.size(), PrimitiveType::LinesStrip);
 	for(auto && curve : curves)
 		curve.draw(target, states);
 }
@@ -100,6 +115,10 @@ void drawing::move(float x, float y) {
 
 	for(auto && triangle : triangles)
 		for(auto && point : triangle)
+			point.position += offset;
+
+	for(auto && rectangle : rectangles)
+		for(auto && point : rectangle)
 			point.position += offset;
 
 	for(auto && curve : curves)
@@ -116,6 +135,10 @@ void drawing::scale_size(Vector2f factor) {
 
 	for(auto && triangle : triangles)
 		for(auto && point : triangle)
+			point.position = point.position * factor;
+
+	for(auto && rectangle : rectangles)
+		for(auto && point : rectangle)
 			point.position = point.position * factor;
 
 	for(auto && curve : curves)
