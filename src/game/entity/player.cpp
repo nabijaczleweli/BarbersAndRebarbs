@@ -57,8 +57,8 @@ void player::write_to_nbt(cpp_nbt::nbt_compound & to) const {
 void player::tick(float max_x, float max_y) {
 	entity::tick(max_x, max_y);
 
-	auto delta_speed_x = 0;
-	auto delta_speed_y = 0;
+	auto delta_speed_x = 0.f;
+	auto delta_speed_y = 0.f;
 
 	if(Keyboard::isKeyPressed(Keyboard::Key::A))
 		delta_speed_x -= 1;
@@ -69,6 +69,16 @@ void player::tick(float max_x, float max_y) {
 	if(Keyboard::isKeyPressed(Keyboard::Key::S))
 		delta_speed_y += 1;
 
+	if(Joystick::isConnected(0)) {
+		const auto horizontal      = Joystick::getAxisPosition(0, X360_axis_mappings::LeftStickHorizontal);
+		const auto vertical        = Joystick::getAxisPosition(0, X360_axis_mappings::LeftStickVertical);
+		const auto horizontal_sign = horizontal / abs(horizontal);
+		const auto vertical_sign   = vertical / abs(vertical);
+
+		delta_speed_x = ((horizontal_sign == X360_axis_up_right_mappings::RightStickHorizontal) ? abs(horizontal) : -abs(horizontal)) / 100.f;
+		delta_speed_y = ((vertical_sign == X360_axis_up_right_mappings::RightStickVertical) ? -abs(vertical) : abs(vertical)) / 100.f;
+	}
+
 	start_movement(delta_speed_x, delta_speed_y);
 }
 
@@ -76,6 +86,12 @@ void player::handle_event(const Event & event) {
 	if(event.type == Event::EventType::MouseButtonPressed && event.mouseButton.button == Mouse::Button::Left) {
 		fp -= .05;
 		world.spawn_create<bullet>(static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), x, y);
+	} else if(event.type == Event::EventType::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::RB &&
+	          event.joystickButton.joystickId == 0) {
+		fp -= .05;
+		world.spawn_create<bullet>(
+		    Vector2f(Joystick::getAxisPosition(0, X360_axis_mappings::RightStickHorizontal), Joystick::getAxisPosition(0, X360_axis_mappings::RightStickVertical)),
+		    x, y);
 	}
 }
 
