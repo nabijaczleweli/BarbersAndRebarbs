@@ -70,13 +70,15 @@ void player::tick(float max_x, float max_y) {
 		delta_speed_y += 1;
 
 	if(Joystick::isConnected(0)) {
-		const auto horizontal      = Joystick::getAxisPosition(0, X360_axis_mappings::LeftStickHorizontal);
-		const auto vertical        = Joystick::getAxisPosition(0, X360_axis_mappings::LeftStickVertical);
-		const auto horizontal_sign = horizontal / abs(horizontal);
-		const auto vertical_sign   = vertical / abs(vertical);
+		const auto horizontal = Joystick::getAxisPosition(0, X360_axis_mappings::LeftStickHorizontal);
+		const auto vertical   = Joystick::getAxisPosition(0, X360_axis_mappings::LeftStickVertical);
+		if(abs(horizontal) > app_configuration.controller_deadzone && abs(vertical) > app_configuration.controller_deadzone) {
+			const auto horizontal_sign = horizontal / abs(horizontal);
+			const auto vertical_sign   = vertical / abs(vertical);
 
-		delta_speed_x = ((horizontal_sign == X360_axis_up_right_mappings::RightStickHorizontal) ? abs(horizontal) : -abs(horizontal)) / 100.f;
-		delta_speed_y = ((vertical_sign == X360_axis_up_right_mappings::RightStickVertical) ? -abs(vertical) : abs(vertical)) / 100.f;
+			delta_speed_x = ((horizontal_sign == X360_axis_up_right_mappings::RightStickHorizontal) ? abs(horizontal) : -abs(horizontal)) / 100.f;
+			delta_speed_y = ((vertical_sign == X360_axis_up_right_mappings::RightStickVertical) ? -abs(vertical) : abs(vertical)) / 100.f;
+		}
 	}
 
 	start_movement(delta_speed_x, delta_speed_y);
@@ -88,10 +90,12 @@ void player::handle_event(const Event & event) {
 		world.spawn_create<bullet>(static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), x, y);
 	} else if(event.type == Event::EventType::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::RB &&
 	          event.joystickButton.joystickId == 0) {
-		fp -= .05;
-		world.spawn_create<bullet>(
-		    Vector2f(Joystick::getAxisPosition(0, X360_axis_mappings::RightStickHorizontal), Joystick::getAxisPosition(0, X360_axis_mappings::RightStickVertical)),
-		    x, y);
+		const auto horizontal = Joystick::getAxisPosition(0, X360_axis_mappings::RightStickHorizontal);
+		const auto vertical = Joystick::getAxisPosition(0, X360_axis_mappings::RightStickVertical);
+		if(abs(horizontal) > app_configuration.controller_deadzone && abs(vertical) > app_configuration.controller_deadzone) {
+			fp -= .05;
+			world.spawn_create<bullet>(Vector2f(horizontal, vertical), x, y);
+		}
 	}
 }
 

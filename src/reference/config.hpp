@@ -29,6 +29,7 @@
 class config {
 public:
 	std::string language = "en_US";
+	float controller_deadzone  = 10;
 
 	bool vsync                 = true;
 	unsigned int FPS           = 60;
@@ -36,6 +37,7 @@ public:
 	unsigned int splash_length = 2;
 
 	float player_speed = 1;
+
 
 	config(const config &) = default;
 	config(config &&) = default;
