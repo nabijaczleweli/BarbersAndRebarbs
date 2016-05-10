@@ -23,7 +23,7 @@
 #include "app/application.hpp"
 #include "reference/container.hpp"
 #include "cimpoler-meta.hpp"
-#include <audiere.h>
+#include "audiere.h"
 #include <stdexcept>
 #include <iostream>
 

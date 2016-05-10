@@ -22,11 +22,13 @@
 
 ifeq "$(OS)" "Windows_NT"
 	EXE := .exe
+	DLL := .dll
 	PIC :=
 	SFML_LINK_SUFF := -2
 	SEED11_SYSTEM_TYPE := windows
 else
 	EXE := .out
+	DLL := .so
 	PIC := -fPIC
 	SFML_LINK_SUFF :=
 	SEED11_SYSTEM_TYPE := linux
@@ -34,14 +36,18 @@ endif
 
 ifneq "$(ADDITIONAL_INCLUDE_DIR)" ""
 	INCCXXAR := -isystem$(ADDITIONAL_INCLUDE_DIR)
+	INCCMAKEAR := CXXFLAGS="-isystem$(ADDITIONAL_INCLUDE_DIR)"
 else
 	INCCXXAR :=
+	INCCMAKEAR :=
 endif
 
 ifneq "$(ADDITIONAL_LINK_DIR)" ""
 	LNCXXAR := -L$(ADDITIONAL_LINK_DIR)
+	LNCMAKEAR := LDFLAGS="-L$(ADDITIONAL_LINK_DIR)"
 else
 	LNCXXAR :=
+	LNCMAKEAR :=
 endif
 
 CEREAL_VERSION := "$(shell cd ext/cereal && git describe --tags | sed "s/v//")"
@@ -53,6 +59,8 @@ WHEREAMI_CPP_VERSION := "$(shell cd ext/whereami-cpp && git describe --tags | se
 
 OBJ := .o
 ARCH := .a
+CMAKE := cmake
+NINJA := ninja
 AR := ar
 CXXAR := -O3 -fomit-frame-pointer -std=c++14 -pedantic -Wall -Wextra -pipe $(INCCXXAR) $(PIC)
 STRIP := strip

@@ -25,7 +25,7 @@
 
 #include "config.hpp"
 #include "../resource/localizer.hpp"
-#include <audiere.h>
+#include "audiere.h"
 #include <SFML/Graphics.hpp>
 #include <string>
 

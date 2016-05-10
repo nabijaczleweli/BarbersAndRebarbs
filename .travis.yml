@@ -2,13 +2,20 @@ language: generic
 sudo: false
 cache:
   apt: true
+  directories:
+    - /tmp/tools
 
 env:
   global:
     - LIB_INSTALLDIR="$HOME"
+    - PATH="$LIB_INSTALLDIR/bin:$PATH"
     - LD_LIBRARY_PATH="$LIB_INSTALLDIR/lib"
+    - CMAKE_VERSION_PREFIX=3.5
+    - CMAKE_VERSION_FULL=3.5.2
+    - NINJA_VERSION=1.7.1
     - AUDIERE_TAG=1.9.4
     - SPEEX_VER=1.1.9
+    - DUMB_VER=0.9.3
     - SFML_TAG=2.3.2
 
 matrix:
@@ -18,7 +25,7 @@ matrix:
         apt:
           packages:
             - g++-5
-            - scons
+            - unzip
             - libpthread-stubs0-dev
             - libgl1-mesa-dev
             - libx11-dev
@@ -41,7 +48,7 @@ matrix:
         apt:
           packages:
             - clang-3.8
-            - scons
+            - unzip
             - libpthread-stubs0-dev
             - libgl1-mesa-dev
             - libx11-dev
@@ -58,12 +65,29 @@ matrix:
           sources: *sources
 
 install:
+  - mkdir -p /tmp/tools
+  - pushd /tmp/tools
+  - if [[ ! -f "cmake-$CMAKE_VERSION_FULL-Linux-x86_64.sh" ]]; then
+      curl -SOL "https://cmake.org/files/v$CMAKE_VERSION_PREFIX/cmake-$CMAKE_VERSION_FULL-Linux-x86_64.sh";
+      chmod +x "cmake-$CMAKE_VERSION_FULL-Linux-x86_64.sh";
+    fi
+  - ./"cmake-$CMAKE_VERSION_FULL-Linux-x86_64.sh" --prefix="$LIB_INSTALLDIR" --exclude-subdir --skip-license
+  - popd
+  -
+  - pushd /tmp/tools
+  - if [[ ! -f "ninja-$NINJA_VERSION.zip" ]]; then
+      curl -SLO "https://github.com/ninja-build/ninja/releases/download/v$NINJA_VERSION/ninja-linux.zip";
+      mv "ninja-linux.zip" "ninja-$NINJA_VERSION.zip";
+    fi
+  - unzip "ninja-$NINJA_VERSION.zip" -d "$LIB_INSTALLDIR/bin"
+  - popd
+  -
   - pushd "/tmp"
   - curl -SL https://github.com/SFML/SFML/archive/$SFML_TAG.tar.gz | tar -xzf-
   - cd "SFML-$SFML_TAG"
   - mkdir build && cd build
-  - cmake -G"Unix Makefiles" .. -DCMAKE_INSTALL_PREFIX:PATH="$LIB_INSTALLDIR"
-  - make -j$(nproc) install
+  - cmake -GNinja .. -DCMAKE_INSTALL_PREFIX:PATH="$LIB_INSTALLDIR"
+  - ninja install
   - popd
   -
   - pushd "/tmp"
@@ -76,18 +100,16 @@ install:
   - popd
   -
   - pushd "/tmp"
-  - curl -SL "http://kent.dl.sourceforge.net/project/audiere/audiere/$AUDIERE_TAG/audiere-$AUDIERE_TAG-src.tar.bz2" | tar -xjf-
-  - mv "audiere" "audiere-$AUDIERE_TAG"
-  - cd "audiere-$AUDIERE_TAG"
-  - sed -i "s/'-Wno-non-virtual-dtor']/'-Wno-non-virtual-dtor'])\nif ARGUMENTS.has_key('CXXFLAGS'):\n  env.Append(CXXFLAGS=ARGUMENTS['CXXFLAGS'])\nif ARGUMENTS.has_key('LDFLAGS'):\n  env.Append(LINKFLAGS=ARGUMENTS['LDFLAGS'])\nenv.Append(LIBS='speex')/" SConstruct
-  - sed -i 's:source = """:source = """\n\tsrc/dumb_resample.cpp\n\tsrc/input_speex.cpp\n\tsrc/speexfile/speexfile.cpp:' SConstruct
-  - sed -i "s/#include <string>/#include <string>\n#include <cstring>/" src/audiere.h
-  - sed -i "s/#include <stdio.h>/#include <stdio.h>\n#include <stdlib.h>/" src/debug.h
-  - sed -i "s:#include <speex:#include <speex/speex:g" src/speexfile/speexfile.h
-  - sed -i "s/#include <ctype.h>/#include <ctype.h>\n#include <stdio.h>/" src/utility.cpp
-  # Doesn't work with `libFLAC.a` installed (gvia libflac-dev) either: https://travis-ci.org/nabijaczleweli/BarbersAndRebarbs/jobs/126249508#L709-L710
-  # dumb is unavailable as package on Travis
-  - scons CXXFLAGS="-isystem$LIB_INSTALLDIR/include -fpermissive" LDFLAGS="-L$LIB_INSTALLDIR/lib" use_flac=no use_dumb=no prefix="$LIB_INSTALLDIR" install
+  - curl -SL "http://prdownloads.sourceforge.net/dumb/dumb-$DUMB_VER.tar.gz?download" | tar -xzf-
+  - cd "dumb-$DUMB_VER"
+  - (
+      echo "include make/unix.inc";
+      echo "ALL_TARGETS := core core-examples core-headers";
+      echo "PREFIX := $LIB_INSTALLDIR";
+    ) > make/config.txt
+  - mkdir -p lib/unix obj/unix/debug obj/unix/release
+  - sed -i 's/OFLAGS :=/\0 -fPIC/g' Makefile Makefile.rdy
+  - make install
   - popd
 
 script: ADDITIONAL_INCLUDE_DIR="$LIB_INSTALLDIR/include" ADDITIONAL_LINK_DIR="$LIB_INSTALLDIR/lib" make -j$(nproc)
