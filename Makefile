@@ -37,6 +37,7 @@ clean :
 	rm -rf $(OUTDIR)
 
 assets :
+	@rm -rf $(OUTDIR)assets
 	@cp -r $(ASSETDIR) $(OUTDIR)
 
 exe : $(OUTDIR)BarbersAndRebarbs$(EXE)
