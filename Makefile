@@ -28,10 +28,10 @@ LDAR := $(LNCXXAR) -L$(BLDDIR)Cpp-NBT -L$(BLDDIR)seed11 -L$(BLDDIR)whereami-cpp 
 SOURCES := $(sort $(wildcard src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp))
 HEADERS := $(sort $(wildcard src/*.hpp src/**/*.hpp src/**/**/*.hpp src/**/**/**/*.hpp))
 
-.PHONY : all clean assets exe audiere cpp-nbt seed11 whereami-cpp sfml-deplist
+.PHONY : all clean assets exe audiere cpp-nbt seed11 whereami-cpp
 
 
-all : assets audiere cpp-nbt seed11 whereami-cpp sfml-deplist exe
+all : assets audiere cpp-nbt seed11 whereami-cpp exe
 
 clean :
 	rm -rf $(OUTDIR)
@@ -44,17 +44,17 @@ audiere : $(BLDDIR)audiere/lib/libaudiere$(DLL)
 cpp-nbt : $(BLDDIR)Cpp-NBT/libcpp-nbt$(ARCH)
 seed11 : $(BLDDIR)seed11/libseed11$(ARCH)
 whereami-cpp : $(BLDDIR)whereami-cpp/libwhereami++$(ARCH)
-sfml-deplist : $(BLDDIR)sfml-modules
 
 
 $(OUTDIR)BarbersAndRebarbs$(EXE) : $(subst $(SRCDIR),$(OBJDIR),$(subst .cpp,$(OBJ),$(SOURCES)))
-	$(CXX) -Wl,-rpath=$(BLDDIR)audiere/lib $(CXXAR) -o$@ $(subst $(SRCDIR),$(OBJDIR),$^) $(PIC) $(LDAR) @$(BLDDIR)sfml-modules
+	$(CXX) -Wl,-rpath=$(BLDDIR)audiere/lib,-rpath=. $(CXXAR) -o$@ $(subst $(SRCDIR),$(OBJDIR),$^) $(PIC) $(LDAR) $(shell grep '<SFML/' $(HEADERS) $(SOURCES) | sed -r 's:.*#include <SFML/(.*).hpp>:-lsfml-\1$(SFML_LINK_SUFF):' | tr '[:upper:]' '[:lower:]' | sort | uniq)
 
 $(BLDDIR)audiere/lib/libaudiere$(DLL) : ext/audiere/CMakeLists.txt
 	@mkdir -p $(abspath $(dir $@)../build)
 	# FLAC doesn't seem to work on Travis by default so v0v
 	cd $(abspath $(dir $@)../build) && $(INCCMAKEAR) $(LNCMAKEAR) $(CMAKE) -DUSE_FLAC=OFF -DCMAKE_INSTALL_PREFIX:PATH="$(abspath $(dir $@)..)" $(abspath $(dir $^)) -GNinja
 	cd $(abspath $(dir $@)../build) && ninja install
+	$(if $(OS) | grep Windows_NT,cp $@ $(OUTDIR))
 
 $(BLDDIR)Cpp-NBT/libcpp-nbt$(ARCH) : ext/Cpp-NBT/Makefile
 	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@)) stlib
@@ -64,10 +64,6 @@ $(BLDDIR)seed11/libseed11$(ARCH) : $(foreach src,seed11_system_agnostic seed11_$
 
 $(BLDDIR)whereami-cpp/libwhereami++$(ARCH) : ext/whereami-cpp/Makefile
 	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@)) stlib
-
-$(BLDDIR)sfml-modules : $(HEADERS) $(SOURCES)
-	@mkdir -p $(dir $@)
-	@grep "<SFML/" $^ | sed -r "s:.*#include <SFML/(.*).hpp>:-lsfml-\\1$(SFML_LINK_SUFF):" | tr '[:upper:]' '[:lower:]' | sort | uniq > $@
 
 
 $(OBJDIR)%$(OBJ) : $(SRCDIR)%.cpp
