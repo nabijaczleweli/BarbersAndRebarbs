@@ -19,3 +19,6 @@
 [submodule "jsonpp"]
 	path = ext/jsonpp
 	url = https://github.com/Rapptz/jsonpp.git
+[submodule "audiere"]
+	path = ext/audiere
+	url = https://github.com/nabijaczleweli/audiere.git
