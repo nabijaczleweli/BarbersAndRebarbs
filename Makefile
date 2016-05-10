@@ -53,7 +53,7 @@ $(BLDDIR)audiere/lib/libaudiere$(DLL) : ext/audiere/CMakeLists.txt
 	@mkdir -p $(abspath $(dir $@)../build)
 	# FLAC doesn't seem to work on Travis by default so v0v
 	cd $(abspath $(dir $@)../build) && $(INCCMAKEAR) $(LNCMAKEAR) $(CMAKE) -DUSE_FLAC=OFF -DCMAKE_INSTALL_PREFIX:PATH="$(abspath $(dir $@)..)" $(abspath $(dir $^)) -GNinja
-	cd $(abspath $(dir $@)../build) && ninja install
+	cd $(abspath $(dir $@)../build) && $(NINJA) install
 	$(if $(OS) | grep Windows_NT,cp $@ $(OUTDIR))
 
 $(BLDDIR)Cpp-NBT/libcpp-nbt$(ARCH) : ext/Cpp-NBT/Makefile
