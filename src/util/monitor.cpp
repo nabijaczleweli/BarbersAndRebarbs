@@ -28,7 +28,7 @@
 #include <windows.h>
 
 
-unsigned int vsync_fps() {
+unsigned int refresh_rate() {
 	DEVMODE dmode{};
 	dmode.dmSize = sizeof(DEVMODE);
 	EnumDisplaySettings(nullptr, ENUM_CURRENT_SETTINGS, &dmode);
@@ -40,7 +40,7 @@ unsigned int vsync_fps() {
 #include <X11/extensions/Xrandr.h>
 
 
-unsigned int vsync_fps() {
+unsigned int refresh_rate() {
 	auto dpy  = XOpenDisplay(nullptr);
 	auto root = RootWindow(dpy, 0);
 

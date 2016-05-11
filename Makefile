@@ -23,7 +23,7 @@
 include configMakefile
 
 
-LDDLLS := audiere cpp-nbt whereami++ seed11
+LDDLLS := $(OS_LD_LIBS) audiere cpp-nbt whereami++ seed11
 LDAR := $(LNCXXAR) -L$(BLDDIR)Cpp-NBT -L$(BLDDIR)seed11 -L$(BLDDIR)whereami-cpp -L$(BLDDIR)audiere/lib $(foreach dll,$(LDDLLS),-l$(dll))
 SOURCES := $(sort $(wildcard src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp))
 HEADERS := $(sort $(wildcard src/*.hpp src/**/*.hpp src/**/**/*.hpp src/**/**/**/*.hpp))

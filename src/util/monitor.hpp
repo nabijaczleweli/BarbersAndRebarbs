@@ -23,4 +23,4 @@
 #pragma once
 
 
-unsigned int vsync_fps();
+unsigned int refresh_rate();

@@ -26,12 +26,14 @@ ifeq "$(OS)" "Windows_NT"
 	PIC :=
 	SFML_LINK_SUFF := -2
 	SEED11_SYSTEM_TYPE := windows
+	OS_LD_LIBS :=
 else
 	EXE := .out
 	DLL := .so
 	PIC := -fPIC
 	SFML_LINK_SUFF :=
 	SEED11_SYSTEM_TYPE := linux
+	OS_LD_LIBS := Xrandr
 endif
 
 ifneq "$(ADDITIONAL_INCLUDE_DIR)" ""

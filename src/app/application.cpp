@@ -21,6 +21,7 @@
 
 #include "application.hpp"
 #include "../reference/container.hpp"
+#include "../util/monitor.hpp"
 #include "../util/file.hpp"
 #include "screens/application/splash_screen.hpp"
 #include <algorithm>
@@ -47,7 +48,8 @@ static sequential_music open_sequential_application_music(bool sound) {
 
 
 unsigned int application::effective_FPS() {
-	return app_configuration.vsync ? 60 : app_configuration.FPS;
+	static const auto vsync_fps = refresh_rate();
+	return app_configuration.vsync ? vsync_fps : app_configuration.FPS;
 }
 
 int application::run() {
