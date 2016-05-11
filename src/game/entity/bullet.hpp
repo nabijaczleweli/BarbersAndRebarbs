@@ -42,6 +42,8 @@ public:
 	virtual ~bullet() = default;
 
 
+	virtual void tick(float max_x = 0, float max_y = 0) override;
+
 	virtual float speed() const override;
 	virtual float speed_loss() const override;
 };

@@ -62,7 +62,10 @@ const entity & game_world::ent(size_t id) const {
 }
 
 void game_world::tick(Vector2u screen_size) {
-	for(auto & entity : entities)
+	for(auto && id : sheduled_for_deletion)
+		entities.erase(id);
+
+	for(auto && entity : entities)
 		entity.second->tick(screen_size.x, screen_size.y);
 }
 
@@ -76,4 +79,8 @@ void game_world::draw(RenderTarget & upon) {
 	for(const auto & entity : entities)
 		if(const auto drwbl = dynamic_cast<const Drawable *>(entity.second.get()))
 			upon.draw(*drwbl);
+}
+
+void game_world::despawn(size_t id) {
+	sheduled_for_deletion.emplace_back(id);
 }

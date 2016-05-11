@@ -27,12 +27,14 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <map>
+#include <vector>
 #include <functional>
 
 
 class game_world {
 private:
 	std::map<std::size_t, std::unique_ptr<entity>> entities;
+	std::vector<std::size_t> sheduled_for_deletion;
 
 	std::size_t reserve_eid();
 	std::size_t spawn_p(std::size_t id, std::unique_ptr<entity> ep);
@@ -56,4 +58,6 @@ public:
 		const auto id = reserve_eid();
 		return spawn_p(id, ET::create(*this, id, std::forward<AT>(at)...));
 	}
+
+	void despawn(std::size_t id);
 };

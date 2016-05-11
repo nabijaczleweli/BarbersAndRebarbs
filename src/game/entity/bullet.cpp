@@ -21,6 +21,7 @@
 
 
 #include "bullet.hpp"
+#include "../world.hpp"
 #include "../../reference/joystick_info.hpp"
 #include "../../reference/container.hpp"
 #include "../../util/vector.hpp"
@@ -50,6 +51,14 @@ void bullet::draw(RenderTarget & target, RenderStates states) const {
 bullet::bullet(game_world & world_r, size_t id_a, unsigned int px, unsigned int py) : entity(world_r, id_a) {
 	x = px;
 	y = py;
+}
+
+void bullet::tick(float max_x, float max_y) {
+	entity::tick(max_x, max_y);
+
+	const auto min_speed = speed() * speed_loss() * 10;
+	if(abs(motion_x) < min_speed || abs(motion_y) < min_speed)
+		world.despawn(id);
 }
 
 float bullet::speed() const {
