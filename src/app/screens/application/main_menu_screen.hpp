@@ -33,7 +33,7 @@
 class main_menu_screen : public screen {
 public:
 	enum class direction : unsigned char { up, down };
-	typedef std::pair<sf::Text, std::function<void(sf::Text &)>> button_clickable;
+	using button_clickable = std::pair<sf::Text, std::function<void(sf::Text &)>>;
 
 private:
 	std::list<button_clickable> main_buttons;

@@ -28,69 +28,37 @@
 
 
 class sequential_music : public audiere::RefImplementation<audiere::OutputStream> {
-protected:
-	sequential_music();
-
 private:
-	bool loop = true;
+	bool loop;
 	audiere::OutputStreamPtr output_stream;
-	unsigned int music_id = 0;
-
-public:
-	unsigned int max_id = 0;
+	unsigned int music_id;
+	unsigned int max_id;
 	std::function<std::string(unsigned int)> getter_algo;
 
+public:
+	sequential_music();
 	sequential_music(unsigned int max_id, std::function<std::string(unsigned int)> getter_algo);
 	sequential_music(unsigned int max_id, const std::string & filename);
-	virtual ~sequential_music();
+	virtual ~sequential_music() = default;
 
 	virtual void tick();
 	void go_to_next();
 
 
-	ADR_METHOD(void) play();
-	ADR_METHOD(void) stop();
-	ADR_METHOD(bool) isPlaying();
-	ADR_METHOD(void) reset();
-	ADR_METHOD(void) setRepeat(bool repeat);
-	ADR_METHOD(bool) getRepeat();
-	ADR_METHOD(void) setVolume(float volume);
-	ADR_METHOD(float) getVolume();
-	ADR_METHOD(void) setPan(float pan);
-	ADR_METHOD(float) getPan();
-	ADR_METHOD(void) setPitchShift(float shift);
-	ADR_METHOD(float) getPitchShift();
-	ADR_METHOD(bool) isSeekable();
-	ADR_METHOD(int) getLength();
-	ADR_METHOD(void) setPosition(int position);
-	ADR_METHOD(int) getPosition();
+	ADR_METHOD(void) play() override;
+	ADR_METHOD(void) stop() override;
+	ADR_METHOD(bool) isPlaying() override;
+	ADR_METHOD(void) reset() override;
+	ADR_METHOD(void) setRepeat(bool repeat) override;
+	ADR_METHOD(bool) getRepeat() override;
+	ADR_METHOD(void) setVolume(float volume) override;
+	ADR_METHOD(float) getVolume() override;
+	ADR_METHOD(void) setPan(float pan) override;
+	ADR_METHOD(float) getPan() override;
+	ADR_METHOD(void) setPitchShift(float shift) override;
+	ADR_METHOD(float) getPitchShift() override;
+	ADR_METHOD(bool) isSeekable() override;
+	ADR_METHOD(int) getLength() override;
+	ADR_METHOD(void) setPosition(int position) override;
+	ADR_METHOD(int) getPosition() override;
 };
-
-class quiet_music : public sequential_music {
-public:
-	quiet_music() : sequential_music() {}
-
-	inline virtual void tick() {}
-	inline ADR_METHOD(void) ref() {}
-	inline ADR_METHOD(void) unref() {}
-	inline ADR_METHOD(void) play() {}
-	inline ADR_METHOD(void) stop() {}
-	inline ADR_METHOD(bool) isPlaying() { return false; }
-	inline ADR_METHOD(void) reset() {}
-	inline ADR_METHOD(void) setRepeat(bool) {}
-	inline ADR_METHOD(bool) getRepeat() { return false; }
-	inline ADR_METHOD(void) setVolume(float) {}
-	inline ADR_METHOD(float) getVolume() { return 0.f; }
-	inline ADR_METHOD(void) setPan(float) {}
-	inline ADR_METHOD(float) getPan() { return 0.f; }
-	inline ADR_METHOD(void) setPitchShift(float) {}
-	inline ADR_METHOD(float) getPitchShift() { return 1.f; }
-	inline ADR_METHOD(bool) isSeekable() { return false; }
-	inline ADR_METHOD(int) getLength() { return 0; }
-	inline ADR_METHOD(void) setPosition(int) {}
-	inline ADR_METHOD(int) getPosition() { return 0; }
-};
-
-
-typedef audiere::RefPtr<sequential_music> SequentialMusicPtr;
-extern const std::unique_ptr<quiet_music> silent_music;

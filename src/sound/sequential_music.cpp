@@ -24,12 +24,18 @@
 #include "sequential_music.hpp"
 #include <algorithm>
 
+
 using namespace audiere;
 using namespace std;
 
 
-const unique_ptr<quiet_music> silent_music(new quiet_music);
-
+sequential_music::sequential_music() : getter_algo([](auto) { return ""; }) {}
+sequential_music::sequential_music(unsigned int seq_len, function<string(unsigned int)> getter)
+      : loop(true), output_stream(nullptr), music_id(0), max_id(seq_len - 1), getter_algo(getter) {
+	if(seq_len)
+		output_stream = OpenSound(audio_device, getter(0).c_str(), true);
+}
+sequential_music::sequential_music(unsigned int maximal_id, const string & filename) : sequential_music(maximal_id, [=](unsigned int) { return filename; }) {}
 
 void sequential_music::tick() {
 	if(!output_stream || (output_stream && isPlaying()))
@@ -55,60 +61,73 @@ void sequential_music::go_to_next() {
 	play();
 }
 
-sequential_music::sequential_music(unsigned int maximal_id, function<string(unsigned int)> getter)
-      : output_stream(OpenSound(audio_device, getter(0).c_str(), true)), max_id(maximal_id), getter_algo(getter) {
-	setRepeat(true);
-}
-sequential_music::sequential_music(unsigned int maximal_id, const string & filename) : sequential_music(maximal_id, [=](unsigned int) { return filename; }) {}
-sequential_music::sequential_music() {}
-sequential_music::~sequential_music() {}
-
-
 void sequential_music::play() {
-	output_stream->play();
+	if(output_stream)
+		output_stream->play();
 }
+
 void sequential_music::stop() {
-	output_stream->stop();
+	if(output_stream)
+		output_stream->stop();
 }
+
 bool sequential_music::isPlaying() {
-	return output_stream->isPlaying();
+	return output_stream && output_stream->isPlaying();
 }
+
 void sequential_music::reset() {
-	output_stream->reset();
+	if(output_stream)
+		output_stream->reset();
 }
+
 void sequential_music::setRepeat(bool repeat) {
 	loop = repeat;
 }
+
 bool sequential_music::getRepeat() {
 	return loop;
 }
+
 void sequential_music::setVolume(float volume) {
-	output_stream->setVolume(volume);
+	if(output_stream)
+		output_stream->setVolume(volume);
 }
+
 float sequential_music::getVolume() {
-	return output_stream->getVolume();
+	return output_stream ? output_stream->getVolume() : 0;
 }
+
 void sequential_music::setPan(float pan) {
-	output_stream->setPan(pan);
+	if(output_stream)
+		output_stream->setPan(pan);
 }
+
 float sequential_music::getPan() {
-	return output_stream->getPan();
+	return output_stream ? output_stream->getPan() : 0;
 }
+
 void sequential_music::setPitchShift(float shift) {
-	output_stream->setPitchShift(shift);
+	if(output_stream)
+		output_stream->setPitchShift(shift);
 }
+
 float sequential_music::getPitchShift() {
-	return output_stream->getPitchShift();
+	return output_stream ? output_stream->getPitchShift() : 0;
 }
+
 bool sequential_music::isSeekable() {
-	return output_stream->isSeekable();
+	return output_stream && output_stream->isSeekable();
 }
+
 int sequential_music::getLength() {
-	return output_stream->getLength();
+	return output_stream ? output_stream->getLength() : 0;
 }
+
 void sequential_music::setPosition(int position) {
-	output_stream->setPosition(position);
+	if(output_stream)
+		output_stream->setPosition(position);
 }
+
 int sequential_music::getPosition() {
-	return output_stream->getPosition();
+	return output_stream ? output_stream->getPosition() : 0;
 }

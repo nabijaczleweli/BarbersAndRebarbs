@@ -32,18 +32,17 @@ using namespace sf;
 using namespace std;
 
 
-static sequential_music * open_sequential_application_music(bool sound) {
-	return (sound ? [&]() {                                                             //  If sounds shall be played
-		auto files = list_files(sound_root + "/main_menu");                                 //  list all files
-		files.erase(remove_if(files.begin(), files.end(), [&](const string & val) {
-			return val.find("music");                                                         //  filter out all that are not prefixed with "music"
-		}), files.end());
-		files.shrink_to_fit();
-		return files.size() ? new sequential_music(files.size(), [&](unsigned int id) {     //  if any matches
-			static const auto files_music = files;                                              //  get only ones prefixed with "music"
-			return sound_root + "/main_menu/" + files_music[id];
-		}) : silent_music.get();                                                            //  else silent
-	}() : silent_music.get());                                                          //  else silent
+static sequential_music open_sequential_application_music(bool sound) {
+	if(!sound)
+		return {};
+
+	auto files = list_files(sound_root + "/main_menu");
+	files.erase(remove_if(files.begin(), files.end(), [&](auto && val) { return val.find("music") != 0; }), files.end());
+	files.shrink_to_fit();
+	return sequential_music(files.size(), [&](unsigned int id) {
+		static const auto files_music = files;
+		return sound_root + "/main_menu/" + files_music[id];
+	});
 }
 
 
@@ -67,7 +66,7 @@ int application::run() {
 			window.setIcon(icon.getSize().x, icon.getSize().x, icon.getPixelsPtr());
 	}
 
-	schedule_screen<splash_screen>(splash_length * effective_FPS());
+	schedule_screen<splash_screen>(app_configuration.splash_length * effective_FPS());
 	return loop();
 }
 
@@ -82,7 +81,7 @@ int application::loop() {
 
 		if(const int i = current_screen->loop())
 			return i;
-		music->tick();
+		music.tick();
 
 		if(const int i = draw())
 			return i;
@@ -110,5 +109,5 @@ int application::draw() {
 
 void application::retry_music() {
 	music = open_sequential_application_music(app_configuration.play_sounds);
-	music->play();
+	music.play();
 }

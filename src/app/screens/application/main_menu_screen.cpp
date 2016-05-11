@@ -31,7 +31,7 @@ using namespace std;
 using namespace sf;
 
 
-typedef main_menu_screen::direction direction;
+using direction = main_menu_screen::direction;
 
 
 void main_menu_screen::move_selection(direction dir) {

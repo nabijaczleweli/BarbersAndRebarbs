@@ -39,16 +39,17 @@ private:
 
 	std::unique_ptr<screen> current_screen;
 	std::unique_ptr<screen> temp_screen;
+
 	sf::RenderWindow window;
 	managed_sprite mouse_pointer;
-	SequentialMusicPtr music;
-	unsigned int splash_length;
+
+	sequential_music music;
 
 	int loop();
 	int draw();
 
 public:
-	static inline unsigned int effective_FPS();
+	static unsigned int effective_FPS();
 
 
 	int run();

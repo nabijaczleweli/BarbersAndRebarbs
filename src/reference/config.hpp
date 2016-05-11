@@ -28,8 +28,8 @@
 
 class config {
 public:
-	std::string language = "en_US";
-	float controller_deadzone  = 10;
+	std::string language      = "en_US";
+	float controller_deadzone = 10;
 
 	bool vsync                 = true;
 	unsigned int FPS           = 60;
