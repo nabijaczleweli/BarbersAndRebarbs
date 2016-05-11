@@ -57,7 +57,9 @@ int main(int argc, char * argv[]) {
 }
 
 
+unsigned int vsync_fps();
 static void credit() {
+	cout << "vsync_fps: " << vsync_fps() << '\n';
 	cout << "Detected OS: " << CIMPOLER_META_OS_NAME << "\n"
 	     << "Compiler: " << CIMPOLER_META_COMPILER_NAME << " version " << cimpoler_meta::version() << "\n"
 	     << "Used libraries:\n"
