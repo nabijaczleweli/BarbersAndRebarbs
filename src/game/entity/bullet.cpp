@@ -37,6 +37,12 @@ unique_ptr<bullet> bullet::create(game_world & world, size_t id, Vector2f aim, u
 	auto bull = make_unique<bullet>(ref(world), id, x, y);
 
 	aim = normalised(aim);
+	// TODO: remove in favour of time-based bullet lifespan
+	const auto ignore_up_to = bull->speed_loss() * 10;
+	if(abs(aim.x) < ignore_up_to)
+		aim.x = 0;
+	if(abs(aim.y) < ignore_up_to)
+		aim.y = 0;
 	bull->start_movement(aim.x, aim.y);
 
 	return bull;
@@ -59,7 +65,9 @@ void bullet::tick(float max_x, float max_y) {
 	entity::tick(max_x, max_y);
 
 	const auto min_speed = speed() * speed_loss() * 10;
-	if(abs(motion_x) < min_speed || abs(motion_y) < min_speed)
+	// Only kill the bullet if it's moving in that direction the the first place, see `bullet::create()`
+	// TODO: remove in favour of time-based bullet lifespan
+	if((motion_x && abs(motion_x) < min_speed) || (motion_y && abs(motion_y) < min_speed))
 		world.despawn(id);
 }
 
