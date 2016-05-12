@@ -43,9 +43,11 @@ unique_ptr<bullet> bullet::create(game_world & world, size_t id, Vector2f aim, u
 }
 
 void bullet::draw(RenderTarget & target, RenderStates states) const {
-	CircleShape crcl(5);
-	crcl.setPosition(x - 2.5, y - 2.5);
-	target.draw(crcl, states);
+	static const auto constexpr k = 2.5f;
+
+	Vertex vertices[2]{{{x, y}, Color::White},  //
+	                   {{x + motion_x * k, y + motion_y * k}, Color::White}};
+	target.draw(vertices, 2, PrimitiveType::Lines, states);
 }
 
 bullet::bullet(game_world & world_r, size_t id_a, unsigned int px, unsigned int py) : entity(world_r, id_a) {
