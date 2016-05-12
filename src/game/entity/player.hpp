@@ -38,7 +38,7 @@ private:
 
 public:
 	using entity::entity;
-	player(game_world & world, std::size_t id);
+	player(game_world & world, std::size_t id, sf::Vector2u screen_size);
 
 	virtual ~player() = default;
 

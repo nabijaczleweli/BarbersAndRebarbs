@@ -25,7 +25,9 @@
 #include "../world.hpp"
 #include "../../reference/joystick_info.hpp"
 #include "../../reference/container.hpp"
+#include "seed11/seed11.hpp"
 #include <SFML/Window.hpp>
+#include <random>
 
 
 using namespace cpp_nbt;
@@ -44,7 +46,15 @@ void player::draw(RenderTarget & target, RenderStates states) const {
 	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x - 2, y + 2), Color(200, 200, 200))), 1, PrimitiveType::Points, states);
 }
 
-player::player(game_world & world_r, size_t id_a) : entity(world_r, id_a), hp(1), fp(1) {}
+player::player(game_world & world_r, size_t id_a, Vector2u screen_size) : entity(world_r, id_a), hp(1), fp(1) {
+	static auto rand = seed11::make_seeded<mt19937>();
+
+	uniform_real_distribution<float> x_dist(0, screen_size.x - 1);
+	uniform_real_distribution<float> y_dist(0, screen_size.y - 1);
+
+	x = x_dist(rand);
+	y = y_dist(rand);
+}
 
 void player::read_from_nbt(const cpp_nbt::nbt_compound & from) {
 	entity::read_from_nbt(from);
@@ -91,7 +101,7 @@ void player::handle_event(const Event & event) {
 	} else if(event.type == Event::EventType::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::RB &&
 	          event.joystickButton.joystickId == 0) {
 		const auto horizontal = Joystick::getAxisPosition(0, X360_axis_mappings::RightStickHorizontal);
-		const auto vertical = Joystick::getAxisPosition(0, X360_axis_mappings::RightStickVertical);
+		const auto vertical   = Joystick::getAxisPosition(0, X360_axis_mappings::RightStickVertical);
 		if(abs(horizontal) > app_configuration.controller_deadzone && abs(vertical) > app_configuration.controller_deadzone) {
 			fp -= .05;
 			world.spawn_create<bullet>(Vector2f(horizontal, vertical), x, y);
