@@ -36,14 +36,20 @@ using namespace sf;
 
 
 void player::draw(RenderTarget & target, RenderStates states) const {
-	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x - 1, y), Color(231, 158, 109))), 1, PrimitiveType::Points, states);
-	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x, y - 1), Color(231, 158, 109))), 1, PrimitiveType::Points, states);
-	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x + 1, y), Color(231, 158, 109))), 1, PrimitiveType::Points, states);
-	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x, y + 1), Color(231, 158, 109))), 1, PrimitiveType::Points, states);
-	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x - 2, y - 2), Color(200, 200, 200))), 1, PrimitiveType::Points, states);
-	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x + 2, y - 2), Color(200, 200, 200))), 1, PrimitiveType::Points, states);
-	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x + 2, y + 2), Color(200, 200, 200))), 1, PrimitiveType::Points, states);
-	target.draw(&static_cast<const Vertex &>(Vertex(Vector2f(x - 2, y + 2), Color(200, 200, 200))), 1, PrimitiveType::Points, states);
+	static const Color body_colour(231, 158, 109);
+	static const Color armour_colour(200, 200, 200);
+
+	Vertex vertices[8]{
+	    {{x - 1, y}, body_colour},        //
+	    {{x, y - 1}, body_colour},        //
+	    {{x + 1, y}, body_colour},        //
+	    {{x, y + 1}, body_colour},        //
+	    {{x - 2, y - 2}, armour_colour},  //
+	    {{x + 2, y - 2}, armour_colour},  //
+	    {{x + 2, y + 2}, armour_colour},  //
+	    {{x - 2, y + 2}, armour_colour},  //
+	};
+	target.draw(vertices, 8, PrimitiveType::Points, states);
 }
 
 player::player(game_world & world_r, size_t id_a, Vector2u screen_size) : entity(world_r, id_a), hp(1), fp(1) {
@@ -58,10 +64,16 @@ player::player(game_world & world_r, size_t id_a, Vector2u screen_size) : entity
 
 void player::read_from_nbt(const cpp_nbt::nbt_compound & from) {
 	entity::read_from_nbt(from);
+	if(auto fhp = from.get_float("hp"))
+		hp = *fhp;
+	if(auto ffp = from.get_float("fp"))
+		fp = *ffp;
 }
 
 void player::write_to_nbt(cpp_nbt::nbt_compound & to) const {
 	entity::write_to_nbt(to);
+	to.set_float("hp", hp);
+	to.set_float("fp", fp);
 }
 
 void player::tick(float max_x, float max_y) {
