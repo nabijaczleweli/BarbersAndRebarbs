@@ -33,17 +33,52 @@
 using namespace std;
 
 
+namespace config_subcategories {
+	struct system {
+		string & language;
+		float & controller_deadzone;
+
+		template <class Archive>
+		void serialize(Archive & archive) {
+			auto langs = list_files(localization_root);
+			langs.erase(remove_if(begin(langs), end(langs), [](const auto & lang) { return lang[0] == '.'; }), end(langs));
+			transform(begin(langs), end(langs), begin(langs), [](const auto & lang) { return lang.substr(0, lang.find(".lang")); });
+
+			archive(cereal::make_nvp("controller_deadzone", controller_deadzone), cereal::make_nvp("language", language),
+			        cereal::make_nvp("available_languages", langs));
+		}
+	};
+
+	struct application {
+		bool & vsync;
+		unsigned int & FPS;
+		bool & play_sounds;
+		unsigned int & splash_length;
+
+		template <class Archive>
+		void serialize(Archive & archive) {
+			archive(cereal::make_nvp("FPS", FPS), cereal::make_nvp("vsync", vsync), cereal::make_nvp("play_sounds", play_sounds),
+			        cereal::make_nvp("splash_length", splash_length));
+		}
+	};
+
+	struct player {
+		float & player_speed;
+
+		template <class Archive>
+		void serialize(Archive & archive) {
+			archive(cereal::make_nvp("speed", player_speed));
+		}
+	};
+}
+
 template <class Archive>
 void serialize(Archive & archive, config & cc) {
-	auto langs = list_files(localization_root);
-	langs.erase(remove_if(begin(langs), end(langs), [](const auto & lang) { return lang[0] == '.'; }), end(langs));
-	transform(begin(langs), end(langs), begin(langs), [](const auto & lang) { return lang.substr(0, lang.find(".lang")); });
-
-	archive(cereal::make_nvp("application:FPS", cc.FPS), cereal::make_nvp("application:vsync", cc.vsync),
-	        cereal::make_nvp("application:play_sounds", cc.play_sounds), cereal::make_nvp("application:splash_length", cc.splash_length),
-	        cereal::make_nvp("system:controller_deadzone", cc.controller_deadzone), cereal::make_nvp("system:language", cc.language),
-	        cereal::make_nvp("system:available_languages", langs), cereal::make_nvp("player:speed", cc.player_speed));
+	archive(cereal::make_nvp("system", config_subcategories::system{cc.language, cc.controller_deadzone}),
+	        cereal::make_nvp("application", config_subcategories::application{cc.vsync, cc.FPS, cc.play_sounds, cc.splash_length}),
+	        cereal::make_nvp("player", config_subcategories::player{cc.player_speed}));
 }
+
 
 config::config(string && ppath) : path(move(ppath)) {
 	ifstream configfile(path);
