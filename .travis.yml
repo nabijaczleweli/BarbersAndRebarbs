@@ -20,7 +20,7 @@ env:
 
 matrix:
   include:
-    - env: CXX=g++-5 CC=gcc-5 DEPLOY=true
+    - env: CXX=g++-5 CC=gcc-5 WORKAROUND_1568899=true DEPLOY=true
       addons:
         apt:
           packages:
@@ -43,7 +43,7 @@ matrix:
             - r-packages-precise
             - llvm-toolchain-precise-3.8
             - ubuntu-toolchain-r-test
-    - env: CXX=clang++-3.8 CC=clang-3.8
+    - env: CXX=clang++-3.8 CC=clang-3.8 WORKAROUND_1568899=false
       addons:
         apt:
           packages:
@@ -85,6 +85,12 @@ install:
   - pushd "/tmp"
   - curl -SL https://github.com/SFML/SFML/archive/$SFML_TAG.tar.gz | tar -xzf-
   - cd "SFML-$SFML_TAG"
+  # See https://bugs.launchpad.net/ubuntu/+source/gcc-5/+bug/1568899
+  # Manifested in https://travis-ci.org/nabijaczleweli/BarbersAndRebarbs/jobs/129995429#L1691-L1694
+  - if [[ "$WORKAROUND_1568899" = "true" ]]; then
+      git init;
+      curl -SL "http://web.archive.org/web/20160509014317/https://gitlab.peach-bun.com/pinion/SFML/commit/3383b4a472f0bd16a8161fb8760cd3e6333f1782.patch" | git apply -;
+    fi
   - mkdir build && cd build
   - cmake -GNinja .. -DCMAKE_INSTALL_PREFIX:PATH="$LIB_INSTALLDIR"
   - ninja install
