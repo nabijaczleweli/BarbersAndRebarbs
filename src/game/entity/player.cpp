@@ -104,13 +104,15 @@ void player::tick(float max_x, float max_y) {
 	}
 
 	start_movement(delta_speed_x, delta_speed_y);
+
+	fp = min(1., fp + .002);
 }
 
 void player::handle_event(const Event & event) {
-	if(event.type == Event::EventType::MouseButtonPressed && event.mouseButton.button == Mouse::Button::Left) {
+	if(fp >= .05 && event.type == Event::EventType::MouseButtonPressed && event.mouseButton.button == Mouse::Button::Left) {
 		fp -= .05;
 		world.spawn_create<bullet>(static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), x, y);
-	} else if(event.type == Event::EventType::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::RB &&
+	} else if(fp >= .05 && event.type == Event::EventType::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::RB &&
 	          event.joystickButton.joystickId == 0) {
 		const auto horizontal = Joystick::getAxisPosition(0, X360_axis_mappings::RightStickHorizontal);
 		const auto vertical   = Joystick::getAxisPosition(0, X360_axis_mappings::RightStickVertical);
