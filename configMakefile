@@ -33,7 +33,7 @@ else
 	PIC := -fPIC
 	SFML_LINK_SUFF :=
 	SEED11_SYSTEM_TYPE := linux
-	OS_LD_LIBS := Xrandr
+	OS_LD_LIBS := Xrandr X11
 endif
 
 ifneq "$(ADDITIONAL_INCLUDE_DIR)" ""
