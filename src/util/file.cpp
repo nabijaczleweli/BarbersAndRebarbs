@@ -23,6 +23,7 @@
 #include "file.hpp"
 #include <cstdio>
 #include <memory>
+#include <cstring>
 #include <dirent.h>
 
 
@@ -46,8 +47,8 @@ vector<string> list_files(const string & directory) {
 	if(const auto dir = unique_ptr<DIR, DIR_deleter>(opendir(directory.c_str()))) {
 		/* print all the files and directories within directory */
 		while(const auto ent = readdir(dir.get()))
-			result.emplace_back(ent->d_name);
-		result.shrink_to_fit();
+			if(strcmp(ent->d_name, ".") && strcmp(ent->d_name, ".."))
+				result.emplace_back(ent->d_name);
 	}
 	return result;
 }

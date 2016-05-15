@@ -41,7 +41,6 @@ namespace config_subcategories {
 		template <class Archive>
 		void serialize(Archive & archive) {
 			auto langs = list_files(localization_root);
-			langs.erase(remove_if(begin(langs), end(langs), [](const auto & lang) { return lang[0] == '.'; }), end(langs));
 			transform(begin(langs), end(langs), begin(langs), [](const auto & lang) { return lang.substr(0, lang.find(".lang")); });
 
 			archive(cereal::make_nvp("controller_deadzone", controller_deadzone), cereal::make_nvp("language", language),
