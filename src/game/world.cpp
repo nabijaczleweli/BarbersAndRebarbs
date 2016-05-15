@@ -62,12 +62,14 @@ const entity & game_world::ent(size_t id) const {
 }
 
 void game_world::tick(Vector2u screen_size) {
+	ticking = true;
+	for(auto && entity : entities)
+		entity.second->tick(screen_size.x, screen_size.y);
+	ticking = false;
+
 	for(auto && id : sheduled_for_deletion)
 		entities.erase(id);
 	sheduled_for_deletion.clear();
-
-	for(auto && entity : entities)
-		entity.second->tick(screen_size.x, screen_size.y);
 }
 
 void game_world::handle_event(const Event & event) {
@@ -83,5 +85,8 @@ void game_world::draw(RenderTarget & upon) {
 }
 
 void game_world::despawn(size_t id) {
-	sheduled_for_deletion.emplace_back(id);
+	if(ticking)
+		sheduled_for_deletion.emplace_back(id);
+	else
+		entities.erase(id);
 }
