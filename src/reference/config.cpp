@@ -64,10 +64,13 @@ namespace config_subcategories {
 
 	struct player {
 		float & player_speed;
+		float & player_stamina_regen;
+		float & player_bullet_stamina_cost;
 
 		template <class Archive>
 		void serialize(Archive & archive) {
-			archive(cereal::make_nvp("speed", player_speed));
+			archive(cereal::make_nvp("speed", player_speed), cereal::make_nvp("stamina_regen", player_stamina_regen),
+			        cereal::make_nvp("bullet_stamina_cost", player_bullet_stamina_cost));
 		}
 	};
 }
@@ -76,7 +79,7 @@ template <class Archive>
 void serialize(Archive & archive, config & cc) {
 	archive(cereal::make_nvp("system", config_subcategories::system{cc.language, cc.controller_deadzone}),
 	        cereal::make_nvp("application", config_subcategories::application{cc.vsync, cc.FPS, cc.play_sounds, cc.splash_length}),
-	        cereal::make_nvp("player", config_subcategories::player{cc.player_speed}));
+	        cereal::make_nvp("player", config_subcategories::player{cc.player_speed, cc.player_stamina_regen, cc.player_bullet_stamina_cost}));
 }
 
 
@@ -86,8 +89,7 @@ config::config(string && ppath) : path(move(ppath)) {
 		cereal::JSONInputArchive archive(configfile);
 		try {
 			archive(*this);
-		} catch(cereal::RapidJSONException &) {
-		} catch(cereal::Exception &) {
+		} catch(...) {
 		}
 	}
 }

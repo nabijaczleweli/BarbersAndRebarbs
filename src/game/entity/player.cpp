@@ -23,6 +23,7 @@
 #include "player.hpp"
 #include "bullet.hpp"
 #include "../world.hpp"
+#include "../../app/application.hpp"
 #include "../../reference/joystick_info.hpp"
 #include "../../reference/container.hpp"
 #include "seed11/seed11.hpp"
@@ -77,6 +78,8 @@ void player::write_to_nbt(cpp_nbt::nbt_compound & to) const {
 }
 
 void player::tick(float max_x, float max_y) {
+	static const auto stamina_regen_frame = app_configuration.player_stamina_regen / application::effective_FPS();
+
 	entity::tick(max_x, max_y);
 
 	auto delta_speed_x = 0.f;
@@ -105,19 +108,20 @@ void player::tick(float max_x, float max_y) {
 
 	start_movement(delta_speed_x, delta_speed_y);
 
-	fp = min(1., fp + .002);
+	fp = min(1.f, fp + stamina_regen_frame);
 }
 
 void player::handle_event(const Event & event) {
-	if(fp >= .05 && event.type == Event::EventType::MouseButtonPressed && event.mouseButton.button == Mouse::Button::Left) {
-		fp -= .05;
+	if(fp >= app_configuration.player_bullet_stamina_cost && event.type == Event::EventType::MouseButtonPressed &&
+	   event.mouseButton.button == Mouse::Button::Left) {
+		fp -= app_configuration.player_bullet_stamina_cost;
 		world.spawn_create<bullet>(static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), x, y);
-	} else if(fp >= .05 && event.type == Event::EventType::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::RB &&
-	          event.joystickButton.joystickId == 0) {
+	} else if(fp >= app_configuration.player_bullet_stamina_cost && event.type == Event::EventType::JoystickButtonPressed &&
+	          event.joystickButton.button == X360_button_mappings::RB && event.joystickButton.joystickId == 0) {
 		const auto horizontal = Joystick::getAxisPosition(0, X360_axis_mappings::RightStickHorizontal);
 		const auto vertical   = Joystick::getAxisPosition(0, X360_axis_mappings::RightStickVertical);
 		if(abs(horizontal) > app_configuration.controller_deadzone && abs(vertical) > app_configuration.controller_deadzone) {
-			fp -= .05;
+			fp -= app_configuration.player_bullet_stamina_cost;
 			world.spawn_create<bullet>(Vector2f(horizontal, vertical), x, y);
 		}
 	}
