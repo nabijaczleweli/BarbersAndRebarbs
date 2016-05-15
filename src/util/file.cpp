@@ -41,7 +41,7 @@ public:
 
 
 // http://stackoverflow.com/questions/612097/how-can-i-get-a-list-of-files-in-a-directory-using-c-or-c
-vector<string> list_files(string directory) {
+vector<string> list_files(const string & directory) {
 	vector<string> result;
 	if(const auto dir = unique_ptr<DIR, DIR_deleter>(opendir(directory.c_str()))) {
 		/* print all the files and directories within directory */

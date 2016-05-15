@@ -28,6 +28,6 @@
 
 
 // http://stackoverflow.com/questions/612097/how-can-i-get-a-list-of-files-in-a-directory-using-c-or-c
-std::vector<std::string> list_files(std::string directory);
+std::vector<std::string> list_files(const std::string & directory);
 
 bool file_exists(const std::string & path);
