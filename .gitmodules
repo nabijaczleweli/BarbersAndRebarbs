@@ -22,3 +22,4 @@
 [submodule "audiere"]
 	path = ext/audiere
 	url = https://github.com/nabijaczleweli/audiere.git
+	branch = v1.9.4
