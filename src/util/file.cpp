@@ -22,32 +22,37 @@
 
 #include "file.hpp"
 #include <cstdio>
+#include <memory>
 #include <dirent.h>
+
 
 using namespace std;
 
 
+class DIR_deleter {
+public:
+	void operator()(DIR * dir) { closedir(dir); }
+};
+
+class FILE_deleter {
+public:
+	void operator()(FILE * file) { fclose(file); }
+};
+
+
 // http://stackoverflow.com/questions/612097/how-can-i-get-a-list-of-files-in-a-directory-using-c-or-c
 vector<string> list_files(string directory) {
-	DIR * dir    = nullptr;
-	dirent * ent = nullptr;
 	vector<string> result;
-	if((dir = opendir(directory.c_str())) != nullptr) {
+	if(const auto dir = unique_ptr<DIR, DIR_deleter>(opendir(directory.c_str()))) {
 		/* print all the files and directories within directory */
-		while((ent = readdir(dir)) != nullptr)
+		while(const auto ent = readdir(dir.get()))
 			result.emplace_back(ent->d_name);
-		closedir(dir);
-		dir = nullptr;
-		ent = nullptr;
 		result.shrink_to_fit();
 	}
 	return result;
 }
 
-bool file_exists(const std::string & path) {
-	if(FILE * file = fopen(path.c_str(), "r")) {
-		fclose(file);
-		return true;
-	} else
-		return false;
+bool file_exists(const string & path) {
+	unique_ptr<FILE, FILE_deleter> file(fopen(path.c_str(), "r"));
+	return file.get();
 }
