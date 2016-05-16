@@ -28,27 +28,61 @@ using namespace sf;
 using namespace std;
 
 
-firearm::firearm(game_world & w, const string & gun_id) : props(&properties().at(gun_id)), world(&w) {}
+firearm::firearm(game_world & w, const string & gun_id)
+      : props(&properties().at(gun_id)), world(&w), action_speed(chrono::duration_cast<chrono::high_resolution_clock::duration>(
+                                                        chrono::microseconds(static_cast<chrono::microseconds::rep>(props->action_speed * micro::den)))),
+        trigger_pulled(false) {}
 
 bool firearm::trigger(float pos_x, float pos_y, const Vector2f & aim, bool sufficient_stam) {
-	if(sufficient_stam)
-		world->spawn_create<bullet>(aim, pos_x, pos_y, cref(props->bullet_props));
-	return sufficient_stam;
+	const auto now          = chrono::high_resolution_clock::now();
+	const auto action_ready = now - action_repeat_start >= action_speed;
+
+	trigger_pulled = true;
+
+	if(action_ready)
+		if(sufficient_stam) {
+			world->spawn_create<bullet>(aim, pos_x, pos_y, cref(props->bullet_props));
+			action_repeat_start = now;
+		}
+
+	return action_ready && sufficient_stam;
 }
 
 bool firearm::tick(float pos_x, float pos_y, const Vector2f & aim, bool sufficient_stam) {
-	const auto shoot = sufficient_stam && props->fire_mode == firearm_properties::fire_mode_t::full_auto;
+	const auto shoot = sufficient_stam && trigger_pulled && props->fire_mode == firearm_properties::fire_mode_t::full_auto;
 
-	if(shoot)
-		world->spawn_create<bullet>(aim, pos_x, pos_y, cref(props->bullet_props));
+	if(shoot) {
+		const auto now          = chrono::high_resolution_clock::now();
+		const auto action_ready = now - action_repeat_start >= action_speed;
+
+		if(action_ready) {
+			world->spawn_create<bullet>(aim, pos_x, pos_y, cref(props->bullet_props));
+			action_repeat_start = now;
+		}
+
+		return action_ready;
+	}
+
 	return shoot;
 }
 
 bool firearm::untrigger(float pos_x, float pos_y, const Vector2f & aim, bool sufficient_stam) {
 	const auto shoot = sufficient_stam && props->fire_mode == firearm_properties::fire_mode_t::semi_auto_response_trigger;
 
-	if(shoot)
-		world->spawn_create<bullet>(aim, pos_x, pos_y, cref(props->bullet_props));
+	trigger_pulled = false;
+
+	if(shoot) {
+		const auto now          = chrono::high_resolution_clock::now();
+		const auto action_ready = now - action_repeat_start >= action_speed;
+
+		if(action_ready) {
+			world->spawn_create<bullet>(aim, pos_x, pos_y, cref(props->bullet_props));
+			action_repeat_start = now;
+		}
+
+		return action_ready;
+	}
+
 	return shoot;
 }
 

@@ -26,6 +26,7 @@
 #include "../world.hpp"
 #include "firearm_properties.hpp"
 #include <SFML/System.hpp>
+#include <chrono>
 #include <map>
 #include <string>
 
@@ -34,6 +35,10 @@ class firearm {
 private:
 	const firearm_properties * props;
 	game_world * world;
+	/*const*/ std::chrono::high_resolution_clock::duration action_speed;
+
+	std::chrono::high_resolution_clock::time_point action_repeat_start;
+	bool trigger_pulled;
 
 public:
 	static const std::map<std::string, firearm_properties> & properties();
