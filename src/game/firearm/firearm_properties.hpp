@@ -39,6 +39,7 @@ struct firearm_properties {
 	};
 
 
+	std::string id;
 	std::string name;
 	bullet_properties bullet_props;
 	fire_mode_t fire_mode;

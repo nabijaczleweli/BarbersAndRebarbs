@@ -55,9 +55,11 @@ static pair<string, firearm_properties> load_single(string && filename) {
 	json::value doc;
 	json::parse(gun_file, doc);
 
-	auto bullet = doc["bullet"].as<json::object>();
-	return {doc["id"].as<string>(),
+	auto bullet   = doc["bullet"].as<json::object>();
+	const auto id = doc["id"].as<string>();
+	return {id,
 	        {
+	            id,
 	            doc["name"].as<string>(),
 	            {
 	                bullet["speed"].as<float>(),  //
@@ -80,6 +82,3 @@ firearm_properties::fire_mode_t fire_mode_from_string(const string & name) {
 	else
 		throw domain_error("\"" + name + "\" is not a fire_mode");
 }
-
-
-static const map<string, firearm_properties> & ____ = firearm::properties();
