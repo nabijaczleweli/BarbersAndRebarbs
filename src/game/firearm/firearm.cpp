@@ -45,7 +45,7 @@ bool firearm::tick(float pos_x, float pos_y, const Vector2f & aim, bool sufficie
 }
 
 bool firearm::untrigger(float pos_x, float pos_y, const Vector2f & aim, bool sufficient_stam) {
-	const auto shoot = sufficient_stam && false;
+	const auto shoot = sufficient_stam && props->fire_mode == firearm_properties::fire_mode_t::semi_auto_response_trigger;
 
 	if(shoot)
 		world->spawn_create<bullet>(aim, pos_x, pos_y, cref(props->bullet_props));

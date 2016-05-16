@@ -35,6 +35,8 @@ struct firearm_properties {
 	enum class fire_mode_t {
 		full_auto,
 		semi_auto,
+		// https://www.youtube.com/watch?v=PYThNUVZrYM
+		semi_auto_response_trigger,
 		single_shot,
 	};
 

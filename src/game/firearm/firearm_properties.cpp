@@ -77,6 +77,8 @@ firearm_properties::fire_mode_t fire_mode_from_string(const string & name) {
 		return firearm_properties::fire_mode_t::full_auto;
 	else if(name == "semi-auto")
 		return firearm_properties::fire_mode_t::semi_auto;
+	else if(name == "semi-auto-response-trigger")
+		return firearm_properties::fire_mode_t::semi_auto_response_trigger;
 	else if(name == "single-shot")
 		return firearm_properties::fire_mode_t::single_shot;
 	else
