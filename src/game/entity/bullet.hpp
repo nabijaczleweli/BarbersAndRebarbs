@@ -24,6 +24,7 @@
 
 
 #include "entity.hpp"
+#include "../firearm/firearm_properties.hpp"
 #include <SFML/Graphics.hpp>
 
 
@@ -32,12 +33,14 @@ protected:
 	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 
 private:
+	const bullet_properties & props;
+
 public:
-	static std::unique_ptr<bullet> create(game_world & world, std::size_t id, sf::Vector2f aim, unsigned int x, unsigned int y);
+	static std::unique_ptr<bullet> create(game_world & world, std::size_t id, sf::Vector2f aim, unsigned int x, unsigned int y, const bullet_properties & props);
 
 
 	using entity::entity;
-	bullet(game_world & world, std::size_t id, unsigned int x, unsigned int y);
+	bullet(game_world & world, std::size_t id, unsigned int x, unsigned int y, const bullet_properties & props);
 
 	virtual ~bullet() = default;
 

@@ -21,16 +21,41 @@
 
 
 #include "firearm.hpp"
+#include "../entity/bullet.hpp"
 
 
 using namespace sf;
 using namespace std;
 
 
-firearm::firearm(game_world & w, const string & gun_name) : world(w) {}
+firearm::firearm(game_world & w, const string & gun_id) : props(&properties().at(gun_id)), world(&w) {}
 
-void firearm::trigger(const Vector2f & aim) {}
+bool firearm::trigger(float pos_x, float pos_y, const Vector2f & aim, bool sufficient_stam) {
+	if(sufficient_stam)
+		world->spawn_create<bullet>(aim, pos_x, pos_y, cref(props->bullet_props));
+	return sufficient_stam;
+}
 
-void firearm::tick(const Vector2f & aim) {}
+bool firearm::tick(float pos_x, float pos_y, const Vector2f & aim, bool sufficient_stam) {
+	const auto shoot = sufficient_stam && props->fire_mode == firearm_properties::fire_mode_t::full_auto;
 
-void firearm::untrigger(const Vector2f & aim) {}
+	if(shoot)
+		world->spawn_create<bullet>(aim, pos_x, pos_y, cref(props->bullet_props));
+	return shoot;
+}
+
+bool firearm::untrigger(float pos_x, float pos_y, const Vector2f & aim, bool sufficient_stam) {
+	const auto shoot = sufficient_stam && false;
+
+	if(shoot)
+		world->spawn_create<bullet>(aim, pos_x, pos_y, cref(props->bullet_props));
+	return shoot;
+}
+
+const string & firearm::id() const noexcept {
+	return props->id;
+}
+
+const string & firearm::name() const noexcept {
+	return props->name;
+}

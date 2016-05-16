@@ -26,21 +26,25 @@
 #include "../world.hpp"
 #include "firearm_properties.hpp"
 #include <SFML/System.hpp>
-#include <string>
 #include <map>
+#include <string>
 
 
 class firearm {
 private:
-	game_world & world;
+	const firearm_properties * props;
+	game_world * world;
 
 public:
 	static const std::map<std::string, firearm_properties> & properties();
 
 
-	firearm(game_world & world, const std::string & gun_name);
+	firearm(game_world & world, const std::string & gun_id);
 
-	void trigger(const sf::Vector2f & aim);
-	void tick(const sf::Vector2f & aim);
-	void untrigger(const sf::Vector2f & aim);
+	bool trigger(float pos_x, float pos_y, const sf::Vector2f & aim, bool sufficient_stam);
+	bool tick(float pos_x, float pos_y, const sf::Vector2f & aim, bool sufficient_stam);
+	bool untrigger(float pos_x, float pos_y, const sf::Vector2f & aim, bool sufficient_stam);
+
+	const std::string & id() const noexcept;
+	const std::string & name() const noexcept;
 };

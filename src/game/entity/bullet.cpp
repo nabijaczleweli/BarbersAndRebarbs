@@ -21,10 +21,10 @@
 
 
 #include "bullet.hpp"
-#include "../world.hpp"
-#include "../../reference/joystick_info.hpp"
 #include "../../reference/container.hpp"
+#include "../../reference/joystick_info.hpp"
 #include "../../util/vector.hpp"
+#include "../world.hpp"
 #include <SFML/Window.hpp>
 
 
@@ -33,8 +33,8 @@ using namespace std;
 using namespace sf;
 
 
-unique_ptr<bullet> bullet::create(game_world & world, size_t id, Vector2f aim, unsigned int x, unsigned int y) {
-	auto bull = make_unique<bullet>(ref(world), id, x, y);
+unique_ptr<bullet> bullet::create(game_world & world, size_t id, Vector2f aim, unsigned int x, unsigned int y, const bullet_properties & props) {
+	auto bull = make_unique<bullet>(ref(world), id, x, y, cref(props));
 
 	aim = normalised(aim);
 	// TODO: remove in favour of time-based bullet lifespan
@@ -56,7 +56,7 @@ void bullet::draw(RenderTarget & target, RenderStates states) const {
 	target.draw(vertices, 2, PrimitiveType::Lines, states);
 }
 
-bullet::bullet(game_world & world_r, size_t id_a, unsigned int px, unsigned int py) : entity(world_r, id_a) {
+bullet::bullet(game_world & world_r, size_t id_a, unsigned int px, unsigned int py, const bullet_properties & pprops) : entity(world_r, id_a), props(pprops) {
 	x = px;
 	y = py;
 }
@@ -64,7 +64,7 @@ bullet::bullet(game_world & world_r, size_t id_a, unsigned int px, unsigned int 
 void bullet::tick(float max_x, float max_y) {
 	entity::tick(max_x, max_y);
 
-	const auto min_speed = speed() * speed_loss() * 10;
+	const auto min_speed = props.speed * props.speed_loss * 10;
 	// Only kill the bullet if it's moving in that direction the the first place, see `bullet::create()`
 	// TODO: remove in favour of time-based bullet lifespan
 	if((motion_x && abs(motion_x) < min_speed) || (motion_y && abs(motion_y) < min_speed))
@@ -72,9 +72,9 @@ void bullet::tick(float max_x, float max_y) {
 }
 
 float bullet::speed() const {
-	return 5.5;
+	return props.speed;
 }
 
 float bullet::speed_loss() const {
-	return .001;
+	return props.speed_loss;
 }

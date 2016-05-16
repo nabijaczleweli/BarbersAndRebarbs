@@ -21,11 +21,11 @@
 
 
 #include "player.hpp"
-#include "bullet.hpp"
-#include "../world.hpp"
 #include "../../app/application.hpp"
-#include "../../reference/joystick_info.hpp"
 #include "../../reference/container.hpp"
+#include "../../reference/joystick_info.hpp"
+#include "../world.hpp"
+#include "bullet.hpp"
 #include "seed11/seed11.hpp"
 #include <SFML/Window.hpp>
 #include <random>
@@ -35,6 +35,14 @@ using namespace cpp_nbt;
 using namespace std;
 using namespace sf;
 
+
+pair<bool, Vector2f> player::controller_aim(unsigned int controller_id) const {
+	const auto horizontal      = Joystick::getAxisPosition(controller_id, X360_axis_mappings::RightStickHorizontal);
+	const auto vertical        = Joystick::getAxisPosition(controller_id, X360_axis_mappings::RightStickVertical);
+	const auto out_of_deadzone = abs(horizontal) > app_configuration.controller_deadzone && abs(vertical) > app_configuration.controller_deadzone;
+
+	return {out_of_deadzone, {horizontal, vertical}};
+}
 
 void player::draw(RenderTarget & target, RenderStates states) const {
 	static const Color body_colour(231, 158, 109);
@@ -53,7 +61,7 @@ void player::draw(RenderTarget & target, RenderStates states) const {
 	target.draw(vertices, 8, PrimitiveType::Points, states);
 }
 
-player::player(game_world & world_r, size_t id_a, Vector2u screen_size) : entity(world_r, id_a), hp(1), fp(1) {
+player::player(game_world & world_r, size_t id_a, Vector2u screen_size) : entity(world_r, id_a), gun(world_r, "default"), hp(1), fp(1) {
 	static auto rand = seed11::make_seeded<mt19937>();
 
 	uniform_real_distribution<float> x_dist(0, screen_size.x - 1);
@@ -65,6 +73,8 @@ player::player(game_world & world_r, size_t id_a, Vector2u screen_size) : entity
 
 void player::read_from_nbt(const cpp_nbt::nbt_compound & from) {
 	entity::read_from_nbt(from);
+	if(auto fgun_id = from.get_string("gun_id"))
+		gun = firearm(world, *fgun_id);
 	if(auto fhp = from.get_float("hp"))
 		hp = *fhp;
 	if(auto ffp = from.get_float("fp"))
@@ -73,6 +83,7 @@ void player::read_from_nbt(const cpp_nbt::nbt_compound & from) {
 
 void player::write_to_nbt(cpp_nbt::nbt_compound & to) const {
 	entity::write_to_nbt(to);
+	to.set_string("gun_id", gun.id());
 	to.set_float("hp", hp);
 	to.set_float("fp", fp);
 }
@@ -109,21 +120,33 @@ void player::tick(float max_x, float max_y) {
 	start_movement(delta_speed_x, delta_speed_y);
 
 	fp = min(1.f, fp + stamina_regen_frame);
+
+	const auto sufficient_stam = fp >= app_configuration.player_bullet_stamina_cost;
+	if(gun.tick(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), sufficient_stam))
+		fp -= app_configuration.player_bullet_stamina_cost;
 }
 
 void player::handle_event(const Event & event) {
-	if(fp >= app_configuration.player_bullet_stamina_cost && event.type == Event::EventType::MouseButtonPressed &&
-	   event.mouseButton.button == Mouse::Button::Left) {
-		fp -= app_configuration.player_bullet_stamina_cost;
-		world.spawn_create<bullet>(static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), x, y);
-	} else if(fp >= app_configuration.player_bullet_stamina_cost && event.type == Event::EventType::JoystickButtonPressed &&
-	          event.joystickButton.button == X360_button_mappings::RB && event.joystickButton.joystickId == 0) {
-		const auto horizontal = Joystick::getAxisPosition(0, X360_axis_mappings::RightStickHorizontal);
-		const auto vertical   = Joystick::getAxisPosition(0, X360_axis_mappings::RightStickVertical);
-		if(abs(horizontal) > app_configuration.controller_deadzone && abs(vertical) > app_configuration.controller_deadzone) {
+	const auto sufficient_stam = fp >= app_configuration.player_bullet_stamina_cost;
+
+	if(event.type == Event::EventType::MouseButtonPressed && event.mouseButton.button == Mouse::Button::Left) {
+		if(gun.trigger(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), sufficient_stam))
 			fp -= app_configuration.player_bullet_stamina_cost;
-			world.spawn_create<bullet>(Vector2f(horizontal, vertical), x, y);
-		}
+	} else if(event.type == Event::EventType::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::RB &&
+	          event.joystickButton.joystickId == 0) {
+		const auto aim = controller_aim(0);
+		if(aim.first)
+			if(gun.trigger(x, y, aim.second, sufficient_stam))
+				fp -= app_configuration.player_bullet_stamina_cost;
+	} else if(event.type == Event::EventType::MouseButtonReleased && event.mouseButton.button == Mouse::Button::Left) {
+		if(gun.untrigger(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), sufficient_stam))
+			fp -= app_configuration.player_bullet_stamina_cost;
+	} else if(event.type == Event::EventType::JoystickButtonReleased && event.joystickButton.button == X360_button_mappings::RB &&
+	          event.joystickButton.joystickId == 0) {
+		const auto aim = controller_aim(0);
+		if(aim.first)
+			if(gun.untrigger(x, y, aim.second, sufficient_stam))
+				fp -= app_configuration.player_bullet_stamina_cost;
 	}
 }
 

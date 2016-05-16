@@ -23,6 +23,7 @@
 #pragma once
 
 
+#include "../firearm/firearm.hpp"
 #include "entity.hpp"
 #include "event_handler.hpp"
 #include <SFML/Graphics.hpp>
@@ -32,7 +33,10 @@ class player : public entity, public event_handler, public sf::Drawable {
 protected:
 	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 
+	std::pair<bool, sf::Vector2f> controller_aim(unsigned int controller_id) const;
+
 private:
+	firearm gun;
 	float hp;
 	float fp;
 
