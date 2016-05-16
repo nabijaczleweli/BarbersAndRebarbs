@@ -37,7 +37,6 @@ struct firearm_properties {
 		semi_auto,
 		// https://www.youtube.com/watch?v=PYThNUVZrYM
 		semi_auto_response_trigger,
-		single_shot,
 	};
 
 
