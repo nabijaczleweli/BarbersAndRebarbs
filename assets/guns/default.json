@@ -1,0 +1,15 @@
+{
+	"id": "default",
+	"name": "Beretta M9A1",
+
+	"bullet": {
+		"speed": 3.81,
+		"speed_loss": 0.00762
+	},
+
+	"fire_mode": "semi-auto",
+	"//": "Extracted from https://www.youtube.com/watch?v=HcXJvwUXhPg",
+	"action_speed": 0.204,
+	"reload_speed": 2.265,
+	"mag_size": 17
+}

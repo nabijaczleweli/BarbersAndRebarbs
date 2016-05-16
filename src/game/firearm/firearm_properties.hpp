@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 
-// Copyright (c) 2014 nabijaczleweli
+// Copyright (c) 2016 nabijaczleweli
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -23,31 +23,26 @@
 #pragma once
 
 
-#include "config.hpp"
-#include "../resource/localizer.hpp"
-#include "audiere.h"
-#include <SFML/Graphics.hpp>
 #include <string>
 
 
-extern const std::string assets_root;
-extern const std::string textures_root;
-extern const std::string font_root;
-extern const std::string sound_root;
-extern const std::string localization_root;
-extern const std::string drawing_root;
-extern const std::string firearm_root;
+struct bullet_properties {
+	float speed;
+	float speed_loss;
+};
 
-extern const std::string app_name;
-extern /***/ config app_configuration;
-
-extern const localizer fallback_izer;
-extern const localizer local_izer;
-extern const localizer global_izer;
+struct firearm_properties {
+	enum class fire_mode_t {
+		full_auto,
+		semi_auto,
+		single_shot,
+	};
 
 
-extern const sf::Font font_pixelish;
-extern const sf::Font font_swirly;
-
-
-extern const audiere::AudioDevicePtr audio_device;
+	std::string name;
+	bullet_properties bullet_props;
+	fire_mode_t fire_mode;
+	float action_speed;
+	float reload_speed;
+	unsigned int mag_size;
+};

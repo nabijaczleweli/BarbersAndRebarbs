@@ -25,7 +25,6 @@
 #include "../reference/container.hpp"
 #include "jsonpp/parser.hpp"
 #include <iterator>
-#include <cassert>
 #include <fstream>
 
 
@@ -73,7 +72,7 @@ drawing::drawing(const string & model_name, const Vector2f & window_size) : own_
 			rctgl[2].position.y = data[2]["y"].as<double>();
 			rctgl[3].position.x = data[3]["x"].as<double>();
 			rctgl[3].position.y = data[3]["y"].as<double>();
-			rctgl[4] = rctgl[0];
+			rctgl[4]            = rctgl[0];
 			rectangles.emplace_back(rctgl);
 		} else if(type == "bezier_curve") {
 			auto && data = element["data"];

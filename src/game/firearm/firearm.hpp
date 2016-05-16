@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 
-// Copyright (c) 2014 nabijaczleweli
+// Copyright (c) 2016 nabijaczleweli
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -23,31 +23,24 @@
 #pragma once
 
 
-#include "config.hpp"
-#include "../resource/localizer.hpp"
-#include "audiere.h"
-#include <SFML/Graphics.hpp>
+#include "../world.hpp"
+#include "firearm_properties.hpp"
+#include <SFML/System.hpp>
 #include <string>
+#include <map>
 
 
-extern const std::string assets_root;
-extern const std::string textures_root;
-extern const std::string font_root;
-extern const std::string sound_root;
-extern const std::string localization_root;
-extern const std::string drawing_root;
-extern const std::string firearm_root;
+class firearm {
+private:
+	game_world & world;
 
-extern const std::string app_name;
-extern /***/ config app_configuration;
-
-extern const localizer fallback_izer;
-extern const localizer local_izer;
-extern const localizer global_izer;
+public:
+	static const std::map<std::string, firearm_properties> & properties();
 
 
-extern const sf::Font font_pixelish;
-extern const sf::Font font_swirly;
+	firearm(game_world & world, const std::string & gun_name);
 
-
-extern const audiere::AudioDevicePtr audio_device;
+	void trigger(const sf::Vector2f & aim);
+	void tick(const sf::Vector2f & aim);
+	void untrigger(const sf::Vector2f & aim);
+};
