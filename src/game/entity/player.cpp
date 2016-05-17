@@ -91,6 +91,8 @@ void player::write_to_nbt(cpp_nbt::nbt_compound & to) const {
 void player::tick(float max_x, float max_y) {
 	static const auto stamina_regen_frame = app_configuration.player_stamina_regen / application::effective_FPS();
 
+	const auto joystick_connected = Joystick::isConnected(0);
+
 	entity::tick(max_x, max_y);
 
 	auto delta_speed_x = 0.f;
@@ -105,7 +107,7 @@ void player::tick(float max_x, float max_y) {
 	if(Keyboard::isKeyPressed(Keyboard::Key::S))
 		delta_speed_y += 1;
 
-	if(Joystick::isConnected(0)) {
+	if(joystick_connected) {
 		const auto horizontal = Joystick::getAxisPosition(0, X360_axis_mappings::LeftStickHorizontal);
 		const auto vertical   = Joystick::getAxisPosition(0, X360_axis_mappings::LeftStickVertical);
 		if(abs(horizontal) > app_configuration.controller_deadzone && abs(vertical) > app_configuration.controller_deadzone) {
@@ -122,7 +124,13 @@ void player::tick(float max_x, float max_y) {
 	fp = min(1.f, fp + stamina_regen_frame);
 
 	const auto sufficient_stam = fp >= app_configuration.player_bullet_stamina_cost;
-	if(gun.tick(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), sufficient_stam))
+
+	if(joystick_connected) {
+		const auto aim = controller_aim(0);
+		if(aim.first)
+			if(gun.tick(x, y, aim.second, sufficient_stam))
+				fp -= app_configuration.player_bullet_stamina_cost;
+	} else if(gun.tick(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), sufficient_stam))
 		fp -= app_configuration.player_bullet_stamina_cost;
 }
 
