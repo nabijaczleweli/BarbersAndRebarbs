@@ -61,7 +61,8 @@ void player::draw(RenderTarget & target, RenderStates states) const {
 	target.draw(vertices, 8, PrimitiveType::Points, states);
 }
 
-player::player(game_world & world_r, size_t id_a, Vector2u screen_size) : entity(world_r, id_a), gun(world_r, "default"), hp(1), fp(1) {
+player::player(game_world & world_r, size_t id_a, Vector2u screen_size)
+      : entity(world_r, id_a), gun(world_r, app_configuration.player_default_firearm), hp(1), fp(1) {
 	static auto rand = seed11::make_seeded<mt19937>();
 
 	uniform_real_distribution<float> x_dist(0, screen_size.x - 1);

@@ -36,13 +36,14 @@ public:
 	bool play_sounds           = true;
 	unsigned int splash_length = 2;
 
-	float player_speed               = 1;
-	float player_stamina_regen       = .12f;
-	float player_bullet_stamina_cost = .05f;
+	float player_speed                 = 1;
+	float player_stamina_regen         = .12f;
+	float player_bullet_stamina_cost   = .05f;
+	std::string player_default_firearm = "default";
 
 
 	config(const config &) = default;
-	config(config &&) = default;
+	config(config &&)      = default;
 	config(std::string && path);
 
 	~config();
