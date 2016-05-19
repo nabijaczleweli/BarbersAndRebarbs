@@ -136,26 +136,31 @@ void player::tick(float max_x, float max_y) {
 }
 
 void player::handle_event(const Event & event) {
-	const auto sufficient_stam = fp >= app_configuration.player_bullet_stamina_cost;
+	const auto sufficient_stam_shot   = fp >= app_configuration.player_bullet_stamina_cost;
+	const auto sufficient_stam_reload = fp >= .1;
 
 	if(event.type == Event::EventType::MouseButtonPressed && event.mouseButton.button == Mouse::Button::Left) {
-		if(gun.trigger(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), sufficient_stam))
+		if(gun.trigger(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), sufficient_stam_shot))
 			fp -= app_configuration.player_bullet_stamina_cost;
 	} else if(event.type == Event::EventType::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::RB &&
 	          event.joystickButton.joystickId == 0) {
 		const auto aim = controller_aim(0);
 		if(aim.first)
-			if(gun.trigger(x, y, aim.second, sufficient_stam))
+			if(gun.trigger(x, y, aim.second, sufficient_stam_shot))
 				fp -= app_configuration.player_bullet_stamina_cost;
 	} else if(event.type == Event::EventType::MouseButtonReleased && event.mouseButton.button == Mouse::Button::Left) {
-		if(gun.untrigger(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), sufficient_stam))
+		if(gun.untrigger(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), sufficient_stam_shot))
 			fp -= app_configuration.player_bullet_stamina_cost;
 	} else if(event.type == Event::EventType::JoystickButtonReleased && event.joystickButton.button == X360_button_mappings::RB &&
 	          event.joystickButton.joystickId == 0) {
 		const auto aim = controller_aim(0);
 		if(aim.first)
-			if(gun.untrigger(x, y, aim.second, sufficient_stam))
+			if(gun.untrigger(x, y, aim.second, sufficient_stam_shot))
 				fp -= app_configuration.player_bullet_stamina_cost;
+	} else if(sufficient_stam_reload && ((event.type == Event::EventType::KeyPressed && event.key.code == Keyboard::Key::R) ||
+	                                     (event.type == Event::EventType::JoystickButtonReleased && event.joystickButton.button == X360_button_mappings::Y))) {
+		gun.reload();
+		fp -= .1;
 	}
 }
 
