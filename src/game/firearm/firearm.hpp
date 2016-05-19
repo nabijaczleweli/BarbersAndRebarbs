@@ -36,9 +36,12 @@ private:
 	const firearm_properties * props;
 	game_world * world;
 	/*const*/ std::chrono::high_resolution_clock::duration action_speed;
+	/*const*/ std::chrono::high_resolution_clock::duration reload_speed;
 
 	std::chrono::high_resolution_clock::time_point action_repeat_start;
+	std::chrono::high_resolution_clock::time_point mag_reload_start;
 	bool trigger_pulled;
+	unsigned int left_in_mag;
 
 public:
 	static const std::map<std::string, firearm_properties> & properties();
@@ -49,6 +52,7 @@ public:
 	bool trigger(float pos_x, float pos_y, const sf::Vector2f & aim, bool sufficient_stam);
 	bool tick(float pos_x, float pos_y, const sf::Vector2f & aim, bool sufficient_stam);
 	bool untrigger(float pos_x, float pos_y, const sf::Vector2f & aim, bool sufficient_stam);
+	void reload();
 
 	const std::string & id() const noexcept;
 	const std::string & name() const noexcept;
