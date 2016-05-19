@@ -32,24 +32,28 @@ using namespace std;
 void circle_chunk::draw(RenderTarget & target, RenderStates states) const {
 	static const auto tau = acos(-1) * 2;
 
-	vector<Vertex> vertices;
-	vertices.reserve(points);
-
-	for(auto i = 0.; i < points; ++i)
-		vertices.emplace_back(Vector2f(r * cos(i / points * fract * tau), r * sin(i / points * fract * tau)), clr);
+	if(recompute_next_time) {
+		if(vertices.size() != points)
+			vertices.resize(points);
+		for(auto i = 0.; i < points; ++i) {
+			vertices[i] = {{static_cast<float>(r * cos(i / points * fract * tau)), static_cast<float>(r * sin(i / points * fract * tau))}, clr};
+		}
+		recompute_next_time = false;
+	}
 
 	states.transform *= getTransform();
 	target.draw(vertices.data(), vertices.size(), PrimitiveType::LinesStrip, states);
 }
 
-circle_chunk::circle_chunk(float frcn, float rad, unsigned int np) : fract(frcn), r(rad), points(np) {}
+circle_chunk::circle_chunk(float frcn, float rad, unsigned int np) : fract(frcn), r(rad), points(np), recompute_next_time(true) {}
 
 float circle_chunk::radius() const {
 	return r;
 }
 
 void circle_chunk::radius(float new_radius) {
-	r = new_radius;
+	r                   = new_radius;
+	recompute_next_time = true;
 }
 
 float circle_chunk::point_amount() const {
@@ -57,7 +61,8 @@ float circle_chunk::point_amount() const {
 }
 
 void circle_chunk::point_amount(float new_point_amount) {
-	points = new_point_amount;
+	points              = new_point_amount;
+	recompute_next_time = true;
 }
 
 float circle_chunk::fraction() const {
@@ -65,7 +70,8 @@ float circle_chunk::fraction() const {
 }
 
 void circle_chunk::fraction(float new_fraction) {
-	fract = new_fraction;
+	fract               = new_fraction;
+	recompute_next_time = true;
 }
 
 
@@ -74,5 +80,6 @@ const Color & circle_chunk::colour() const {
 }
 
 void circle_chunk::colour(Color new_colour) {
-	clr = std::move(new_colour);
+	clr                 = std::move(new_colour);
+	recompute_next_time = true;
 }

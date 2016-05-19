@@ -32,9 +32,11 @@ private:
 	float r;
 	float points;
 	sf::Color clr;
+	mutable bool recompute_next_time;
+	mutable std::vector<sf::Vertex> vertices;
 
 protected:
-	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const;
+	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 
 public:
 	circle_chunk(float fraction = 1, float radius = 0, unsigned int point_amount = 30);
