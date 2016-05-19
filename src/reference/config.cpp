@@ -65,12 +65,14 @@ namespace config_subcategories {
 		float & player_speed;
 		float & player_stamina_regen;
 		float & player_bullet_stamina_cost;
+		float & player_reload_stamina_cost;
 		string & player_default_firearm;
 
 		template <class Archive>
 		void serialize(Archive & archive) {
 			archive(cereal::make_nvp("speed", player_speed), cereal::make_nvp("stamina_regen", player_stamina_regen),
-			        cereal::make_nvp("bullet_stamina_cost", player_bullet_stamina_cost), cereal::make_nvp("default_firearm", player_default_firearm));
+			        cereal::make_nvp("bullet_stamina_cost", player_bullet_stamina_cost), cereal::make_nvp("reload_stamina_cost", player_reload_stamina_cost),
+			        cereal::make_nvp("default_firearm", player_default_firearm));
 		}
 	};
 }
@@ -79,8 +81,8 @@ template <class Archive>
 void serialize(Archive & archive, config & cc) {
 	archive(cereal::make_nvp("system", config_subcategories::system{cc.language, cc.controller_deadzone}),
 	        cereal::make_nvp("application", config_subcategories::application{cc.vsync, cc.FPS, cc.play_sounds, cc.splash_length}),
-	        cereal::make_nvp("player",
-	                         config_subcategories::player{cc.player_speed, cc.player_stamina_regen, cc.player_bullet_stamina_cost, cc.player_default_firearm}));
+	        cereal::make_nvp("player", config_subcategories::player{cc.player_speed, cc.player_stamina_regen, cc.player_bullet_stamina_cost,
+	                                                                cc.player_reload_stamina_cost, cc.player_default_firearm}));
 }
 
 
