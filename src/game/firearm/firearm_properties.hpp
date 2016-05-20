@@ -47,4 +47,5 @@ struct firearm_properties {
 	float action_speed;
 	float reload_speed;
 	unsigned int mag_size;
+	unsigned int mag_quantity;
 };

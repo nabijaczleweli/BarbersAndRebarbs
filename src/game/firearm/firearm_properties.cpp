@@ -69,6 +69,7 @@ static pair<string, firearm_properties> load_single(string && filename) {
 	            doc["action_speed"].as<float>(),
 	            doc["reload_speed"].as<float>(),
 	            doc["mag_size"].as<unsigned int>(),
+	            doc["mag_quantity"].as<unsigned int>(),
 	        }};
 }
 
