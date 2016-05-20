@@ -33,7 +33,7 @@ firearm::firearm(game_world & w, const string & gun_id)
                                                         chrono::microseconds(static_cast<chrono::microseconds::rep>(props->action_speed * micro::den)))),
         reload_speed(chrono::duration_cast<chrono::high_resolution_clock::duration>(
             chrono::microseconds(static_cast<chrono::microseconds::rep>(props->reload_speed * micro::den)))),
-        trigger_pulled(false), left_in_mag(0) {}
+        trigger_pulled(false), left_in_mag(0), left_mags(props->mag_quantity) {}
 
 bool firearm::trigger(float pos_x, float pos_y, const Vector2f & aim, bool sufficient_stam) {
 	const auto now          = chrono::high_resolution_clock::now();
@@ -95,8 +95,11 @@ bool firearm::untrigger(float pos_x, float pos_y, const Vector2f & aim, bool suf
 }
 
 void firearm::reload() {
-	left_in_mag      = props->mag_size;
-	mag_reload_start = chrono::high_resolution_clock::now();
+	if(left_mags) {
+		left_in_mag      = props->mag_size;
+		mag_reload_start = chrono::high_resolution_clock::now();
+		--left_mags;
+	}
 }
 
 const string & firearm::id() const noexcept {

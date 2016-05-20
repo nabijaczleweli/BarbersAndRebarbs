@@ -42,6 +42,7 @@ private:
 	std::chrono::high_resolution_clock::time_point mag_reload_start;
 	bool trigger_pulled;
 	unsigned int left_in_mag;
+	unsigned int left_mags;
 
 public:
 	static const std::map<std::string, firearm_properties> & properties();
