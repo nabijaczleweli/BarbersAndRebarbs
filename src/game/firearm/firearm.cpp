@@ -94,12 +94,17 @@ bool firearm::untrigger(float pos_x, float pos_y, const Vector2f & aim, bool suf
 	return shoot;
 }
 
-void firearm::reload() {
+bool firearm::reload() {
 	if(left_mags) {
 		left_in_mag      = props->mag_size;
 		mag_reload_start = chrono::high_resolution_clock::now();
 		--left_mags;
+
+		return true;
 	}
+
+	left_in_mag = 0;
+	return false;
 }
 
 const string & firearm::id() const noexcept {

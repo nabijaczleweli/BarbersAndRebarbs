@@ -170,8 +170,8 @@ void player::handle_event(const Event & event) {
 				fp -= app_configuration.player_bullet_stamina_cost;
 	} else if(sufficient_stam_reload && ((event.type == Event::EventType::KeyPressed && event.key.code == Keyboard::Key::R) ||
 	                                     (event.type == Event::EventType::JoystickButtonReleased && event.joystickButton.button == X360_button_mappings::Y))) {
-		gun.reload();
-		fp -= app_configuration.player_reload_stamina_cost;
+		if(gun.reload())
+			fp -= app_configuration.player_reload_stamina_cost;
 	}
 }
 

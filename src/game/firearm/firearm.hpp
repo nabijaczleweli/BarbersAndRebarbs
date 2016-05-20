@@ -53,7 +53,7 @@ public:
 	bool trigger(float pos_x, float pos_y, const sf::Vector2f & aim, bool sufficient_stam);
 	bool tick(float pos_x, float pos_y, const sf::Vector2f & aim, bool sufficient_stam);
 	bool untrigger(float pos_x, float pos_y, const sf::Vector2f & aim, bool sufficient_stam);
-	void reload();
+	bool reload();
 
 	const std::string & id() const noexcept;
 	const std::string & name() const noexcept;
