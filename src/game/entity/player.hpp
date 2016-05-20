@@ -23,6 +23,7 @@
 #pragma once
 
 
+#include "../../render/circle_chunk.hpp"
 #include "../firearm/firearm.hpp"
 #include "entity.hpp"
 #include "event_handler.hpp"
@@ -36,6 +37,7 @@ protected:
 	std::pair<bool, sf::Vector2f> controller_aim(unsigned int controller_id) const;
 
 private:
+	mutable circle_chunk progress_circle;
 	firearm gun;
 	float hp;
 	float fp;

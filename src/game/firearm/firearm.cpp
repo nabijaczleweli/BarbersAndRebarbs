@@ -106,3 +106,14 @@ const string & firearm::id() const noexcept {
 const string & firearm::name() const noexcept {
 	return props->name;
 }
+
+float firearm::progress() const noexcept {
+	const auto now             = chrono::high_resolution_clock::now();
+	const auto reload_progress = (now - mag_reload_start).count() / static_cast<double>(reload_speed.count());
+
+	if(reload_progress >= 1) {
+		const auto action_progress = (now - action_repeat_start).count() / static_cast<double>(action_speed.count());
+		return min(action_progress, 1.);
+	} else
+		return min(reload_progress, 1.);
+}

@@ -56,4 +56,6 @@ public:
 
 	const std::string & id() const noexcept;
 	const std::string & name() const noexcept;
+
+	float progress() const noexcept;
 };

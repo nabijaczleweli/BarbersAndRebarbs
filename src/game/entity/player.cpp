@@ -59,11 +59,22 @@ void player::draw(RenderTarget & target, RenderStates states) const {
 	    {{x - 2, y + 2}, armour_colour},  //
 	};
 	target.draw(vertices, 8, PrimitiveType::Points, states);
+
+	const auto progress = gun.progress();
+	if(progress != 1) {
+		progress_circle.fraction(progress);
+		progress_circle.setPosition(x, y);
+		progress_circle.setRotation(progress * 360);
+		target.draw(progress_circle, states);
+	}
 }
 
 player::player(game_world & world_r, size_t id_a, Vector2u screen_size)
-      : entity(world_r, id_a), gun(world_r, app_configuration.player_default_firearm), hp(1), fp(1) {
+      : entity(world_r, id_a), progress_circle(0, 7), gun(world_r, app_configuration.player_default_firearm), hp(1), fp(1) {
+	static const Color progress_colour(255, 255, 255, 100);
 	static auto rand = seed11::make_seeded<mt19937>();
+
+	progress_circle.colour(progress_colour);
 
 	uniform_real_distribution<float> x_dist(0, screen_size.x - 1);
 	uniform_real_distribution<float> y_dist(0, screen_size.y - 1);
