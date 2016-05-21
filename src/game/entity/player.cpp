@@ -48,7 +48,7 @@ void player::draw(RenderTarget & target, RenderStates states) const {
 	static const Color body_colour(231, 158, 109);
 	static const Color armour_colour(200, 200, 200);
 
-	Vertex vertices[8]{
+	const Vertex vertices[]{
 	    {{x - 1, y}, body_colour},        //
 	    {{x, y - 1}, body_colour},        //
 	    {{x + 1, y}, body_colour},        //
@@ -58,7 +58,7 @@ void player::draw(RenderTarget & target, RenderStates states) const {
 	    {{x + 2, y + 2}, armour_colour},  //
 	    {{x - 2, y + 2}, armour_colour},  //
 	};
-	target.draw(vertices, 8, PrimitiveType::Points, states);
+	target.draw(vertices, sizeof vertices / sizeof *vertices, PrimitiveType::Points, states);
 
 	const auto progress = gun.progress();
 	if(progress != 1) {

@@ -40,7 +40,7 @@ assets :
 	@rm -rf $(OUTDIR)assets
 	@cp -r $(ASSETDIR) $(OUTDIR)
 
-exe : $(OUTDIR)BarbersAndRebarbs$(EXE)
+exe : audiere cpp-nbt seed11 whereami-cpp $(OUTDIR)BarbersAndRebarbs$(EXE)
 audiere : $(BLDDIR)audiere/lib/libaudiere$(DLL)
 cpp-nbt : $(BLDDIR)Cpp-NBT/libcpp-nbt$(ARCH)
 seed11 : $(BLDDIR)seed11/libseed11$(ARCH)

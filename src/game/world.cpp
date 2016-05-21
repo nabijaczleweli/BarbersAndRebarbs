@@ -67,7 +67,7 @@ void game_world::tick(Vector2u screen_size) {
 		entity.second->tick(screen_size.x, screen_size.y);
 	ticking = false;
 
-	for(auto && id : sheduled_for_deletion)
+	for(auto id : sheduled_for_deletion)
 		entities.erase(id);
 	sheduled_for_deletion.clear();
 }

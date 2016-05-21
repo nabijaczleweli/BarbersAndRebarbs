@@ -33,8 +33,7 @@ void circle_chunk::draw(RenderTarget & target, RenderStates states) const {
 	static const auto tau = acos(-1) * 2;
 
 	if(recompute_next_time) {
-		if(vertices.size() != points)
-			vertices.resize(points);
+		vertices.resize(points);
 		for(auto i = 0.; i < points; ++i) {
 			vertices[i] = {{static_cast<float>(r * cos(i / points * fract * tau)), static_cast<float>(r * sin(i / points * fract * tau))}, clr};
 		}

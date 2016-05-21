@@ -51,9 +51,9 @@ unique_ptr<bullet> bullet::create(game_world & world, size_t id, Vector2f aim, u
 void bullet::draw(RenderTarget & target, RenderStates states) const {
 	static const auto constexpr k = 2.5f;
 
-	Vertex vertices[2]{{{x, y}, Color::White},  //
-	                   {{x + motion_x * k, y + motion_y * k}, Color::White}};
-	target.draw(vertices, 2, PrimitiveType::Lines, states);
+	const Vertex vertices[]{{{x, y}, Color::White},  //
+	                        {{x + motion_x * k, y + motion_y * k}, Color::White}};
+	target.draw(vertices, sizeof vertices / sizeof *vertices, PrimitiveType::Lines, states);
 }
 
 bullet::bullet(game_world & world_r, size_t id_a, unsigned int px, unsigned int py, const bullet_properties & pprops) : entity(world_r, id_a), props(pprops) {
