@@ -182,9 +182,3 @@ main_menu_screen::main_menu_screen(application & theapp)
 
 	selected = main_buttons.size() - 1;
 }
-main_menu_screen::main_menu_screen(const main_menu_screen & other)
-      : screen(other), main_buttons(other.main_buttons), selected(other.selected), control_frames_counter(0), joystick_up(other.joystick_up),
-        joystick_drawing(other.joystick_drawing), keys_drawing(other.keys_drawing) {}
-main_menu_screen::main_menu_screen(main_menu_screen && other)
-      : screen(move(other)), main_buttons(move(other.main_buttons)), selected(other.selected), control_frames_counter(other.control_frames_counter),
-        joystick_up(other.joystick_up), joystick_drawing(move(other.joystick_drawing)), keys_drawing(move(other.keys_drawing)) {}

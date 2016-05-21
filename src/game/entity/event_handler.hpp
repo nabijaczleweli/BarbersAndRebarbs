@@ -29,4 +29,6 @@
 class event_handler {
 public:
 	virtual void handle_event(const sf::Event & event) = 0;
+
+	virtual ~event_handler() = default;
 };

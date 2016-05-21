@@ -56,12 +56,7 @@ public:
 	sf::Vector2f end_point;
 
 	bezier_curve(sf::Vector2f the_start_point, sf::Vector2f the_control_point, sf::Vector2f the_end_point);
-	bezier_curve(const bezier_curve & other);
-	bezier_curve(bezier_curve && other);
 
-	~bezier_curve();
-
-	bezier_curve & operator=(const bezier_curve & from);
 	void swap(bezier_curve & with);
 
 	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;

@@ -40,7 +40,6 @@ protected:
 
 public:
 	circle_chunk(float fraction = 1, float radius = 0, unsigned int point_amount = 30);
-	virtual ~circle_chunk() = default;
 
 	float radius() const;
 	void radius(float new_radius);

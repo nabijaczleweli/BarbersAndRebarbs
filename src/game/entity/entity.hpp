@@ -40,8 +40,6 @@ protected:
 public:
 	entity(game_world & world, std::size_t id);
 	entity(game_world & world, std::size_t id, const cpp_nbt::nbt_compound & from);
-	entity(const entity & other) = default;
-	entity(entity && other) = default;
 
 	virtual ~entity() = default;
 

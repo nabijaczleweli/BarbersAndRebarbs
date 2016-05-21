@@ -67,5 +67,3 @@ int splash_screen::handle_event(const Event & event) {
 }
 
 splash_screen::splash_screen(application & theapp, unsigned int frame_amt) : screen(theapp), frames(frame_amt), text(app_name, font_pixelish) {}
-splash_screen::splash_screen(const splash_screen & other) : screen(other), frames(other.frames), background(other.background), text(other.text) {}
-splash_screen::splash_screen(splash_screen && other) : screen(move(other)), frames(other.frames), background(move(other.background)), text(move(other.text)) {}

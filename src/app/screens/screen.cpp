@@ -43,5 +43,3 @@ int screen::handle_event(const Event & event) {
 }
 
 screen::screen(application & theapp) : app(theapp) {}
-screen::screen(const screen & other) : app(other.app) {}
-screen::screen(screen && other) : app(other.app) {}

@@ -40,7 +40,5 @@ public:
 	virtual int handle_event(const sf::Event & event) override;
 
 	splash_screen(application & theapp, unsigned int frame_amt);
-	splash_screen(const splash_screen & other);
-	splash_screen(splash_screen && other);
 	virtual ~splash_screen() = default;
 };

@@ -40,19 +40,6 @@ bezier_curve::bezier_curve(Vector2f the_start_point, Vector2f the_control_point,
       : start_point(the_start_point), control_point(the_control_point), end_point(the_end_point) {
 	compute_vertices();
 }
-bezier_curve::bezier_curve(const bezier_curve & other)
-      : vertices(other.vertices), start_point(other.start_point), control_point(other.control_point), end_point(other.end_point) {}
-bezier_curve::bezier_curve(bezier_curve && other)
-      : vertices(std::move(other.vertices)), start_point(std::move(other.start_point)), control_point(std::move(other.control_point)),
-        end_point(std::move(other.end_point)) {}
-
-bezier_curve::~bezier_curve() {}
-
-bezier_curve & bezier_curve::operator=(const bezier_curve & from) {
-	bezier_curve temp(from);
-	swap(temp);
-	return *this;
-}
 
 void bezier_curve::swap(bezier_curve & with) {
 #define VSWAP(var)       \

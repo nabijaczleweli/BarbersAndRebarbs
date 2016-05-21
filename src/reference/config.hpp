@@ -43,10 +43,7 @@ public:
 	std::string player_default_firearm = "default";
 
 
-	config(const config &) = default;
-	config(config &&)      = default;
 	config(std::string && path);
-
 	~config();
 
 private:

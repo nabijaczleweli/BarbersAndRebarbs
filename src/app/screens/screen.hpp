@@ -38,7 +38,5 @@ public:
 	virtual int handle_event(const sf::Event & event);
 
 	screen(application & theapp);
-	screen(const screen & other);
-	screen(screen && other);
 	virtual ~screen() = default;
 };
