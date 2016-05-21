@@ -26,9 +26,9 @@
 #include "entity/entity.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <functional>
 #include <map>
 #include <vector>
-#include <functional>
 
 
 class game_world {

@@ -23,8 +23,8 @@
 #pragma once
 
 
-#include "entity.hpp"
 #include "../firearm/firearm_properties.hpp"
+#include "entity.hpp"
 #include <SFML/Graphics.hpp>
 
 

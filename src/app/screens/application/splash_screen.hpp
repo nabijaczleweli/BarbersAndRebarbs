@@ -23,8 +23,8 @@
 #pragma once
 
 
-#include "../screen.hpp"
 #include "../../../render/managed_sprite.hpp"
+#include "../screen.hpp"
 
 
 class splash_screen : public screen {

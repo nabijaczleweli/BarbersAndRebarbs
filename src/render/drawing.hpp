@@ -25,8 +25,8 @@
 
 #include "bezier_curve.hpp"
 #include <SFML/Graphics.hpp>
-#include <vector>
 #include <array>
+#include <vector>
 
 
 class drawing : public sf::Drawable {

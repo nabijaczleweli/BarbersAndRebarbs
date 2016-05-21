@@ -21,8 +21,8 @@
 
 
 #include "main_game_screen.hpp"
-#include "../../../reference/container.hpp"
 #include "../../../game/entity/player.hpp"
+#include "../../../reference/container.hpp"
 #include "../../application.hpp"
 
 
@@ -61,6 +61,6 @@ main_game_screen::main_game_screen(application & theapp) : screen(theapp) {
 	player_id = world.spawn<player>(app.window.getSize());
 
 	const auto & plr = dynamic_cast<const player &>(world.ent(player_id));
-	hp_stat     = {Color::Red, plr.health()};
-	energy_stat = {Color(50, 200, 200), plr.stamina()};
+	hp_stat          = {Color::Red, plr.health()};
+	energy_stat      = {Color(50, 200, 200), plr.stamina()};
 }

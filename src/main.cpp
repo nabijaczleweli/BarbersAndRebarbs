@@ -21,11 +21,11 @@
 
 
 #include "app/application.hpp"
-#include "reference/container.hpp"
-#include "cimpoler-meta.hpp"
 #include "audiere.h"
-#include <stdexcept>
+#include "cimpoler-meta.hpp"
+#include "reference/container.hpp"
 #include <iostream>
+#include <stdexcept>
 
 
 using namespace std;

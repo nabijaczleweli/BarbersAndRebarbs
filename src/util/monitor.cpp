@@ -35,9 +35,9 @@ unsigned int refresh_rate() {
 	return dmode.dmDisplayFrequency;
 }
 #else
-#include <unistd.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrandr.h>
+#include <unistd.h>
 
 
 unsigned int refresh_rate() {

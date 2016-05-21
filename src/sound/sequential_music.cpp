@@ -20,8 +20,8 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#include "../reference/container.hpp"
 #include "sequential_music.hpp"
+#include "../reference/container.hpp"
 #include <algorithm>
 
 

@@ -21,12 +21,12 @@
 
 #include "application.hpp"
 #include "../reference/container.hpp"
-#include "../util/monitor.hpp"
 #include "../util/file.hpp"
+#include "../util/monitor.hpp"
 #include "screens/application/splash_screen.hpp"
+#include <SFML/System.hpp>
 #include <algorithm>
 #include <thread>
-#include <SFML/System.hpp>
 
 
 using namespace sf;

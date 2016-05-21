@@ -23,10 +23,10 @@
 #pragma once
 
 
-#include "../screen.hpp"
 #include "../../../game/world.hpp"
 #include "../../../render/managed_sprite.hpp"
 #include "../../../render/stat_bar.hpp"
+#include "../screen.hpp"
 #include <deque>
 #include <memory>
 

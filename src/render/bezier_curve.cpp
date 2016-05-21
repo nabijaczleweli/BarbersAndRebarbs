@@ -22,8 +22,8 @@
 
 #include "bezier_curve.hpp"
 #include "../util/vector.hpp"
-#include <functional>
 #include <algorithm>
+#include <functional>
 #include <future>
 
 

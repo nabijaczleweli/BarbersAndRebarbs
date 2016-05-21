@@ -23,8 +23,8 @@
 #pragma once
 
 
-#include "cpp-nbt/tags/complex/nbt_compound.hpp"
 #include "cpp-nbt/nbt_reloadable.hpp"
+#include "cpp-nbt/tags/complex/nbt_compound.hpp"
 #include <utility>
 
 

@@ -23,9 +23,9 @@
 #pragma once
 
 
-#include "config.hpp"
 #include "../resource/localizer.hpp"
 #include "audiere.h"
+#include "config.hpp"
 #include <SFML/Graphics.hpp>
 #include <string>
 

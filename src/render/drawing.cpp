@@ -21,11 +21,11 @@
 
 
 #include "drawing.hpp"
-#include "../util/vector.hpp"
 #include "../reference/container.hpp"
+#include "../util/vector.hpp"
 #include "jsonpp/parser.hpp"
-#include <iterator>
 #include <fstream>
+#include <iterator>
 
 
 using namespace std;
