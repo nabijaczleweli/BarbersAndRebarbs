@@ -21,9 +21,9 @@
 
 
 #include "app/application.hpp"
-#include "audiere.h"
-#include "cimpoler-meta.hpp"
 #include "reference/container.hpp"
+#include <audiere.h>
+#include <cimpoler-meta.hpp>
 #include <iostream>
 #include <stdexcept>
 

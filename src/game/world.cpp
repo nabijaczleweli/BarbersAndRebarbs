@@ -23,8 +23,8 @@
 #include "world.hpp"
 #include "entity/event_handler.hpp"
 #include "entity/player.hpp"
-#include "seed11/seed11.hpp"
 #include <random>
+#include <seed11/seed11.hpp>
 
 
 static const constexpr auto max_id_len       = 4u;

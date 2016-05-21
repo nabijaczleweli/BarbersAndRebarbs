@@ -25,7 +25,7 @@ include configMakefile
 
 LDDLLS := $(OS_LD_LIBS) audiere cpp-nbt whereami++ seed11
 LDAR := $(LNCXXAR) -L$(BLDDIR)Cpp-NBT -L$(BLDDIR)seed11 -L$(BLDDIR)whereami-cpp -L$(BLDDIR)audiere/lib $(foreach dll,$(LDDLLS),-l$(dll))
-INCAR := $(foreach l,$(foreach l,audiere cereal cimpoler-meta Cpp-NBT seed11 whereami-cpp,$(l)/include) jsonpp,-Iext/$(l))
+INCAR := $(foreach l,$(foreach l,audiere cereal cimpoler-meta Cpp-NBT seed11 whereami-cpp,$(l)/include) jsonpp,-isystemext/$(l))
 VERAR := $(foreach l,CEREAL CIMPOLER_META CPP_NBT JSONPP SEED11 WHEREAMI_CPP,-D$(l)_VERSION='$($(l)_VERSION)')
 SOURCES := $(sort $(wildcard src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp))
 HEADERS := $(sort $(wildcard src/*.hpp src/**/*.hpp src/**/**/*.hpp src/**/**/**/*.hpp))
