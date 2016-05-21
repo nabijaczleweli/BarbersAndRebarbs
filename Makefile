@@ -25,6 +25,8 @@ include configMakefile
 
 LDDLLS := $(OS_LD_LIBS) audiere cpp-nbt whereami++ seed11
 LDAR := $(LNCXXAR) -L$(BLDDIR)Cpp-NBT -L$(BLDDIR)seed11 -L$(BLDDIR)whereami-cpp -L$(BLDDIR)audiere/lib $(foreach dll,$(LDDLLS),-l$(dll))
+INCAR := $(foreach l,$(foreach l,audiere cereal cimpoler-meta Cpp-NBT seed11 whereami-cpp,$(l)/include) jsonpp,-Iext/$(l))
+VERAR := $(foreach l,CEREAL CIMPOLER_META CPP_NBT JSONPP SEED11 WHEREAMI_CPP,-D$(l)_VERSION='$($(l)_VERSION)')
 SOURCES := $(sort $(wildcard src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp))
 HEADERS := $(sort $(wildcard src/*.hpp src/**/*.hpp src/**/**/*.hpp src/**/**/**/*.hpp))
 
@@ -69,7 +71,7 @@ $(BLDDIR)whereami-cpp/libwhereami++$(ARCH) : ext/whereami-cpp/Makefile
 
 $(OBJDIR)%$(OBJ) : $(SRCDIR)%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXAR) -Iext/audiere/include -Iext/cereal/include -Iext/cimpoler-meta/include -Iext/Cpp-NBT/include -Iext/jsonpp -Iext/seed11/include -Iext/whereami-cpp/include -DCEREAL_VERSION='$(CEREAL_VERSION)' -DCIMPOLER_META_VERSION='$(CIMPOLER_META_VERSION)' -DCPP_NBT_VERSION='$(CPP_NBT_VERSION)' -DJSONPP_VERSION='$(JSONPP_VERSION)' -DSEED11_VERSION='$(SEED11_VERSION)' -DWHEREAMI_CPP_VERSION='$(WHEREAMI_CPP_VERSION)' -c -o$@ $^
+	$(CXX) $(CXXAR) $(INCAR) $(VERAR) -c -o$@ $^
 
 $(BLDDIR)seed11/obj/%.o : ext/seed11/src/%.cpp
 	@mkdir -p $(dir $@)
