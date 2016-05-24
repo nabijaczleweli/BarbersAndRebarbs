@@ -28,6 +28,7 @@ using namespace sf;
 using namespace std;
 using namespace audiere;
 using namespace whereami;
+using namespace cpp_localiser;
 
 
 const string assets_root(executable_dir() + "/assets");
@@ -41,9 +42,9 @@ const string firearm_root(assets_root + "/guns");
 const string app_name("BarbersAndRebarbs");
 /***/ config app_configuration(executable_dir() + "/" + app_name + ".cfg");
 
-const localizer fallback_izer;
-const localizer local_izer(app_configuration.language);
-const localizer global_izer(local_izer, fallback_izer);
+const localiser fallback_izer(localization_root);
+const localiser local_izer(localization_root, app_configuration.language);
+const localiser global_izer(local_izer, fallback_izer);
 
 
 const Font font_pixelish([] {

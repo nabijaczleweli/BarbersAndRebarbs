@@ -23,8 +23,8 @@
 #pragma once
 
 
-#include "../resource/localizer.hpp"
 #include "config.hpp"
+#include "cpp-localiser.hpp"
 #include <SFML/Graphics.hpp>
 #include <audiere.h>
 #include <string>
@@ -41,9 +41,9 @@ extern const std::string firearm_root;
 extern const std::string app_name;
 extern /***/ config app_configuration;
 
-extern const localizer fallback_izer;
-extern const localizer local_izer;
-extern const localizer global_izer;
+extern const cpp_localiser::localiser fallback_izer;
+extern const cpp_localiser::localiser local_izer;
+extern const cpp_localiser::localiser global_izer;
 
 
 extern const sf::Font font_pixelish;
