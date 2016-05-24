@@ -42,9 +42,9 @@ const string firearm_root(assets_root + "/guns");
 const string app_name("BarbersAndRebarbs");
 /***/ config app_configuration(executable_dir() + "/" + app_name + ".cfg");
 
-const localiser fallback_izer(localization_root);
-const localiser local_izer(localization_root, app_configuration.language);
-const localiser global_izer(local_izer, fallback_izer);
+const localiser fallback_iser(localization_root);
+const localiser local_iser(localization_root, app_configuration.language);
+const localiser global_iser(local_iser, fallback_iser);
 
 
 const Font font_pixelish([] {

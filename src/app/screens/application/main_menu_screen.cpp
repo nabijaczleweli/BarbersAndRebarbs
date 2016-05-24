@@ -170,15 +170,15 @@ main_menu_screen::main_menu_screen(application & theapp)
 	joystick_drawing.second.move(app.window.getSize().x / 4 - joystick_drawing.second.size().x / 2,
 	                             app.window.getSize().y / 2 - joystick_drawing.second.size().y / 2);
 
-	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text.start"), font_swirly),
+	main_buttons.emplace_front(Text(global_iser.translate_key("gui.application.text.start"), font_swirly),
 	                           [&](Text &) { app.schedule_screen<main_game_screen>(); });
-	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"), font_swirly),
+	main_buttons.emplace_front(Text(global_iser.translate_key("gui.application.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"), font_swirly),
 	                           [&](Text & txt) {
 		                           app_configuration.play_sounds = !app_configuration.play_sounds;
-		                           txt.setString(global_izer.translate_key("gui.application.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"));
+		                           txt.setString(global_iser.translate_key("gui.application.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"));
 		                           app.retry_music();
 		                         });
-	main_buttons.emplace_front(Text(global_izer.translate_key("gui.application.text.quit"), font_swirly), [&](Text &) { app.window.close(); });
+	main_buttons.emplace_front(Text(global_iser.translate_key("gui.application.text.quit"), font_swirly), [&](Text &) { app.window.close(); });
 
 	selected = main_buttons.size() - 1;
 }

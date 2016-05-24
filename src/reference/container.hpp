@@ -41,9 +41,9 @@ extern const std::string firearm_root;
 extern const std::string app_name;
 extern /***/ config app_configuration;
 
-extern const cpp_localiser::localiser fallback_izer;
-extern const cpp_localiser::localiser local_izer;
-extern const cpp_localiser::localiser global_izer;
+extern const cpp_localiser::localiser fallback_iser;
+extern const cpp_localiser::localiser local_iser;
+extern const cpp_localiser::localiser global_iser;
 
 
 extern const sf::Font font_pixelish;
