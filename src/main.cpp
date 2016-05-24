@@ -58,7 +58,7 @@ int main(int argc, char * argv[]) {
 
 
 static void credit() {
-	cout << "Detected OS: " << CIMPOLER_META_OS_NAME << "\n"
+	cout << "OS: " << CIMPOLER_META_OS_NAME << "\n"
 	     << "Compiler: " << CIMPOLER_META_COMPILER_NAME << " version " << cimpoler_meta::version() << "\n"
 	     << "Stdlib: " << CIMPOLER_META_STDLIB << " version " << cimpoler_meta::stdlib_version() << "\n"
 	     << "Used libraries:\n"
@@ -66,6 +66,7 @@ static void credit() {
 	     << "  - audiere version " << audiere::GetVersion() << ": https://sourceforge.net/projects/audiere\n"
 	     << "  - cereal version " << CEREAL_VERSION << ": http://uscilab.github.io/cereal\n"
 	     << "  - cimpoler-meta version " << CIMPOLER_META_VERSION << ": https://github.com/nabijaczleweli/cimpoler-meta\n"
+	     << "  - cpp-localiser version " << CPP_LOCALISER_VERSION << ": https://github.com/nabijaczleweli/cpp-localiser\n"
 	     << "  - Cpp-NBT version " << CPP_NBT_VERSION << ": https://github.com/nabijaczleweli/Cpp-NBT\n"
 	     << "  - jsonpp version " << JSONPP_VERSION << ": http://rapptz.github.io/jsonpp\n"
 	     << "  - seed11 version " << SEED11_VERSION << ": https://github.com/milleniumbug/seed11\n"

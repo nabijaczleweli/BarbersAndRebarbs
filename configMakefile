@@ -38,26 +38,26 @@ endif
 
 ifneq "$(ADDITIONAL_INCLUDE_DIR)" ""
 	INCCXXAR := -isystem$(ADDITIONAL_INCLUDE_DIR)
-	INCCMAKEAR := CXXFLAGS="-isystem$(ADDITIONAL_INCLUDE_DIR)"
 else
 	INCCXXAR :=
-	INCCMAKEAR :=
 endif
 
 ifneq "$(ADDITIONAL_LINK_DIR)" ""
 	LNCXXAR := -L$(ADDITIONAL_LINK_DIR)
-	LNCMAKEAR := LDFLAGS="-L$(ADDITIONAL_LINK_DIR)"
 else
 	LNCXXAR :=
-	LNCMAKEAR :=
 endif
 
-CEREAL_VERSION := "$(shell cd ext/cereal && git describe --tags | sed "s/v//")"
-CIMPOLER_META_VERSION := "$(shell cd ext/cimpoler-meta && git log -1 --pretty=format:%h)"
-CPP_NBT_VERSION := "$(shell cd ext/Cpp-NBT && git log -1 --pretty=format:%h)"
-JSONPP_VERSION := "$(shell cd ext/jsonpp && git log -1 --pretty=format:%h)"
-SEED11_VERSION := "$(shell cd ext/seed11 && git describe --tags | sed "s/v//")"
-WHEREAMI_CPP_VERSION := "$(shell cd ext/whereami-cpp && git describe --tags | sed "s/v//")"
+INCCMAKEAR := CXXFLAGS="$(INCCXXAR)"
+LNCMAKEAR := LDFLAGS="$(LNCXXAR)"
+
+CEREAL_VERSION := "$(patsubst v%,%,$(shell git -C ext/cereal describe --tags))"
+CIMPOLER_META_VERSION := "$(shell git -C ext/cimpoler-meta log -1 --pretty=format:%h)"
+CPP_LOCALISER_VERSION := "$(patsubst v%,%,$(shell git -C ext/cpp-localiser describe --tags))"
+CPP_NBT_VERSION := "$(shell git -C ext/Cpp-NBT log -1 --pretty=format:%h)"
+JSONPP_VERSION := "$(shell git -C ext/jsonpp log -1 --pretty=format:%h)"
+SEED11_VERSION := "$(patsubst v%,%,$(shell git -C ext/seed11 describe --tags))"
+WHEREAMI_CPP_VERSION := "$(patsubst v%,%,$(shell git -C ext/whereami-cpp describe --tags))"
 
 OBJ := .o
 ARCH := .a
