@@ -67,7 +67,7 @@ void bullet::tick(float max_x, float max_y) {
 	const auto min_speed = props.speed * props.speed_loss * 10;
 	// Only kill the bullet if it's moving in that direction the the first place, see `bullet::create()`
 	// TODO: remove in favour of time-based bullet lifespan
-	if((motion_x && abs(motion_x) < min_speed) || (motion_y && abs(motion_y) < min_speed))
+	if((motion_x && abs(motion_x) < min_speed) && (motion_y && abs(motion_y) < min_speed))
 		world.despawn(id);
 }
 
