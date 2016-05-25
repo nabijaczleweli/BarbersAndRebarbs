@@ -50,13 +50,14 @@ public:
 
 	firearm(game_world & world, const std::string & gun_id);
 
-	bool trigger(float pos_x, float pos_y, const sf::Vector2f & aim, bool sufficient_stam);
-	bool tick(float pos_x, float pos_y, const sf::Vector2f & aim, bool sufficient_stam);
-	bool untrigger(float pos_x, float pos_y, const sf::Vector2f & aim, bool sufficient_stam);
-	bool reload();
+	void trigger(float pos_x, float pos_y, const sf::Vector2f & aim);
+	void tick(float pos_x, float pos_y, const sf::Vector2f & aim);
+	void untrigger(float pos_x, float pos_y, const sf::Vector2f & aim);
+	void reload();
 
 	const std::string & id() const noexcept;
 	const std::string & name() const noexcept;
 
 	float progress() const noexcept;
+	float depletion() const noexcept;
 };

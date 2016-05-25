@@ -37,9 +37,6 @@ public:
 	unsigned int splash_length = 2;
 
 	float player_speed                 = 1;
-	float player_stamina_regen         = .12f;
-	float player_bullet_stamina_cost   = .05f;
-	float player_reload_stamina_cost   = .3f;
 	std::string player_default_firearm = "default";
 
 

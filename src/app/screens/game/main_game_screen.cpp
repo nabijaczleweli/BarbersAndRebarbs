@@ -62,5 +62,5 @@ main_game_screen::main_game_screen(application & theapp) : screen(theapp) {
 
 	const auto & plr = dynamic_cast<const player &>(world.ent(player_id));
 	hp_stat          = {Color::Red, plr.health()};
-	energy_stat      = {Color(50, 200, 200), plr.stamina()};
+	energy_stat      = {Color(50, 200, 200), plr.gun_progress()};
 }

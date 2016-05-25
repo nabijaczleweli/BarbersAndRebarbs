@@ -40,7 +40,7 @@ private:
 	mutable circle_chunk progress_circle;
 	firearm gun;
 	float hp;
-	float fp;
+	mutable float progress;
 
 public:
 	using entity::entity;
@@ -59,6 +59,6 @@ public:
 	float & health() noexcept;
 	const float & health() const noexcept;
 
-	float & stamina() noexcept;
-	const float & stamina() const noexcept;
+	float & gun_progress() noexcept;
+	const float & gun_progress() const noexcept;
 };

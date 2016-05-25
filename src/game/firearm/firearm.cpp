@@ -35,11 +35,11 @@ firearm::firearm(game_world & w, const string & gun_id)
             chrono::microseconds(static_cast<chrono::microseconds::rep>(props->reload_speed * micro::den)))),
         trigger_pulled(false), left_in_mag(0), left_mags(props->mag_quantity) {}
 
-bool firearm::trigger(float pos_x, float pos_y, const Vector2f & aim, bool sufficient_stam) {
+void firearm::trigger(float pos_x, float pos_y, const Vector2f & aim) {
 	const auto now          = chrono::high_resolution_clock::now();
 	const auto action_ready = now - action_repeat_start >= action_speed;
 	const auto reload_ready = now - mag_reload_start >= reload_speed;
-	const auto shoot        = action_ready && reload_ready && left_in_mag && sufficient_stam;
+	const auto shoot        = action_ready && reload_ready && left_in_mag;
 
 	trigger_pulled = true;
 
@@ -48,12 +48,10 @@ bool firearm::trigger(float pos_x, float pos_y, const Vector2f & aim, bool suffi
 		action_repeat_start = now;
 		--left_in_mag;
 	}
-
-	return shoot;
 }
 
-bool firearm::tick(float pos_x, float pos_y, const Vector2f & aim, bool sufficient_stam) {
-	const auto shoot = sufficient_stam && trigger_pulled && left_in_mag && props->fire_mode == firearm_properties::fire_mode_t::full_auto;
+void firearm::tick(float pos_x, float pos_y, const Vector2f & aim) {
+	const auto shoot = trigger_pulled && left_in_mag && props->fire_mode == firearm_properties::fire_mode_t::full_auto;
 
 	if(shoot) {
 		const auto now          = chrono::high_resolution_clock::now();
@@ -65,15 +63,11 @@ bool firearm::tick(float pos_x, float pos_y, const Vector2f & aim, bool sufficie
 			action_repeat_start = now;
 			--left_in_mag;
 		}
-
-		return action_ready && reload_ready;
 	}
-
-	return shoot;
 }
 
-bool firearm::untrigger(float pos_x, float pos_y, const Vector2f & aim, bool sufficient_stam) {
-	const auto shoot = sufficient_stam && left_in_mag && props->fire_mode == firearm_properties::fire_mode_t::semi_auto_response_trigger;
+void firearm::untrigger(float pos_x, float pos_y, const Vector2f & aim) {
+	const auto shoot = left_in_mag && props->fire_mode == firearm_properties::fire_mode_t::semi_auto_response_trigger;
 
 	trigger_pulled = false;
 
@@ -87,24 +81,16 @@ bool firearm::untrigger(float pos_x, float pos_y, const Vector2f & aim, bool suf
 			action_repeat_start = now;
 			--left_in_mag;
 		}
-
-		return action_ready && reload_ready;
 	}
-
-	return shoot;
 }
 
-bool firearm::reload() {
+void firearm::reload() {
 	if(left_mags) {
 		left_in_mag      = props->mag_size;
 		mag_reload_start = chrono::high_resolution_clock::now();
 		--left_mags;
-
-		return true;
-	}
-
-	left_in_mag = 0;
-	return false;
+	} else
+		left_in_mag = 0;
 }
 
 const string & firearm::id() const noexcept {
@@ -124,4 +110,13 @@ float firearm::progress() const noexcept {
 		return min(action_progress, 1.);
 	} else
 		return min(reload_progress, 1.);
+}
+
+float firearm::depletion() const noexcept {
+	const auto now          = chrono::high_resolution_clock::now();
+	const auto reload_ready = now - mag_reload_start >= reload_speed;
+	if(reload_ready)
+		return left_in_mag / static_cast<float>(props->mag_size);
+	else
+		return left_mags / static_cast<float>(props->mag_quantity);
 }

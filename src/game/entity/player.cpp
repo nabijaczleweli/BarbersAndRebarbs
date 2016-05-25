@@ -60,17 +60,18 @@ void player::draw(RenderTarget & target, RenderStates states) const {
 	};
 	target.draw(vertices, sizeof vertices / sizeof *vertices, PrimitiveType::Points, states);
 
-	const auto progress = gun.progress();
-	if(progress != 1) {
-		progress_circle.fraction(progress);
+	const auto gun_progress = gun.progress();
+	if(gun_progress != 1) {
+		progress_circle.fraction(gun_progress);
 		progress_circle.setPosition(x, y);
-		progress_circle.setRotation(progress * 360);
+		progress_circle.setRotation(gun_progress * 360);
 		target.draw(progress_circle, states);
 	}
+	progress = gun.depletion();
 }
 
 player::player(game_world & world_r, size_t id_a, Vector2u screen_size)
-      : entity(world_r, id_a), progress_circle(0, 7), gun(world_r, app_configuration.player_default_firearm), hp(1), fp(1) {
+      : entity(world_r, id_a), progress_circle(0, 7), gun(world_r, app_configuration.player_default_firearm), hp(1), progress(0) {
 	static const Color progress_colour(255, 255, 255, 100);
 	static auto rand = seed11::make_seeded<mt19937>();
 
@@ -89,20 +90,15 @@ void player::read_from_nbt(const cpp_nbt::nbt_compound & from) {
 		gun = firearm(world, *fgun_id);
 	if(auto fhp = from.get_float("hp"))
 		hp = *fhp;
-	if(auto ffp = from.get_float("fp"))
-		fp = *ffp;
 }
 
 void player::write_to_nbt(cpp_nbt::nbt_compound & to) const {
 	entity::write_to_nbt(to);
 	to.set_string("gun_id", gun.id());
 	to.set_float("hp", hp);
-	to.set_float("fp", fp);
 }
 
 void player::tick(float max_x, float max_y) {
-	static const auto stamina_regen_frame = app_configuration.player_stamina_regen / application::effective_FPS();
-
 	const auto joystick_connected = Joystick::isConnected(0);
 
 	entity::tick(max_x, max_y);
@@ -132,47 +128,26 @@ void player::tick(float max_x, float max_y) {
 	}
 
 	start_movement(delta_speed_x, delta_speed_y);
-
-	fp = min(1.f, fp + stamina_regen_frame);
-
-	const auto sufficient_stam = fp >= app_configuration.player_bullet_stamina_cost;
-
-	if(joystick_connected) {
-		const auto aim = controller_aim(0);
-		if(aim.first)
-			if(gun.tick(x, y, aim.second, sufficient_stam))
-				fp -= app_configuration.player_bullet_stamina_cost;
-	} else if(gun.tick(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), sufficient_stam))
-		fp -= app_configuration.player_bullet_stamina_cost;
 }
 
 void player::handle_event(const Event & event) {
-	const auto sufficient_stam_shot   = fp >= app_configuration.player_bullet_stamina_cost;
-	const auto sufficient_stam_reload = fp >= app_configuration.player_reload_stamina_cost;
-
-	if(event.type == Event::EventType::MouseButtonPressed && event.mouseButton.button == Mouse::Button::Left) {
-		if(gun.trigger(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), sufficient_stam_shot))
-			fp -= app_configuration.player_bullet_stamina_cost;
-	} else if(event.type == Event::EventType::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::RB &&
-	          event.joystickButton.joystickId == 0) {
+	if(event.type == Event::EventType::MouseButtonPressed && event.mouseButton.button == Mouse::Button::Left)
+		gun.trigger(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y));
+	else if(event.type == Event::EventType::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::RB &&
+	        event.joystickButton.joystickId == 0) {
 		const auto aim = controller_aim(0);
 		if(aim.first)
-			if(gun.trigger(x, y, aim.second, sufficient_stam_shot))
-				fp -= app_configuration.player_bullet_stamina_cost;
-	} else if(event.type == Event::EventType::MouseButtonReleased && event.mouseButton.button == Mouse::Button::Left) {
-		if(gun.untrigger(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y), sufficient_stam_shot))
-			fp -= app_configuration.player_bullet_stamina_cost;
-	} else if(event.type == Event::EventType::JoystickButtonReleased && event.joystickButton.button == X360_button_mappings::RB &&
-	          event.joystickButton.joystickId == 0) {
+			gun.trigger(x, y, aim.second);
+	} else if(event.type == Event::EventType::MouseButtonReleased && event.mouseButton.button == Mouse::Button::Left)
+		gun.untrigger(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y));
+	else if(event.type == Event::EventType::JoystickButtonReleased && event.joystickButton.button == X360_button_mappings::RB &&
+	        event.joystickButton.joystickId == 0) {
 		const auto aim = controller_aim(0);
 		if(aim.first)
-			if(gun.untrigger(x, y, aim.second, sufficient_stam_shot))
-				fp -= app_configuration.player_bullet_stamina_cost;
-	} else if(sufficient_stam_reload && ((event.type == Event::EventType::KeyPressed && event.key.code == Keyboard::Key::R) ||
-	                                     (event.type == Event::EventType::JoystickButtonReleased && event.joystickButton.button == X360_button_mappings::Y))) {
-		if(gun.reload())
-			fp -= app_configuration.player_reload_stamina_cost;
-	}
+			gun.untrigger(x, y, aim.second);
+	} else if((event.type == Event::EventType::KeyPressed && event.key.code == Keyboard::Key::R) ||
+	          (event.type == Event::EventType::JoystickButtonReleased && event.joystickButton.button == X360_button_mappings::Y))
+		gun.reload();
 }
 
 float player::speed() const {
@@ -187,10 +162,10 @@ const float & player::health() const noexcept {
 	return hp;
 }
 
-float & player::stamina() noexcept {
-	return fp;
+float & player::gun_progress() noexcept {
+	return progress;
 }
 
-const float & player::stamina() const noexcept {
-	return fp;
+const float & player::gun_progress() const noexcept {
+	return progress;
 }
