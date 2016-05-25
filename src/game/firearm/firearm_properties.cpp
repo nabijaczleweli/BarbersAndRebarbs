@@ -76,7 +76,7 @@ static pair<string, firearm_properties> load_single(string && filename) {
 firearm_properties::fire_mode_t fire_mode_from_string(const string & name) {
 	if(name == "full-auto")
 		return firearm_properties::fire_mode_t::full_auto;
-	else if(name == "semi-auto" || name == "bolt-action")
+	else if(name == "semi-auto" || name == "bolt-action" || name == "single-shot")
 		return firearm_properties::fire_mode_t::semi_auto;
 	else if(name == "semi-auto-response-trigger")
 		return firearm_properties::fire_mode_t::semi_auto_response_trigger;

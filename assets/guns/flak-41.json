@@ -1,0 +1,17 @@
+{
+	"id": "flak",
+	"name": "Flak 41",
+	"//0": "https://en.wikipedia.org/wiki/8.8_cm_Flak_18/36/37/41",
+
+	"bullet": {
+		"speed": 10,
+		"speed_loss": 0.000113
+	},
+
+	"fire_mode": "single-shot",
+	"action_speed": 0,
+	"reload_speed": 2.66666666666666666,
+	"mag_size": 1,
+	"//1": "Straight outta my arse",
+	"mag_quantity": 150
+}
