@@ -1,0 +1,17 @@
+{
+	"id": "enfield",
+	"name": "Lee-Enfield No. 4 Mk I",
+
+	"bullet": {
+		"speed": 7.44,
+		"speed_loss": 0.0055
+	},
+
+	"fire_mode": "bolt-action",
+	"//0": "https://www.youtube.com/watch?v=6Fozy_qV8Xg",
+	"action_speed": 0.615,
+	"reload_speed": 2.345,
+	"mag_size": 10,
+	"//1": "https://www.reddit.com/r/AskHistorians/comments/2gdsq9/how_many_bullets_did_the_average_soldier_in_ww1/",
+	"mag_quantity": 15
+}
