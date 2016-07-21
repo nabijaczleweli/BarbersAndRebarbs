@@ -26,6 +26,7 @@
 #include "../../util/vector.hpp"
 #include "../world.hpp"
 #include <SFML/Window.hpp>
+#include <cmath>
 
 
 using namespace cpp_nbt;

@@ -25,6 +25,7 @@
 
 #include <SFML/System.hpp>
 #include <type_traits>
+#include <cmath>
 
 
 template <class T>

@@ -23,6 +23,7 @@
 #include "stat_bar.hpp"
 #include "../reference/container.hpp"
 #include <utility>
+#include <cmath>
 
 
 using namespace std;

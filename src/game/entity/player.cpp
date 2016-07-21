@@ -102,6 +102,7 @@ void player::tick(float max_x, float max_y) {
 	const auto joystick_connected = Joystick::isConnected(0);
 
 	entity::tick(max_x, max_y);
+	gun.tick(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y));
 
 	auto delta_speed_x = 0.f;
 	auto delta_speed_y = 0.f;

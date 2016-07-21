@@ -1,0 +1,16 @@
+{
+	"id": "mp44",
+	"name": "Sturmgewehr 44",
+	"//": "https://en.wikipedia.org/wiki/StG_44",
+
+	"bullet": {
+		"speed": 6.85,
+		"speed_loss": 0.0003
+	},
+
+	"fire_mode": "full-auto",
+	"action_speed": 0.1,
+	"reload_speed": 1.75,
+	"mag_size": 30,
+	"mag_quantity": 10
+}

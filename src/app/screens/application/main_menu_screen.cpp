@@ -25,6 +25,7 @@
 #include "../../../reference/joystick_info.hpp"
 #include "../../application.hpp"
 #include "../game/main_game_screen.hpp"
+#include <cmath>
 
 
 using namespace std;
