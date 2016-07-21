@@ -30,12 +30,9 @@
 #include <utility>
 
 
-using namespace std;
-
-
 namespace config_subcategories {
 	struct system {
-		string & language;
+		std::string & language;
 		float & controller_deadzone;
 
 		template <class Archive>
@@ -63,7 +60,7 @@ namespace config_subcategories {
 
 	struct player {
 		float & player_speed;
-		string & player_default_firearm;
+		std::string & player_default_firearm;
 
 		template <class Archive>
 		void serialize(Archive & archive) {
@@ -80,8 +77,8 @@ void serialize(Archive & archive, config & cc) {
 }
 
 
-config::config(string && ppath) : path(move(ppath)) {
-	ifstream configfile(path);
+config::config(std::string && ppath) : path(move(ppath)) {
+	std::ifstream configfile(path);
 	if(configfile.is_open()) {
 		cereal::JSONInputArchive archive(configfile);
 		try {
@@ -92,7 +89,7 @@ config::config(string && ppath) : path(move(ppath)) {
 }
 
 config::~config() {
-	ofstream configfile(path);
+	std::ofstream configfile(path);
 	cereal::JSONOutputArchive archive(configfile);
 	archive(cereal::make_nvp(app_name + " configuration", *this));
 }

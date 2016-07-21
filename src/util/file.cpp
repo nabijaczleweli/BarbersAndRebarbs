@@ -27,9 +27,6 @@
 #include <memory>
 
 
-using namespace std;
-
-
 class DIR_deleter {
 public:
 	void operator()(DIR * dir) { closedir(dir); }
@@ -37,23 +34,23 @@ public:
 
 class FILE_deleter {
 public:
-	void operator()(FILE * file) { fclose(file); }
+	void operator()(std::FILE * file) { fclose(file); }
 };
 
 
 // http://stackoverflow.com/questions/612097/how-can-i-get-a-list-of-files-in-a-directory-using-c-or-c
-vector<string> list_files(const string & directory) {
-	vector<string> result;
-	if(const auto dir = unique_ptr<DIR, DIR_deleter>(opendir(directory.c_str()))) {
+std::vector<std::string> list_files(const std::string & directory) {
+	std::vector<std::string> result;
+	if(const auto dir = std::unique_ptr<DIR, DIR_deleter>(opendir(directory.c_str()))) {
 		/* print all the files and directories within directory */
 		while(const auto ent = readdir(dir.get()))
-			if(strcmp(ent->d_name, ".") && strcmp(ent->d_name, ".."))
+			if(std::strcmp(ent->d_name, ".") && std::strcmp(ent->d_name, ".."))
 				result.emplace_back(ent->d_name);
 	}
 	return result;
 }
 
-bool file_exists(const string & path) {
-	unique_ptr<FILE, FILE_deleter> file(fopen(path.c_str(), "r"));
+bool file_exists(const std::string & path) {
+	std::unique_ptr<std::FILE, FILE_deleter> file(std::fopen(path.c_str(), "r"));
 	return file.get();
 }

@@ -30,7 +30,7 @@
 
 template <class T>
 sf::Vector2<T> normalised(const sf::Vector2<T> & vec) {
-	const T length = sqrt(vec.x * vec.x + vec.y * vec.y);
+	const T length = std::sqrt(vec.x * vec.x + vec.y * vec.y);
 	if(length)
 		return vec / length;
 	return vec;

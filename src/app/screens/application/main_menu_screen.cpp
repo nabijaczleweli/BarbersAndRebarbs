@@ -28,8 +28,7 @@
 #include <cmath>
 
 
-using namespace std;
-using namespace sf;
+using namespace std::literals;
 
 
 using direction = main_menu_screen::direction;
@@ -38,7 +37,7 @@ using direction = main_menu_screen::direction;
 void main_menu_screen::move_selection(direction dir) {
 	switch(dir) {
 		case direction::up:
-			selected = min(main_buttons.size() - 1, selected + 1);
+			selected = std::min(main_buttons.size() - 1, selected + 1);
 			break;
 		case direction::down:
 			if(selected)
@@ -56,7 +55,7 @@ void main_menu_screen::press_button() {
 void main_menu_screen::try_drawings() {
 	if(!(control_frames_counter++ % 10)) {
 		control_frames_counter = 0;
-		if(joystick_drawing.first != Joystick::isConnected(0)) {
+		if(joystick_drawing.first != sf::Joystick::isConnected(0)) {
 			joystick_drawing.first ^= 1;
 			joystick_drawing.second.move(0, joystick_drawing.second.size().y * .55f * (joystick_drawing.first ? 1 : -1));
 			keys_drawing.move(0, joystick_drawing.second.size().y * .55f * (joystick_drawing.first ? -1 : 1));
@@ -77,7 +76,7 @@ int main_menu_screen::loop() {
 
 		button.first.setPosition((winsize.x * (59.f / 60.f)) - btnbds.width,
 		                         (winsize.y * (7.f / 8.f)) - (buttid + 1) * btnbds.height - (winsize.y * ((buttid * 1.f) / 90.f)));
-		button.first.setColor((buttid == selected) ? Color::Red : Color::White);
+		button.first.setColor((buttid == selected) ? sf::Color::Red : sf::Color::White);
 		++buttid;
 	}
 	return 0;
@@ -95,12 +94,12 @@ int main_menu_screen::draw() {
 	return 0;
 }
 
-int main_menu_screen::handle_event(const Event & event) {
+int main_menu_screen::handle_event(const sf::Event & event) {
 	if(int i = screen::handle_event(event))
 		return i;
 
 	switch(static_cast<int>(event.type)) {
-		case Event::MouseMoved: {
+		case sf::Event::MouseMoved: {
 			unsigned int buttid = 0;
 			for(const auto & button : main_buttons) {
 				if(button.first.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y)) {
@@ -111,8 +110,8 @@ int main_menu_screen::handle_event(const Event & event) {
 			}
 		} break;
 
-		case Event::MouseButtonPressed:
-			if(event.mouseButton.button == Mouse::Left)
+		case sf::Event::MouseButtonPressed:
+			if(event.mouseButton.button == sf::Mouse::Left)
 				for(const auto & button : main_buttons)
 					if(button.first.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
 						press_button();
@@ -120,31 +119,31 @@ int main_menu_screen::handle_event(const Event & event) {
 					}
 			break;
 
-		case Event::MouseWheelMoved:
+		case sf::Event::MouseWheelMoved:
 			move_selection((event.mouseWheel.delta > 0) ? direction::up : direction::down);
 			break;
-		case Event::KeyPressed:
+		case sf::Event::KeyPressed:
 			switch(static_cast<int>(event.key.code)) {
-				case Keyboard::Key::Up:
+				case sf::Keyboard::Key::Up:
 					move_selection(direction::up);
 					break;
-				case Keyboard::Key::Down:
+				case sf::Keyboard::Key::Down:
 					move_selection(direction::down);
 					break;
-				case Keyboard::Key::Return:
-				case Keyboard::Key::Space:
+				case sf::Keyboard::Key::Return:
+				case sf::Keyboard::Key::Space:
 					press_button();
 					break;
 			}
 			break;
 
-		case Event::JoystickMoved:
+		case sf::Event::JoystickMoved:
 			if(event.joystickMove.axis == X360_axis_mappings::LeftStickVertical || event.joystickMove.axis == X360_axis_mappings::DPadVertical) {
 				if(event.joystickMove.position && (event.joystickMove.position >= 25 || event.joystickMove.position <= -25)) {
 					if(joystick_up)
 						break;
 					joystick_up    = true;
-					const int sign = event.joystickMove.position / abs(event.joystickMove.position);
+					const int sign = event.joystickMove.position / std::abs(event.joystickMove.position);
 
 					move_selection((sign == ((event.joystickMove.axis == X360_axis_mappings::LeftStickVertical) ? X360_axis_up_right_mappings::LeftStickVertical
 					                                                                                            : X360_axis_up_right_mappings::DPadVertical))
@@ -155,7 +154,7 @@ int main_menu_screen::handle_event(const Event & event) {
 			}
 			break;
 
-		case Event::JoystickButtonPressed:
+		case sf::Event::JoystickButtonPressed:
 			if(event.joystickButton.button == X360_button_mappings::A)
 				press_button();
 			break;
@@ -171,15 +170,15 @@ main_menu_screen::main_menu_screen(application & theapp)
 	joystick_drawing.second.move(app.window.getSize().x / 4 - joystick_drawing.second.size().x / 2,
 	                             app.window.getSize().y / 2 - joystick_drawing.second.size().y / 2);
 
-	main_buttons.emplace_front(Text(global_iser.translate_key("gui.application.text.start"), font_swirly),
-	                           [&](Text &) { app.schedule_screen<main_game_screen>(); });
-	main_buttons.emplace_front(Text(global_iser.translate_key("gui.application.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"), font_swirly),
-	                           [&](Text & txt) {
+	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.start"), font_swirly),
+	                           [&](sf::Text &) { app.schedule_screen<main_game_screen>(); });
+	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"), font_swirly),
+	                           [&](sf::Text & txt) {
 		                           app_configuration.play_sounds = !app_configuration.play_sounds;
 		                           txt.setString(global_iser.translate_key("gui.application.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"));
 		                           app.retry_music();
 		                         });
-	main_buttons.emplace_front(Text(global_iser.translate_key("gui.application.text.quit"), font_swirly), [&](Text &) { app.window.close(); });
+	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.quit"), font_swirly), [&](sf::Text &) { app.window.close(); });
 
 	selected = main_buttons.size() - 1;
 }

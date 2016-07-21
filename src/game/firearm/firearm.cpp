@@ -24,19 +24,16 @@
 #include "../entity/bullet.hpp"
 
 
-using namespace sf;
-using namespace std;
-
-
-firearm::firearm(game_world & w, const string & gun_id)
-      : props(&properties().at(gun_id)), world(&w), action_speed(chrono::duration_cast<chrono::high_resolution_clock::duration>(
-                                                        chrono::microseconds(static_cast<chrono::microseconds::rep>(props->action_speed * micro::den)))),
-        reload_speed(chrono::duration_cast<chrono::high_resolution_clock::duration>(
-            chrono::microseconds(static_cast<chrono::microseconds::rep>(props->reload_speed * micro::den)))),
+firearm::firearm(game_world & w, const std::string & gun_id)
+      : props(&properties().at(gun_id)), world(&w),
+        action_speed(std::chrono::duration_cast<std::chrono::high_resolution_clock::duration>(
+            std::chrono::microseconds(static_cast<std::chrono::microseconds::rep>(props->action_speed * std::micro::den)))),
+        reload_speed(std::chrono::duration_cast<std::chrono::high_resolution_clock::duration>(
+            std::chrono::microseconds(static_cast<std::chrono::microseconds::rep>(props->reload_speed * std::micro::den)))),
         trigger_pulled(false), left_in_mag(0), left_mags(props->mag_quantity) {}
 
-void firearm::trigger(float pos_x, float pos_y, const Vector2f & aim) {
-	const auto now          = chrono::high_resolution_clock::now();
+void firearm::trigger(float pos_x, float pos_y, const sf::Vector2f & aim) {
+	const auto now          = std::chrono::high_resolution_clock::now();
 	const auto action_ready = now - action_repeat_start >= action_speed;
 	const auto reload_ready = now - mag_reload_start >= reload_speed;
 	const auto shoot        = action_ready && reload_ready && left_in_mag;
@@ -44,40 +41,40 @@ void firearm::trigger(float pos_x, float pos_y, const Vector2f & aim) {
 	trigger_pulled = true;
 
 	if(shoot) {
-		world->spawn_create<bullet>(aim, pos_x, pos_y, cref(props->bullet_props));
+		world->spawn_create<bullet>(aim, pos_x, pos_y, std::cref(props->bullet_props));
 		action_repeat_start = now;
 		--left_in_mag;
 	}
 }
 
-void firearm::tick(float pos_x, float pos_y, const Vector2f & aim) {
+void firearm::tick(float pos_x, float pos_y, const sf::Vector2f & aim) {
 	const auto shoot = trigger_pulled && left_in_mag && props->fire_mode == firearm_properties::fire_mode_t::full_auto;
 
 	if(shoot) {
-		const auto now          = chrono::high_resolution_clock::now();
+		const auto now          = std::chrono::high_resolution_clock::now();
 		const auto action_ready = now - action_repeat_start >= action_speed;
 		const auto reload_ready = now - mag_reload_start >= reload_speed;
 
 		if(action_ready && reload_ready) {
-			world->spawn_create<bullet>(aim, pos_x, pos_y, cref(props->bullet_props));
+			world->spawn_create<bullet>(aim, pos_x, pos_y, std::cref(props->bullet_props));
 			action_repeat_start = now;
 			--left_in_mag;
 		}
 	}
 }
 
-void firearm::untrigger(float pos_x, float pos_y, const Vector2f & aim) {
+void firearm::untrigger(float pos_x, float pos_y, const sf::Vector2f & aim) {
 	const auto shoot = left_in_mag && props->fire_mode == firearm_properties::fire_mode_t::semi_auto_response_trigger;
 
 	trigger_pulled = false;
 
 	if(shoot) {
-		const auto now          = chrono::high_resolution_clock::now();
+		const auto now          = std::chrono::high_resolution_clock::now();
 		const auto action_ready = now - action_repeat_start >= action_speed;
 		const auto reload_ready = now - mag_reload_start >= reload_speed;
 
 		if(action_ready && reload_ready) {
-			world->spawn_create<bullet>(aim, pos_x, pos_y, cref(props->bullet_props));
+			world->spawn_create<bullet>(aim, pos_x, pos_y, std::cref(props->bullet_props));
 			action_repeat_start = now;
 			--left_in_mag;
 		}
@@ -87,33 +84,33 @@ void firearm::untrigger(float pos_x, float pos_y, const Vector2f & aim) {
 void firearm::reload() {
 	if(left_mags) {
 		left_in_mag      = props->mag_size;
-		mag_reload_start = chrono::high_resolution_clock::now();
+		mag_reload_start = std::chrono::high_resolution_clock::now();
 		--left_mags;
 	} else
 		left_in_mag = 0;
 }
 
-const string & firearm::id() const noexcept {
+const std::string & firearm::id() const noexcept {
 	return props->id;
 }
 
-const string & firearm::name() const noexcept {
+const std::string & firearm::name() const noexcept {
 	return props->name;
 }
 
 float firearm::progress() const noexcept {
-	const auto now             = chrono::high_resolution_clock::now();
+	const auto now             = std::chrono::high_resolution_clock::now();
 	const auto reload_progress = (now - mag_reload_start).count() / static_cast<double>(reload_speed.count());
 
 	if(reload_progress >= 1) {
 		const auto action_progress = (now - action_repeat_start).count() / static_cast<double>(action_speed.count());
-		return min(action_progress, 1.);
+		return std::min(action_progress, 1.);
 	} else
-		return min(reload_progress, 1.);
+		return std::min(reload_progress, 1.);
 }
 
 float firearm::depletion() const noexcept {
-	const auto now          = chrono::high_resolution_clock::now();
+	const auto now          = std::chrono::high_resolution_clock::now();
 	const auto reload_ready = now - mag_reload_start >= reload_speed;
 	if(reload_ready)
 		return left_in_mag / static_cast<float>(props->mag_size);

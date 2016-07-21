@@ -27,16 +27,12 @@
 #include <future>
 
 
-using namespace std;
-using namespace sf;
-
-
 float bezier_curve::bezier_step       = .0001f;
 bool bezier_curve::optimize_points    = true;
 float bezier_curve::optimize_prettily = .01f;
 
 
-bezier_curve::bezier_curve(Vector2f the_start_point, Vector2f the_control_point, Vector2f the_end_point)
+bezier_curve::bezier_curve(sf::Vector2f the_start_point, sf::Vector2f the_control_point, sf::Vector2f the_end_point)
       : start_point(the_start_point), control_point(the_control_point), end_point(the_end_point) {
 	compute_vertices();
 }
@@ -49,7 +45,7 @@ void bezier_curve::swap(bezier_curve & with) {
 		with.var = temp;     \
 	}
 
-	Vector2f temp;
+	sf::Vector2f temp;
 
 	VSWAP(start_point);
 	VSWAP(control_point);
@@ -59,29 +55,28 @@ void bezier_curve::swap(bezier_curve & with) {
 #undef VSWAP
 }
 
-void bezier_curve::draw(RenderTarget & target, RenderStates) const {
-	target.draw(vertices.data(), vertices.size(), PrimitiveType::LinesStrip);
-	// target.draw(&static_cast<const Vertex &>(Vertex(control_point, Color::White)), 1, PrimitiveType::Points);  // Debug
+void bezier_curve::draw(sf::RenderTarget & target, sf::RenderStates) const {
+	target.draw(vertices.data(), vertices.size(), sf::PrimitiveType::LinesStrip);
+	// target.draw(&static_cast<const sf::Vertex &>(Vertex(control_point,sf:: Color::White)), 1, sf::PrimitiveType::Points);  // Debug
 }
 
 void bezier_curve::compute_vertices() {
 	vertices.clear();
 	const auto & scale(get_scale());
 	for(float t = 0; t <= 1; t += bezier_step)
-		vertices.emplace_back((1 - t) * (1 - t) * (scale * start_point) + 2 * (1 - t) * t * (scale * control_point) + t * t * (scale * end_point), Color::White);
+		vertices.emplace_back((1 - t) * (1 - t) * (scale * start_point) + 2 * (1 - t) * t * (scale * control_point) + t * t * (scale * end_point), sf::Color::White);
 	if(optimize_points) {
 		const unsigned int additional_offset = optimize_prettily * vertices.size();
-		vertices.erase(unique(vertices.begin() + additional_offset, vertices.end() - additional_offset,
-		                      [&](const Vertex & lhs, const Vertex & rhs) {
-			                      return (round(lhs.position.x) == round(rhs.position.x)) && (round(lhs.position.y) == round(rhs.position.y));
-			                    }),
-		               vertices.end() - additional_offset);
+		vertices.erase(
+		    unique(vertices.begin() + additional_offset, vertices.end() - additional_offset,
+		           [&](auto && lhs, auto && rhs) { return (round(lhs.position.x) == round(rhs.position.x)) && (round(lhs.position.y) == round(rhs.position.y)); }),
+		    vertices.end() - additional_offset);
 	}
 	vertices.shrink_to_fit();
 }
 
 void bezier_curve::move(float x, float y) {
-	Vector2f by(x, y);
+	sf::Vector2f by(x, y);
 	start_point += by;
 	control_point += by;
 	end_point += by;
@@ -93,7 +88,7 @@ void bezier_curve::set_scale(float factor_x, float factor_y) {
 	compute_vertices();
 }
 
-void bezier_curve::scale(const Vector2f & factor) {
+void bezier_curve::scale(const sf::Vector2f & factor) {
 	scale(factor.x, factor.y);
 }
 

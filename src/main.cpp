@@ -28,11 +28,8 @@
 #include <stdexcept>
 
 
-using namespace std;
-
-
 static void credit();
-static pair<string, int> check_config();
+static std::pair<std::string, int> check_config();
 static void init_app(application & app, int argc, char * argv[]);
 static void init_deps(application & app);
 
@@ -42,7 +39,7 @@ int main(int argc, char * argv[]) {
 	{
 		const auto cfg_result = check_config();
 		if(cfg_result.second) {
-			cerr << "Configuration error: " << cfg_result.first << '\n';
+			std::cerr << "Configuration error: " << cfg_result.first << '\n';
 			return cfg_result.second;
 		}
 	}
@@ -52,29 +49,29 @@ int main(int argc, char * argv[]) {
 	init_app(app, argc, argv);
 	const auto result = app.run();
 	if(result)
-		cerr << "`app.run()` failed with " << result << "! Oh noes!";
+		std::cerr << "`app.run()` failed with " << result << "! Oh noes!";
 	return result;
 }
 
 
 static void credit() {
-	cout << "OS: " << CIMPOLER_META_OS_NAME << "\n"
-	     << "Compiler: " << CIMPOLER_META_COMPILER_NAME << " version " << cimpoler_meta::version() << "\n"
-	     << "Stdlib: " << CIMPOLER_META_STDLIB << " version " << cimpoler_meta::stdlib_version() << "\n"
-	     << "Used libraries:\n"
-	     << "  - SFML version " << SFML_VERSION_MAJOR << '.' << SFML_VERSION_MINOR << ": http://sfml-dev.org\n"
-	     << "  - audiere version " << audiere::GetVersion() << ": https://sourceforge.net/projects/audiere\n"
-	     << "  - cereal version " << CEREAL_VERSION << ": http://uscilab.github.io/cereal\n"
-	     << "  - cimpoler-meta version " << CIMPOLER_META_VERSION << ": https://github.com/nabijaczleweli/cimpoler-meta\n"
-	     << "  - cpp-localiser version " << CPP_LOCALISER_VERSION << ": https://github.com/nabijaczleweli/cpp-localiser\n"
-	     << "  - Cpp-NBT version " << CPP_NBT_VERSION << ": https://github.com/nabijaczleweli/Cpp-NBT\n"
-	     << "  - jsonpp version " << JSONPP_VERSION << ": http://rapptz.github.io/jsonpp\n"
-	     << "  - seed11 version " << SEED11_VERSION << ": https://github.com/milleniumbug/seed11\n"
-	     << "  - whereami-cpp version " << WHEREAMI_CPP_VERSION << ": https://github.com/nabijaczleweli/whereami-cpp\n"
-	     << "\n\n";
+	std::cout << "OS: " << CIMPOLER_META_OS_NAME << "\n"
+	          << "Compiler: " << CIMPOLER_META_COMPILER_NAME << " version " << cimpoler_meta::version() << "\n"
+	          << "Stdlib: " << CIMPOLER_META_STDLIB << " version " << cimpoler_meta::stdlib_version() << "\n"
+	          << "Used libraries:\n"
+	          << "  - SFML version " << SFML_VERSION_MAJOR << '.' << SFML_VERSION_MINOR << ": http://sfml-dev.org\n"
+	          << "  - audiere version " << audiere::GetVersion() << ": https://sourceforge.net/projects/audiere\n"
+	          << "  - cereal version " << CEREAL_VERSION << ": http://uscilab.github.io/cereal\n"
+	          << "  - cimpoler-meta version " << CIMPOLER_META_VERSION << ": https://github.com/nabijaczleweli/cimpoler-meta\n"
+	          << "  - cpp-localiser version " << CPP_LOCALISER_VERSION << ": https://github.com/nabijaczleweli/cpp-localiser\n"
+	          << "  - Cpp-NBT version " << CPP_NBT_VERSION << ": https://github.com/nabijaczleweli/Cpp-NBT\n"
+	          << "  - jsonpp version " << JSONPP_VERSION << ": http://rapptz.github.io/jsonpp\n"
+	          << "  - seed11 version " << SEED11_VERSION << ": https://github.com/milleniumbug/seed11\n"
+	          << "  - whereami-cpp version " << WHEREAMI_CPP_VERSION << ": https://github.com/nabijaczleweli/whereami-cpp\n"
+	          << "\n\n";
 }
 
-static pair<string, int> check_config() {
+static std::pair<std::string, int> check_config() {
 	if(!app_configuration.vsync && !app_configuration.FPS)
 		return {"VSync not enabled and FPS set to 0", -1};
 

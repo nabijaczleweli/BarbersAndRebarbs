@@ -22,16 +22,12 @@
 
 #include "stat_bar.hpp"
 #include "../reference/container.hpp"
-#include <utility>
 #include <cmath>
+#include <utility>
 
 
-using namespace std;
-using namespace sf;
-
-
-const Texture & stat_bar::load_bar_frame_texture() {
-	static Texture bar_frame_texture;
+const sf::Texture & stat_bar::load_bar_frame_texture() {
+	static sf::Texture bar_frame_texture;
 	static bool bar_frame_texture_loaded = false;
 
 	if(!bar_frame_texture_loaded)
@@ -39,8 +35,8 @@ const Texture & stat_bar::load_bar_frame_texture() {
 	return bar_frame_texture;
 }
 
-const Texture & stat_bar::load_bar_fill_texture() {
-	static Texture bar_fill_texture;
+const sf::Texture & stat_bar::load_bar_fill_texture() {
+	static sf::Texture bar_fill_texture;
 	static bool bar_fill_texture_loaded = false;
 
 	if(!bar_fill_texture_loaded)
@@ -50,26 +46,26 @@ const Texture & stat_bar::load_bar_fill_texture() {
 
 
 stat_bar::stat_bar() : filledness(nullptr) {}
-stat_bar::stat_bar(Color color, const float & filledness_r)
+stat_bar::stat_bar(sf::Color colour, const float & filledness_r)
       : bar_frame_sprite(load_bar_frame_texture()), bar_fill_sprite(load_bar_fill_texture()), filledness(&filledness_r) {
-	bar_fill_sprite.setColor(color);
+	bar_fill_sprite.setColor(colour);
 }
 
-void stat_bar::draw(RenderTarget & target, RenderStates) const {
+void stat_bar::draw(sf::RenderTarget & target, sf::RenderStates) const {
 	if(filledness) {
 		auto rect  = bar_fill_sprite.getTextureRect();
-		rect.width = bar_fill_sprite.getTexture()->getSize().x * min(1.f, abs(*filledness));
-		bar_fill_sprite.setTextureRect(static_cast<IntRect>(rect));
+		rect.width = bar_fill_sprite.getTexture()->getSize().x * std::min(1.f, std::abs(*filledness));
+		bar_fill_sprite.setTextureRect(static_cast<sf::IntRect>(rect));
 		target.draw(bar_fill_sprite);
 	}
 
 	target.draw(bar_frame_sprite);
 }
 
-FloatRect stat_bar::getGlobalBounds() const {
+sf::FloatRect stat_bar::getGlobalBounds() const {
 	return bar_frame_sprite.getGlobalBounds();
 }
-FloatRect stat_bar::getLocalBounds() const {
+sf::FloatRect stat_bar::getLocalBounds() const {
 	return bar_frame_sprite.getLocalBounds();
 }
 
@@ -79,7 +75,7 @@ void stat_bar::setPosition(float x, float y) {
 	bar_fill_sprite.setPosition(x, y);
 }
 
-void stat_bar::setPosition(const Vector2f & position) {
+void stat_bar::setPosition(const sf::Vector2f & position) {
 	Transformable::setPosition(position);
 	bar_frame_sprite.setPosition(position);
 	bar_fill_sprite.setPosition(position);

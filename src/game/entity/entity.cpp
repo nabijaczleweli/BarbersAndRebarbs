@@ -25,16 +25,12 @@
 #include <functional>
 
 
-using namespace std;
-using namespace cpp_nbt;
-
-
 entity::entity(game_world & world_r, size_t id_a) : x(0), y(0), motion_x(0), motion_y(0), id(id_a), world(world_r) {}
-entity::entity(game_world & world_r, size_t id_a, const nbt_compound & from) : entity(world_r, id_a) {
+entity::entity(game_world & world_r, size_t id_a, const cpp_nbt::nbt_compound & from) : entity(world_r, id_a) {
 	read_from_nbt(from);
 }
 
-void entity::read_from_nbt(const nbt_compound & from) {
+void entity::read_from_nbt(const cpp_nbt::nbt_compound & from) {
 	if(auto fx = from.get_float("x"))
 		x = *fx;
 	if(auto fy = from.get_float("y"))
@@ -45,7 +41,7 @@ void entity::read_from_nbt(const nbt_compound & from) {
 		motion_y = *fmotion_y;
 }
 
-void entity::write_to_nbt(nbt_compound & to) const {
+void entity::write_to_nbt(cpp_nbt::nbt_compound & to) const {
 	to.set_float("x", x);
 	to.set_float("y", y);
 	to.set_float("motion_x", motion_x);
@@ -61,7 +57,7 @@ void entity::tick(float max_x, float max_y) {
 
 	if(max_x && max_y) {
 		if(x < 0) {
-			x        = fabs(x);
+			x        = std::abs(x);
 			motion_x = -motion_x;
 		}
 		if(x > max_x) {
@@ -69,7 +65,7 @@ void entity::tick(float max_x, float max_y) {
 			motion_x = -motion_x;
 		}
 		if(y < 0) {
-			y        = fabs(y);
+			y        = std::abs(y);
 			motion_y = -motion_y;
 		}
 		if(y > max_y) {

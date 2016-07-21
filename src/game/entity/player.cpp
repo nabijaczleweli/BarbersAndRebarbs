@@ -31,24 +31,19 @@
 #include <seed11/seed11.hpp>
 
 
-using namespace cpp_nbt;
-using namespace std;
-using namespace sf;
-
-
-pair<bool, Vector2f> player::controller_aim(unsigned int controller_id) const {
-	const auto horizontal      = Joystick::getAxisPosition(controller_id, X360_axis_mappings::RightStickHorizontal);
-	const auto vertical        = Joystick::getAxisPosition(controller_id, X360_axis_mappings::RightStickVertical);
-	const auto out_of_deadzone = abs(horizontal) > app_configuration.controller_deadzone && abs(vertical) > app_configuration.controller_deadzone;
+std::pair<bool, sf::Vector2f> player::controller_aim(unsigned int controller_id) const {
+	const auto horizontal      = sf::Joystick::getAxisPosition(controller_id, X360_axis_mappings::RightStickHorizontal);
+	const auto vertical        = sf::Joystick::getAxisPosition(controller_id, X360_axis_mappings::RightStickVertical);
+	const auto out_of_deadzone = std::abs(horizontal) > app_configuration.controller_deadzone && std::abs(vertical) > app_configuration.controller_deadzone;
 
 	return {out_of_deadzone, {horizontal, vertical}};
 }
 
-void player::draw(RenderTarget & target, RenderStates states) const {
-	static const Color body_colour(231, 158, 109);
-	static const Color armour_colour(200, 200, 200);
+void player::draw(sf::RenderTarget & target, sf::RenderStates states) const {
+	static const sf::Color body_colour(231, 158, 109);
+	static const sf::Color armour_colour(200, 200, 200);
 
-	const Vertex vertices[]{
+	const sf::Vertex vertices[]{
 	    {{x - 1, y}, body_colour},        //
 	    {{x, y - 1}, body_colour},        //
 	    {{x + 1, y}, body_colour},        //
@@ -58,7 +53,7 @@ void player::draw(RenderTarget & target, RenderStates states) const {
 	    {{x + 2, y + 2}, armour_colour},  //
 	    {{x - 2, y + 2}, armour_colour},  //
 	};
-	target.draw(vertices, sizeof vertices / sizeof *vertices, PrimitiveType::Points, states);
+	target.draw(vertices, sizeof vertices / sizeof *vertices, sf::PrimitiveType::Points, states);
 
 	const auto gun_progress = gun.progress();
 	if(gun_progress != 1) {
@@ -70,15 +65,15 @@ void player::draw(RenderTarget & target, RenderStates states) const {
 	progress = gun.depletion();
 }
 
-player::player(game_world & world_r, size_t id_a, Vector2u screen_size)
+player::player(game_world & world_r, size_t id_a, sf::Vector2u screen_size)
       : entity(world_r, id_a), progress_circle(0, 7), gun(world_r, app_configuration.player_default_firearm), hp(1), progress(0) {
-	static const Color progress_colour(255, 255, 255, 100);
-	static auto rand = seed11::make_seeded<mt19937>();
+	static const sf::Color progress_colour(255, 255, 255, 100);
+	static auto rand = seed11::make_seeded<std::mt19937>();
 
 	progress_circle.colour(progress_colour);
 
-	uniform_real_distribution<float> x_dist(0, screen_size.x - 1);
-	uniform_real_distribution<float> y_dist(0, screen_size.y - 1);
+	std::uniform_real_distribution<float> x_dist(0, screen_size.x - 1);
+	std::uniform_real_distribution<float> y_dist(0, screen_size.y - 1);
 
 	x = x_dist(rand);
 	y = y_dist(rand);
@@ -99,55 +94,55 @@ void player::write_to_nbt(cpp_nbt::nbt_compound & to) const {
 }
 
 void player::tick(float max_x, float max_y) {
-	const auto joystick_connected = Joystick::isConnected(0);
+	const auto joystick_connected = sf::Joystick::isConnected(0);
 
 	entity::tick(max_x, max_y);
-	gun.tick(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y));
+	gun.tick(x, y, static_cast<sf::Vector2f>(sf::Mouse::getPosition()) - sf::Vector2f(x, y));
 
 	auto delta_speed_x = 0.f;
 	auto delta_speed_y = 0.f;
 
-	if(Keyboard::isKeyPressed(Keyboard::Key::A))
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 		delta_speed_x -= 1;
-	if(Keyboard::isKeyPressed(Keyboard::Key::D))
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 		delta_speed_x += 1;
-	if(Keyboard::isKeyPressed(Keyboard::Key::W))
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
 		delta_speed_y -= 1;
-	if(Keyboard::isKeyPressed(Keyboard::Key::S))
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 		delta_speed_y += 1;
 
 	if(joystick_connected) {
-		const auto horizontal = Joystick::getAxisPosition(0, X360_axis_mappings::LeftStickHorizontal);
-		const auto vertical   = Joystick::getAxisPosition(0, X360_axis_mappings::LeftStickVertical);
-		if(abs(horizontal) > app_configuration.controller_deadzone && abs(vertical) > app_configuration.controller_deadzone) {
-			const auto horizontal_sign = horizontal / abs(horizontal);
-			const auto vertical_sign   = vertical / abs(vertical);
+		const auto horizontal = sf::Joystick::getAxisPosition(0, X360_axis_mappings::LeftStickHorizontal);
+		const auto vertical   = sf::Joystick::getAxisPosition(0, X360_axis_mappings::LeftStickVertical);
+		if(std::abs(horizontal) > app_configuration.controller_deadzone && std::abs(vertical) > app_configuration.controller_deadzone) {
+			const auto horizontal_sign = horizontal / std::abs(horizontal);
+			const auto vertical_sign   = vertical / std::abs(vertical);
 
-			delta_speed_x = ((horizontal_sign == X360_axis_up_right_mappings::RightStickHorizontal) ? abs(horizontal) : -abs(horizontal)) / 100.f;
-			delta_speed_y = ((vertical_sign == X360_axis_up_right_mappings::RightStickVertical) ? -abs(vertical) : abs(vertical)) / 100.f;
+			delta_speed_x = ((horizontal_sign == X360_axis_up_right_mappings::RightStickHorizontal) ? std::abs(horizontal) : -std::abs(horizontal)) / 100.f;
+			delta_speed_y = ((vertical_sign == X360_axis_up_right_mappings::RightStickVertical) ? -std::abs(vertical) : std::abs(vertical)) / 100.f;
 		}
 	}
 
 	start_movement(delta_speed_x, delta_speed_y);
 }
 
-void player::handle_event(const Event & event) {
-	if(event.type == Event::EventType::MouseButtonPressed && event.mouseButton.button == Mouse::Button::Left)
-		gun.trigger(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y));
-	else if(event.type == Event::EventType::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::RB &&
+void player::handle_event(const sf::Event & event) {
+	if(event.type == sf::Event::EventType::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Button::Left)
+		gun.trigger(x, y, static_cast<sf::Vector2f>(sf::Mouse::getPosition()) - sf::Vector2f(x, y));
+	else if(event.type == sf::Event::EventType::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::RB &&
 	        event.joystickButton.joystickId == 0) {
 		const auto aim = controller_aim(0);
 		if(aim.first)
 			gun.trigger(x, y, aim.second);
-	} else if(event.type == Event::EventType::MouseButtonReleased && event.mouseButton.button == Mouse::Button::Left)
-		gun.untrigger(x, y, static_cast<Vector2f>(Mouse::getPosition()) - Vector2f(x, y));
-	else if(event.type == Event::EventType::JoystickButtonReleased && event.joystickButton.button == X360_button_mappings::RB &&
+	} else if(event.type == sf::Event::EventType::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Left)
+		gun.untrigger(x, y, static_cast<sf::Vector2f>(sf::Mouse::getPosition()) - sf::Vector2f(x, y));
+	else if(event.type == sf::Event::EventType::JoystickButtonReleased && event.joystickButton.button == X360_button_mappings::RB &&
 	        event.joystickButton.joystickId == 0) {
 		const auto aim = controller_aim(0);
 		if(aim.first)
 			gun.untrigger(x, y, aim.second);
-	} else if((event.type == Event::EventType::KeyPressed && event.key.code == Keyboard::Key::R) ||
-	          (event.type == Event::EventType::JoystickButtonReleased && event.joystickButton.button == X360_button_mappings::Y))
+	} else if((event.type == sf::Event::EventType::KeyPressed && event.key.code == sf::Keyboard::Key::R) ||
+	          (event.type == sf::Event::EventType::JoystickButtonReleased && event.joystickButton.button == X360_button_mappings::Y))
 		gun.reload();
 }
 

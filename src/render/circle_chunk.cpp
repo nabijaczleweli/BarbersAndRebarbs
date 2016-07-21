@@ -25,23 +25,19 @@
 #include <vector>
 
 
-using namespace sf;
-using namespace std;
-
-
-void circle_chunk::draw(RenderTarget & target, RenderStates states) const {
-	static const auto tau = acos(-1) * 2;
+void circle_chunk::draw(sf::RenderTarget & target, sf::RenderStates states) const {
+	static const auto tau = std::acos(-1) * 2;
 
 	if(recompute_next_time) {
 		vertices.resize(points);
 		for(auto i = 0.; i < points; ++i) {
-			vertices[i] = {{static_cast<float>(r * cos(i / points * fract * tau)), static_cast<float>(r * sin(i / points * fract * tau))}, clr};
+			vertices[i] = {{static_cast<float>(r * std::cos(i / points * fract * tau)), static_cast<float>(r * std::sin(i / points * fract * tau))}, clr};
 		}
 		recompute_next_time = false;
 	}
 
 	states.transform *= getTransform();
-	target.draw(vertices.data(), vertices.size(), PrimitiveType::LinesStrip, states);
+	target.draw(vertices.data(), vertices.size(), sf::PrimitiveType::LinesStrip, states);
 }
 
 circle_chunk::circle_chunk(float frcn, float rad, unsigned int np) : fract(frcn), r(rad), points(np), recompute_next_time(true) {}
@@ -74,11 +70,11 @@ void circle_chunk::fraction(float new_fraction) {
 }
 
 
-const Color & circle_chunk::colour() const {
+const sf::Color & circle_chunk::colour() const {
 	return clr;
 }
 
-void circle_chunk::colour(Color new_colour) {
+void circle_chunk::colour(sf::Color new_colour) {
 	clr                 = std::move(new_colour);
 	recompute_next_time = true;
 }

@@ -26,10 +26,6 @@
 #include "../../application.hpp"
 
 
-using namespace std;
-using namespace sf;
-
-
 void main_game_screen::setup() {
 	screen::setup();
 	const auto & winsize       = app.window.getView().getSize();
@@ -52,7 +48,7 @@ int main_game_screen::draw() {
 	return 0;
 }
 
-int main_game_screen::handle_event(const Event & event) {
+int main_game_screen::handle_event(const sf::Event & event) {
 	world.handle_event(event);
 	return screen::handle_event(event);
 }
@@ -61,6 +57,6 @@ main_game_screen::main_game_screen(application & theapp) : screen(theapp) {
 	player_id = world.spawn<player>(app.window.getSize());
 
 	const auto & plr = dynamic_cast<const player &>(world.ent(player_id));
-	hp_stat          = {Color::Red, plr.health()};
-	energy_stat      = {Color(50, 200, 200), plr.gun_progress()};
+	hp_stat          = {sf::Color::Red, plr.health()};
+	energy_stat      = {sf::Color(50, 200, 200), plr.gun_progress()};
 }

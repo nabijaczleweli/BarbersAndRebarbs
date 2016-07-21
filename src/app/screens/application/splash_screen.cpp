@@ -26,10 +26,6 @@
 #include "main_menu_screen.hpp"
 
 
-using namespace std;
-using namespace sf;
-
-
 void splash_screen::setup() {
 	screen::setup();
 	if(!frames)
@@ -57,11 +53,11 @@ int splash_screen::draw() {
 	return 0;
 }
 
-int splash_screen::handle_event(const Event & event) {
-	if((event.type == Event::KeyPressed && !event.key.alt && !event.key.control && !event.key.shift && !event.key.system) ||
-	   event.type == Event::MouseButtonPressed || event.type == Event::JoystickButtonPressed)
+int splash_screen::handle_event(const sf::Event & event) {
+	if((event.type == sf::Event::KeyPressed && !event.key.alt && !event.key.control && !event.key.shift && !event.key.system) ||
+	   event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::JoystickButtonPressed)
 		app.schedule_screen<main_menu_screen>();
-	else if(event.type == Event::Closed)
+	else if(event.type == sf::Event::Closed)
 		app.window.close();
 	return 0;
 }

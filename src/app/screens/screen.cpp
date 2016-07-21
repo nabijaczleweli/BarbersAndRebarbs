@@ -26,19 +26,16 @@
 #include "../application.hpp"
 
 
-using namespace sf;
-
-
 void screen::setup() {}
 
-int screen::handle_event(const Event & event) {
-	if(event.type == Event::Closed || (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) ||
-	   (event.type == Event::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::Back))
+int screen::handle_event(const sf::Event & event) {
+	if(event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) ||
+	   (event.type == sf::Event::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::Back))
 		app.window.close();
-	else if(event.type == Event::MouseButtonPressed)
+	else if(event.type == sf::Event::MouseButtonPressed)
 		app.window.requestFocus();
-	else if(event.type == Event::Count)
-		throw Event::Count;
+	else if(event.type == sf::Event::Count)
+		throw sf::Event::Count;
 	return 0;
 }
 

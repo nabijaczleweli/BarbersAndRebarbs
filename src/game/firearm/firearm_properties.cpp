@@ -28,44 +28,41 @@
 #include <stdexcept>
 
 
-using namespace std;
+static std::map<std::string, firearm_properties> all_firearm_properties;
 
 
-static map<string, firearm_properties> all_firearm_properties;
+static void load_all(std::map<std::string, firearm_properties> & all_props);
+static std::pair<std::string, firearm_properties> load_single(std::string && filename);
+static firearm_properties::fire_mode_t fire_mode_from_string(const std::string & name);
 
 
-static void load_all(map<string, firearm_properties> & all_props);
-static pair<string, firearm_properties> load_single(string && filename);
-static firearm_properties::fire_mode_t fire_mode_from_string(const string & name);
-
-
-const map<string, firearm_properties> & firearm::properties() {
+const std::map<std::string, firearm_properties> & firearm::properties() {
 	load_all(all_firearm_properties);
 	return all_firearm_properties;
 }
 
 
-static void load_all(map<string, firearm_properties> & all_props) {
+static void load_all(std::map<std::string, firearm_properties> & all_props) {
 	for(auto && fname : list_files(firearm_root))
 		all_props.insert(load_single(firearm_root + '/' + fname));
 }
 
-static pair<string, firearm_properties> load_single(string && filename) {
-	ifstream gun_file(filename);
+static std::pair<std::string, firearm_properties> load_single(std::string && filename) {
+	std::ifstream gun_file(filename);
 	json::value doc;
 	json::parse(gun_file, doc);
 
 	auto bullet   = doc["bullet"].as<json::object>();
-	const auto id = doc["id"].as<string>();
+	const auto id = doc["id"].as<std::string>();
 	return {id,
 	        {
 	            id,
-	            doc["name"].as<string>(),
+	            doc["name"].as<std::string>(),
 	            {
 	                bullet["speed"].as<float>(),  //
 	                bullet["speed_loss"].as<float>(),
 	            },
-	            fire_mode_from_string(doc["fire_mode"].as<string>()),
+	            fire_mode_from_string(doc["fire_mode"].as<std::string>()),
 	            doc["action_speed"].as<float>(),
 	            doc["reload_speed"].as<float>(),
 	            doc["mag_size"].as<unsigned int>(),
@@ -73,7 +70,7 @@ static pair<string, firearm_properties> load_single(string && filename) {
 	        }};
 }
 
-firearm_properties::fire_mode_t fire_mode_from_string(const string & name) {
+firearm_properties::fire_mode_t fire_mode_from_string(const std::string & name) {
 	if(name == "full-auto")
 		return firearm_properties::fire_mode_t::full_auto;
 	else if(name == "semi-auto" || name == "bolt-action" || name == "single-shot")
@@ -81,5 +78,5 @@ firearm_properties::fire_mode_t fire_mode_from_string(const string & name) {
 	else if(name == "semi-auto-response-trigger")
 		return firearm_properties::fire_mode_t::semi_auto_response_trigger;
 	else
-		throw domain_error("\"" + name + "\" is not a fire_mode");
+		throw std::domain_error("\"" + name + "\" is not a fire_mode");
 }

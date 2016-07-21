@@ -29,32 +29,27 @@
 #include <cmath>
 
 
-using namespace cpp_nbt;
-using namespace std;
-using namespace sf;
-
-
-unique_ptr<bullet> bullet::create(game_world & world, size_t id, Vector2f aim, unsigned int x, unsigned int y, const bullet_properties & props) {
-	auto bull = make_unique<bullet>(ref(world), id, x, y, cref(props));
+std::unique_ptr<bullet> bullet::create(game_world & world, size_t id, sf::Vector2f aim, unsigned int x, unsigned int y, const bullet_properties & props) {
+	auto bull = std::make_unique<bullet>(std::ref(world), id, x, y, std::cref(props));
 
 	aim = normalised(aim);
 	// TODO: remove in favour of time-based bullet lifespan
 	const auto ignore_up_to = bull->speed_loss() * 10;
-	if(abs(aim.x) < ignore_up_to)
+	if(std::abs(aim.x) < ignore_up_to)
 		aim.x = 0;
-	if(abs(aim.y) < ignore_up_to)
+	if(std::abs(aim.y) < ignore_up_to)
 		aim.y = 0;
 	bull->start_movement(aim.x, aim.y);
 
 	return bull;
 }
 
-void bullet::draw(RenderTarget & target, RenderStates states) const {
+void bullet::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 	static const auto constexpr k = 2.5f;
 
-	const Vertex vertices[]{{{x, y}, Color::White},  //
-	                        {{x + motion_x * k, y + motion_y * k}, Color::White}};
-	target.draw(vertices, sizeof vertices / sizeof *vertices, PrimitiveType::Lines, states);
+	const sf::Vertex vertices[]{{{x, y}, sf::Color::White},  //
+	                            {{x + motion_x * k, y + motion_y * k}, sf::Color::White}};
+	target.draw(vertices, sizeof vertices / sizeof *vertices, sf::PrimitiveType::Lines, states);
 }
 
 bullet::bullet(game_world & world_r, size_t id_a, unsigned int px, unsigned int py, const bullet_properties & pprops) : entity(world_r, id_a), props(pprops) {
@@ -68,7 +63,7 @@ void bullet::tick(float max_x, float max_y) {
 	const auto min_speed = props.speed * props.speed_loss * 10;
 	// Only kill the bullet if it's moving in that direction the the first place, see `bullet::create()`
 	// TODO: remove in favour of time-based bullet lifespan
-	if((motion_x && abs(motion_x) < min_speed) && (motion_y && abs(motion_y) < min_speed))
+	if((motion_x && std::abs(motion_x) < min_speed) && (motion_y && std::abs(motion_y) < min_speed))
 		world.despawn(id);
 }
 

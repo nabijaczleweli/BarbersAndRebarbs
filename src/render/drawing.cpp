@@ -28,12 +28,8 @@
 #include <jsonpp/parser.hpp>
 
 
-using namespace std;
-using namespace sf;
-
-
-drawing::drawing(const string & model_name, const Vector2f & window_size) : own_scale(1, 1) {
-	ifstream drawing_file(drawing_root + "/" + model_name + ".json");
+drawing::drawing(const std::string & model_name, const sf::Vector2f & window_size) : own_scale(1, 1) {
+	std::ifstream drawing_file(drawing_root + "/" + model_name + ".json");
 	json::value doc;
 	json::parse(drawing_file, doc);
 
@@ -41,7 +37,7 @@ drawing::drawing(const string & model_name, const Vector2f & window_size) : own_
 	loaded_size = {doc["size"]["x"].as<float>(), doc["size"]["y"].as<float>()};
 
 	for(auto && element : doc["elements"].as<json::array>()) {
-		auto && type = element["type"].as<string>();
+		auto && type = element["type"].as<std::string>();
 
 		if(type == "line") {
 			auto && data = element["data"].as<json::array>();
@@ -76,9 +72,9 @@ drawing::drawing(const string & model_name, const Vector2f & window_size) : own_
 			rectangles.emplace_back(rctgl);
 		} else if(type == "bezier_curve") {
 			auto && data = element["data"];
-			Vector2f start_point;
-			Vector2f control_point;
-			Vector2f end_point;
+			sf::Vector2f start_point;
+			sf::Vector2f control_point;
+			sf::Vector2f end_point;
 
 			start_point.x   = data["start"]["x"].as<double>();
 			start_point.y   = data["start"]["y"].as<double>();
@@ -94,19 +90,19 @@ drawing::drawing(const string & model_name, const Vector2f & window_size) : own_
 	scale_size(window_size);
 }
 
-void drawing::draw(RenderTarget & target, RenderStates states) const {
+void drawing::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 	for(auto && line : lines)
-		target.draw(line.data(), line.size(), PrimitiveType::Lines);
+		target.draw(line.data(), line.size(), sf::PrimitiveType::Lines);
 	for(auto && triangle : triangles)
-		target.draw(triangle.data(), triangle.size(), PrimitiveType::Triangles);
+		target.draw(triangle.data(), triangle.size(), sf::PrimitiveType::Triangles);
 	for(auto && rectangle : rectangles)
-		target.draw(rectangle.data(), rectangle.size(), PrimitiveType::LinesStrip);
+		target.draw(rectangle.data(), rectangle.size(), sf::PrimitiveType::LinesStrip);
 	for(auto && curve : curves)
 		curve.draw(target, states);
 }
 
 void drawing::move(float x, float y) {
-	Vector2f offset(x, y);
+	sf::Vector2f offset(x, y);
 
 	for(auto && line : lines)
 		for(auto && point : line)
@@ -124,7 +120,7 @@ void drawing::move(float x, float y) {
 		curve.move(x, y);
 }
 
-void drawing::scale_size(Vector2f factor) {
+void drawing::scale_size(sf::Vector2f factor) {
 	factor    = factor / origin_size;
 	own_scale = own_scale * factor;
 
@@ -144,6 +140,6 @@ void drawing::scale_size(Vector2f factor) {
 		curve.scale(factor);
 }
 
-Vector2f drawing::size() const {
+sf::Vector2f drawing::size() const {
 	return loaded_size * own_scale;
 }

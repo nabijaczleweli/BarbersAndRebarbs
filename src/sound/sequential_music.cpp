@@ -25,17 +25,14 @@
 #include <algorithm>
 
 
-using namespace audiere;
-using namespace std;
-
-
 sequential_music::sequential_music() : getter_algo([](auto) { return ""; }) {}
-sequential_music::sequential_music(unsigned int seq_len, function<string(unsigned int)> getter)
+sequential_music::sequential_music(unsigned int seq_len, std::function<std::string(unsigned int)> getter)
       : loop(true), output_stream(nullptr), music_id(0), max_id(seq_len - 1), getter_algo(getter) {
 	if(seq_len)
-		output_stream = OpenSound(audio_device, getter(0).c_str(), true);
+		output_stream = audiere::OpenSound(audio_device, getter(0).c_str(), true);
 }
-sequential_music::sequential_music(unsigned int maximal_id, const string & filename) : sequential_music(maximal_id, [=](unsigned int) { return filename; }) {}
+sequential_music::sequential_music(unsigned int maximal_id, const std::string & filename)
+      : sequential_music(maximal_id, [=](unsigned int) { return filename; }) {}
 
 void sequential_music::tick() {
 	if(!output_stream || (output_stream && isPlaying()))
@@ -47,7 +44,7 @@ void sequential_music::go_to_next() {
 	stop();
 
 	++music_id;
-	music_id = min(music_id, max_id);
+	music_id = std::min(music_id, max_id);
 	if(music_id == max_id) {
 		if(getRepeat())
 			music_id = 0;
@@ -57,7 +54,7 @@ void sequential_music::go_to_next() {
 		}
 	}
 
-	output_stream = OpenSound(audio_device, getter_algo(music_id).c_str(), true);
+	output_stream = audiere::OpenSound(audio_device, getter_algo(music_id).c_str(), true);
 	play();
 }
 

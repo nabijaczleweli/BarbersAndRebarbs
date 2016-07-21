@@ -24,39 +24,32 @@
 #include <whereami++.hpp>
 
 
-using namespace sf;
-using namespace std;
-using namespace audiere;
-using namespace whereami;
-using namespace cpp_localiser;
+const std::string assets_root(whereami::executable_dir() + "/assets");
+const std::string textures_root(assets_root + "/textures");
+const std::string font_root(assets_root + "/fonts");
+const std::string sound_root(assets_root + "/sound");
+const std::string localization_root(assets_root + "/lang");
+const std::string drawing_root(assets_root + "/drawings");
+const std::string firearm_root(assets_root + "/guns");
+
+const std::string app_name("BarbersAndRebarbs");
+/***/ config app_configuration(whereami::executable_dir() + "/" + app_name + ".cfg");
+
+const cpp_localiser::localiser fallback_iser(localization_root);
+const cpp_localiser::localiser local_iser(localization_root, app_configuration.language);
+const cpp_localiser::localiser global_iser(local_iser, fallback_iser);
 
 
-const string assets_root(executable_dir() + "/assets");
-const string textures_root(assets_root + "/textures");
-const string font_root(assets_root + "/fonts");
-const string sound_root(assets_root + "/sound");
-const string localization_root(assets_root + "/lang");
-const string drawing_root(assets_root + "/drawings");
-const string firearm_root(assets_root + "/guns");
-
-const string app_name("BarbersAndRebarbs");
-/***/ config app_configuration(executable_dir() + "/" + app_name + ".cfg");
-
-const localiser fallback_iser(localization_root);
-const localiser local_iser(localization_root, app_configuration.language);
-const localiser global_iser(local_iser, fallback_iser);
-
-
-const Font font_pixelish([] {
-	Font tmp;
+const sf::Font font_pixelish([] {
+	sf::Font tmp;
 	tmp.loadFromFile(font_root + "/04B_30.ttf");
 	return tmp;
 }());
-const Font font_swirly([] {
-	Font tmp;
+const sf::Font font_swirly([] {
+	sf::Font tmp;
 	tmp.loadFromFile(font_root + "/MACABRA_.ttf");
 	return tmp;
 }());
 
 
-const AudioDevicePtr audio_device(OpenDevice());
+const audiere::AudioDevicePtr audio_device(audiere::OpenDevice());
