@@ -2,9 +2,6 @@
 	path = ext/cereal
 	url = https://github.com/USCiLab/cereal.git
 	branch = v1.1.2
-[submodule "Cpp-NBT"]
-	path = ext/Cpp-NBT
-	url = https://github.com/nabijaczleweli/Cpp-NBT.git
 [submodule "cimpoler-meta"]
 	path = ext/cimpoler-meta
 	url = https://github.com/nabijaczleweli/cimpoler-meta.git
