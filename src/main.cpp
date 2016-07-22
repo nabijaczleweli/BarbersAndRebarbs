@@ -64,7 +64,6 @@ static void credit() {
 	          << "  - cereal version " << CEREAL_VERSION << ": http://uscilab.github.io/cereal\n"
 	          << "  - cimpoler-meta version " << CIMPOLER_META_VERSION << ": https://github.com/nabijaczleweli/cimpoler-meta\n"
 	          << "  - cpp-localiser version " << CPP_LOCALISER_VERSION << ": https://github.com/nabijaczleweli/cpp-localiser\n"
-	          << "  - Cpp-NBT version " << CPP_NBT_VERSION << ": https://github.com/nabijaczleweli/Cpp-NBT\n"
 	          << "  - jsonpp version " << JSONPP_VERSION << ": http://rapptz.github.io/jsonpp\n"
 	          << "  - seed11 version " << SEED11_VERSION << ": https://github.com/milleniumbug/seed11\n"
 	          << "  - whereami-cpp version " << WHEREAMI_CPP_VERSION << ": https://github.com/nabijaczleweli/whereami-cpp\n"
