@@ -23,13 +23,12 @@
 #pragma once
 
 
-#include <cpp-nbt/nbt_reloadable.hpp>
-#include <cpp-nbt/tags/complex/nbt_compound.hpp>
 #include <utility>
+#include <jsonpp/value.hpp>
 
 
 class game_world;
-class entity : public cpp_nbt::nbt_reloadable {
+class entity {
 protected:
 	float x, y;
 	float motion_x, motion_y;
@@ -39,12 +38,12 @@ protected:
 
 public:
 	entity(game_world & world, std::size_t id);
-	entity(game_world & world, std::size_t id, const cpp_nbt::nbt_compound & from);
+	entity(game_world & world, std::size_t id, const json::object & from);
 
 	virtual ~entity() = default;
 
-	virtual void read_from_nbt(const cpp_nbt::nbt_compound & from);
-	virtual void write_to_nbt(cpp_nbt::nbt_compound & to) const;
+	virtual void read_from_json(const json::object & from);
+	virtual json::object write_to_json() const;
 
 	virtual void tick(float max_x = 0, float max_y = 0);  // maxes for physics
 

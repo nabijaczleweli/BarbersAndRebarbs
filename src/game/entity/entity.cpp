@@ -26,26 +26,29 @@
 
 
 entity::entity(game_world & world_r, size_t id_a) : x(0), y(0), motion_x(0), motion_y(0), id(id_a), world(world_r) {}
-entity::entity(game_world & world_r, size_t id_a, const cpp_nbt::nbt_compound & from) : entity(world_r, id_a) {
-	read_from_nbt(from);
+entity::entity(game_world & world_r, size_t id_a, const json::object & from) : entity(world_r, id_a) {
+	read_from_json(from);
 }
 
-void entity::read_from_nbt(const cpp_nbt::nbt_compound & from) {
-	if(auto fx = from.get_float("x"))
-		x = *fx;
-	if(auto fy = from.get_float("y"))
-		y = *fy;
-	if(auto fmotion_x = from.get_float("motion_x"))
-		motion_x = *fmotion_x;
-	if(auto fmotion_y = from.get_float("motion_y"))
-		motion_y = *fmotion_y;
+void entity::read_from_json(const json::object & from) {
+	auto itr = from.end();
+	if((itr = from.find("x")) == from.end())
+		x = itr->second.as<float>();
+	if((itr = from.find("y")) == from.end())
+		y = itr->second.as<float>();
+	if((itr = from.find("motion_x")) == from.end())
+		motion_x = itr->second.as<float>();
+	if((itr = from.find("motion_y")) == from.end())
+		motion_y = itr->second.as<float>();
 }
 
-void entity::write_to_nbt(cpp_nbt::nbt_compound & to) const {
-	to.set_float("x", x);
-	to.set_float("y", y);
-	to.set_float("motion_x", motion_x);
-	to.set_float("motion_y", motion_y);
+json::object entity::write_to_json() const {
+	return {
+	    {"x", x},  //
+	    {"y", y},
+	    {"motion_x", motion_x},
+	    {"motion_y", motion_y},
+	};
 }
 
 void entity::tick(float max_x, float max_y) {

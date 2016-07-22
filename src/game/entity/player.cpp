@@ -79,18 +79,20 @@ player::player(game_world & world_r, size_t id_a, sf::Vector2u screen_size)
 	y = y_dist(rand);
 }
 
-void player::read_from_nbt(const cpp_nbt::nbt_compound & from) {
-	entity::read_from_nbt(from);
-	if(auto fgun_id = from.get_string("gun_id"))
-		gun = firearm(world, *fgun_id);
-	if(auto fhp = from.get_float("hp"))
-		hp = *fhp;
+void player::read_from_json(const json::object & from) {
+	entity::read_from_json(from);
+	auto itr = from.end();
+	if((itr = from.find("gun_id")) == from.end())
+		gun = firearm(world, itr->second.as<std::string>());
+	if((itr = from.find("hp")) == from.end())
+		hp = itr->second.as<float>();
 }
 
-void player::write_to_nbt(cpp_nbt::nbt_compound & to) const {
-	entity::write_to_nbt(to);
-	to.set_string("gun_id", gun.id());
-	to.set_float("hp", hp);
+json::object player::write_to_json() const {
+	auto written = entity::write_to_json();
+	written.emplace("gun_id", gun.id());
+	written.emplace("hp", hp);
+	return written;
 }
 
 void player::tick(float max_x, float max_y) {

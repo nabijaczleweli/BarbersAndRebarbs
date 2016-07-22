@@ -48,8 +48,8 @@ public:
 
 	virtual ~player() = default;
 
-	virtual void read_from_nbt(const cpp_nbt::nbt_compound & from) override;
-	virtual void write_to_nbt(cpp_nbt::nbt_compound & to) const override;
+	virtual void read_from_json(const json::object & from) override;
+	virtual json::object write_to_json() const override;
 
 	virtual void tick(float max_x, float max_y) override;
 	virtual void handle_event(const sf::Event & event) override;
