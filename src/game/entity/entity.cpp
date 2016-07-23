@@ -21,33 +21,50 @@
 
 
 #include "entity.hpp"
+#include "bullet.hpp"
+#include "player.hpp"
 #include <cmath>
 #include <functional>
 
 
+std::unique_ptr<entity> entity::from_json(game_world & world, const json::object & from) {
+	const auto itr = from.find("kind");
+
+	if(itr != from.end() && itr->second.as<std::string>() == "player")
+		return std::make_unique<player>(std::ref(world), from);
+	else if(itr != from.end() && itr->second.as<std::string>() == "bullet")
+		return std::make_unique<bullet>(std::ref(world), from);
+
+	return std::make_unique<entity>(std::ref(world), from);
+}
+
+
 entity::entity(game_world & world_r, size_t id_a) : x(0), y(0), motion_x(0), motion_y(0), id(id_a), world(world_r) {}
-entity::entity(game_world & world_r, size_t id_a, const json::object & from) : entity(world_r, id_a) {
+entity::entity(game_world & world_r, const json::object & from) : entity(world_r, 0) {
 	read_from_json(from);
 }
 
 void entity::read_from_json(const json::object & from) {
 	auto itr = from.end();
-	if((itr = from.find("x")) == from.end())
+	if((itr = from.find("x")) != from.end())
 		x = itr->second.as<float>();
-	if((itr = from.find("y")) == from.end())
+	if((itr = from.find("y")) != from.end())
 		y = itr->second.as<float>();
-	if((itr = from.find("motion_x")) == from.end())
+	if((itr = from.find("motion_x")) != from.end())
 		motion_x = itr->second.as<float>();
-	if((itr = from.find("motion_y")) == from.end())
+	if((itr = from.find("motion_y")) != from.end())
 		motion_y = itr->second.as<float>();
+	if((itr = from.find("id")) != from.end())
+		id = itr->second.as<std::size_t>();
 }
 
 json::object entity::write_to_json() const {
 	return {
-	    {"x", x},  //
-	    {"y", y},
-	    {"motion_x", motion_x},
-	    {"motion_y", motion_y},
+	    {"x", x},                //
+	    {"y", y},                //
+	    {"motion_x", motion_x},  //
+	    {"motion_y", motion_y},  //
+	    {"id", id},              //
 	};
 }
 

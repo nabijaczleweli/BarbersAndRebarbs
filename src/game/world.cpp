@@ -21,8 +21,11 @@
 
 
 #include "world.hpp"
+#include "../reference/container.hpp"
 #include "entity/event_handler.hpp"
 #include "entity/player.hpp"
+#include <fstream>
+#include <jsonpp/parser.hpp>
 #include <random>
 #include <seed11/seed11.hpp>
 
@@ -69,6 +72,15 @@ void game_world::tick(sf::Vector2u screen_size) {
 }
 
 void game_world::handle_event(const sf::Event & event) {
+	if(event.type == sf::Event::EventType::KeyPressed && event.key.control && event.key.code == sf::Keyboard::Key::LBracket) {
+		json::object ents;
+		for(auto && pr : entities)
+			ents.emplace(std::to_string(pr.first), pr.second->write_to_json());
+
+		std::ofstream out(app_configuration.path + ".sav");
+		json::dump(out, ents, {0, json::format_options::minify, 20});
+	}
+
 	for(const auto & entity : entities)
 		if(auto handler = dynamic_cast<event_handler *>(entity.second.get()))
 			handler->handle_event(event);

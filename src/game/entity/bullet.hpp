@@ -33,7 +33,7 @@ protected:
 	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 
 private:
-	const bullet_properties & props;
+	bullet_properties props;
 
 public:
 	static std::unique_ptr<bullet> create(game_world & world, std::size_t id, sf::Vector2f aim, unsigned int x, unsigned int y, const bullet_properties & props);
@@ -41,6 +41,9 @@ public:
 
 	using entity::entity;
 	bullet(game_world & world, std::size_t id, unsigned int x, unsigned int y, const bullet_properties & props);
+
+	virtual void read_from_json(const json::object & from) override;
+	virtual json::object write_to_json() const override;
 
 	virtual ~bullet() = default;
 

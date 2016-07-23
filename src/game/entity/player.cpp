@@ -82,16 +82,17 @@ player::player(game_world & world_r, size_t id_a, sf::Vector2u screen_size)
 void player::read_from_json(const json::object & from) {
 	entity::read_from_json(from);
 	auto itr = from.end();
-	if((itr = from.find("gun_id")) == from.end())
-		gun = firearm(world, itr->second.as<std::string>());
-	if((itr = from.find("hp")) == from.end())
+	if((itr = from.find("gun")) != from.end())
+		gun = firearm(world, itr->second.as<json::object>());
+	if((itr = from.find("hp")) != from.end())
 		hp = itr->second.as<float>();
 }
 
 json::object player::write_to_json() const {
 	auto written = entity::write_to_json();
-	written.emplace("gun_id", gun.id());
+	written.emplace("gun", gun.write_to_json());
 	written.emplace("hp", hp);
+	written.emplace("kind", "player");
 	return written;
 }
 

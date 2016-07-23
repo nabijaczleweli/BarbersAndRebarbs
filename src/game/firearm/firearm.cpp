@@ -21,8 +21,14 @@
 
 
 #include "firearm.hpp"
+#include "../../util/json.hpp"
 #include "../entity/bullet.hpp"
 
+
+using namespace std::literals;
+
+
+firearm::firearm() : props(nullptr), world(nullptr) {}
 
 firearm::firearm(game_world & w, const std::string & gun_id)
       : props(&properties().at(gun_id)), world(&w),
@@ -31,6 +37,28 @@ firearm::firearm(game_world & w, const std::string & gun_id)
         reload_speed(std::chrono::duration_cast<std::chrono::high_resolution_clock::duration>(
             std::chrono::microseconds(static_cast<std::chrono::microseconds::rep>(props->reload_speed * std::micro::den)))),
         trigger_pulled(false), left_in_mag(0), left_mags(props->mag_quantity) {}
+
+firearm::firearm(game_world & w, const json::object & from) : firearm(w, json_get_defaulted(from, "id", "default"s)) {
+	read_from_json(from);
+}
+
+void firearm::read_from_json(const json::object & from) {
+	auto itr = from.end();
+	if((itr = from.find("trigger_pulled")) != from.end())
+		trigger_pulled = itr->second.as<bool>();
+	if((itr = from.find("left_in_mag")) != from.end())
+		left_in_mag = itr->second.as<unsigned int>();
+	if((itr = from.find("left_mags")) != from.end())
+		left_mags = itr->second.as<unsigned int>();
+}
+
+json::object firearm::write_to_json() const {
+	return {
+	    {"trigger_pulled", trigger_pulled},  //
+	    {"left_in_mag", left_in_mag}, //
+	    {"left_mags", left_mags}, //
+	};
+}
 
 void firearm::trigger(float pos_x, float pos_y, const sf::Vector2f & aim) {
 	const auto now          = std::chrono::high_resolution_clock::now();

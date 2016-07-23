@@ -44,5 +44,6 @@ public:
 	~config();
 
 private:
+	friend class game_world;
 	std::string path;
 };

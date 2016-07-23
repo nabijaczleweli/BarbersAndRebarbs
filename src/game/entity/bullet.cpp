@@ -57,6 +57,22 @@ bullet::bullet(game_world & world_r, size_t id_a, unsigned int px, unsigned int 
 	y = py;
 }
 
+void bullet::read_from_json(const json::object & from) {
+	entity::read_from_json(from);
+	auto itr = from.end();
+	if((itr = from.find("bullet")) != from.end()) {
+		const auto bullet = itr->second.as<json::object>();
+		props = {bullet.at("speed").as<float>(), bullet.at("speed_loss").as<float>()};
+	}
+}
+
+json::object bullet::write_to_json() const {
+	auto written = entity::write_to_json();
+	written.emplace("bullet", json::object({{"speed", props.speed}, {"speed_loss", props.speed_loss}}));
+	written.emplace("kind", "bullet");
+	return written;
+}
+
 void bullet::tick(float max_x, float max_y) {
 	entity::tick(max_x, max_y);
 

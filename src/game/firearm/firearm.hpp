@@ -27,6 +27,7 @@
 #include "firearm_properties.hpp"
 #include <SFML/System.hpp>
 #include <chrono>
+#include <jsonpp/value.hpp>
 #include <map>
 #include <string>
 
@@ -48,7 +49,12 @@ public:
 	static const std::map<std::string, firearm_properties> & properties();
 
 
+	firearm();
 	firearm(game_world & world, const std::string & gun_id);
+	firearm(game_world & world, const json::object & from);
+
+	void read_from_json(const json::object & from);
+	json::object write_to_json() const;
 
 	void trigger(float pos_x, float pos_y, const sf::Vector2f & aim);
 	void tick(float pos_x, float pos_y, const sf::Vector2f & aim);

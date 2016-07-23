@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 
-// Copyright (c) 2015 nabijaczleweli
+// Copyright (c) 2016 nabijaczleweli
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -24,36 +24,13 @@
 
 
 #include <jsonpp/value.hpp>
-#include <memory>
 #include <utility>
 
 
-class game_world;
-class entity {
-protected:friend class game_world;
-	float x, y;
-	float motion_x, motion_y;
-
-	std::size_t id;
-	game_world & world;
-
-public:
-	static std::unique_ptr<entity> from_json(game_world & world, const json::object & from);
-
-
-	entity(game_world & world, std::size_t id);
-	entity(game_world & world, const json::object & from);
-
-	virtual ~entity() = default;
-
-	virtual void read_from_json(const json::object & from);
-	virtual json::object write_to_json() const;
-
-	virtual void tick(float max_x = 0, float max_y = 0);  // maxes for physics
-
-
-	void start_movement(float amt_x, float amt_y);
-
-	virtual float speed() const;
-	virtual float speed_loss() const;
-};
+template <class T>
+T && json_get_defaulted(const json::object & obj, const char * key, T && def) {
+	const auto itr = obj.find(key);
+	if(itr == obj.end())
+		return std::move(def);
+	return std::move(itr->second.as<T>());
+}
