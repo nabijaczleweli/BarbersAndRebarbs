@@ -45,7 +45,7 @@
 		{
 			"follow_symlinks": true,
 			"name": "External code",
-			"path": "ext/All"
+			"path": "ext"
 		}
 	],
 	"settings":

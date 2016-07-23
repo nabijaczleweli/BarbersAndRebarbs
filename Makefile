@@ -23,17 +23,17 @@
 include configMakefile
 
 
-LDDLLS := $(OS_LD_LIBS) audiere cpp-localiser whereami++ seed11
-LDAR := $(LNCXXAR) -L$(BLDDIR)seed11 -L$(BLDDIR)cpp-localiser -L$(BLDDIR)whereami-cpp -L$(BLDDIR)audiere/lib $(foreach dll,$(LDDLLS),-l$(dll))
-INCAR := $(foreach l,$(foreach l,audiere cereal cimpoler-meta cpp-localiser seed11 whereami-cpp,$(l)/include) jsonpp,-isystemext/$(l))
+LDDLLS := $(OS_LD_LIBS) audiere cpp-localiser whereami++ seed11 zstd
+LDAR := $(LNCXXAR) -L$(BLDDIR)audiere/lib -L$(BLDDIR)cpp-localiser -L$(BLDDIR)whereami-cpp -L$(BLDDIR)seed11 -L$(BLDDIR)zstd $(foreach dll,$(LDDLLS),-l$(dll))
+INCAR := $(foreach l,$(foreach l,audiere cereal cimpoler-meta cpp-localiser seed11 whereami-cpp,$(l)/include) jsonpp,-isystemext/$(l)) -isystem$(BLDDIR)zstd/include
 VERAR := $(foreach l,CEREAL CIMPOLER_META CPP_LOCALISER JSONPP SEED11 WHEREAMI_CPP,-D$(l)_VERSION='$($(l)_VERSION)')
 SOURCES := $(sort $(wildcard src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp))
 HEADERS := $(sort $(wildcard src/*.hpp src/**/*.hpp src/**/**/*.hpp src/**/**/**/*.hpp))
 
-.PHONY : all clean assets exe audiere cpp-localiser seed11 whereami-cpp
+.PHONY : all clean assets exe audiere cpp-localiser seed11 zstd whereami-cpp
 
 
-all : assets audiere cpp-localiser seed11 whereami-cpp exe
+all : assets audiere cpp-localiser seed11 whereami-cpp zstd exe
 
 clean :
 	rm -rf $(OUTDIR)
@@ -47,6 +47,7 @@ audiere : $(BLDDIR)audiere/lib/libaudiere$(DLL)
 cpp-localiser : $(BLDDIR)cpp-localiser/libcpp-localiser$(ARCH)
 seed11 : $(BLDDIR)seed11/libseed11$(ARCH)
 whereami-cpp : $(BLDDIR)whereami-cpp/libwhereami++$(ARCH)
+zstd : $(BLDDIR)zstd/libzstd$(ARCH) $(BLDDIR)zstd/include/zstd/common/zstd.h
 
 
 $(OUTDIR)BarbersAndRebarbs$(EXE) : $(subst $(SRCDIR),$(OBJDIR),$(subst .cpp,$(OBJ),$(SOURCES)))
@@ -68,11 +69,23 @@ $(BLDDIR)seed11/libseed11$(ARCH) : $(foreach src,seed11_system_agnostic seed11_$
 $(BLDDIR)whereami-cpp/libwhereami++$(ARCH) : ext/whereami-cpp/Makefile
 	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@)) stlib
 
+$(BLDDIR)zstd/libzstd$(ARCH) : $(subst ext/zstd/lib,$(BLDDIR)zstd/obj,$(subst .c,$(OBJ),$(wildcard ext/zstd/lib/common/*.c ext/zstd/lib/compress/*.c ext/zstd/lib/decompress/*.c)))
+	@mkdir -p $(dir $@)
+	$(AR) crs $@ $^
+
+$(BLDDIR)zstd/include/zstd/common/zstd.h : $(wildcard ext/zstd/lib/common/*.h ext/zstd/lib/compress/*.h ext/zstd/lib/decompress/*.h)
+	@mkdir -p $(foreach incfile,$(subst ext/zstd/lib,$(BLDDIR)zstd/include/zstd,$^),$(abspath $(dir $(incfile))))
+	$(foreach incfile,$^,cp $(incfile) $(subst ext/zstd/lib,$(BLDDIR)zstd/include/zstd,$(incfile));)
+
 
 $(OBJDIR)%$(OBJ) : $(SRCDIR)%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXAR) $(INCAR) $(VERAR) -c -o$@ $^
+	$(CXX) $(CXXAR) $(INCAR) $(VERAR) -DZSTD_STATIC_LINKING_ONLY -c -o$@ $^
 
 $(BLDDIR)seed11/obj/%.o : ext/seed11/src/%.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXAR) -isystemext/seed11/include -c -o$@ $^
+
+$(BLDDIR)zstd/obj/%.o : ext/zstd/lib/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CCAR) -Iext/zstd/lib/common -DZSTD_STATIC_LINKING_ONLY -c -o$@ $^
