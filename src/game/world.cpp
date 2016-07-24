@@ -21,6 +21,7 @@
 
 
 #include "world.hpp"
+#include "../app/application.hpp"
 #include "../reference/container.hpp"
 #include "entity/event_handler.hpp"
 #include "entity/player.hpp"
@@ -28,6 +29,10 @@
 #include <jsonpp/parser.hpp>
 #include <random>
 #include <seed11/seed11.hpp>
+#include <zstd/common/zstd.h>
+
+
+using namespace std::literals;
 
 
 static const constexpr auto max_id_len       = 4u;
@@ -77,8 +82,19 @@ void game_world::handle_event(const sf::Event & event) {
 		for(auto && pr : entities)
 			ents.emplace(std::to_string(pr.first), pr.second->write_to_json());
 
-		std::ofstream out(app_configuration.path + ".sav");
-		json::dump(out, ents, {0, json::format_options::minify, 20});
+		const auto out         = json::dump_string(ents, {0, json::format_options::minify, 20});
+		auto out_c             = std::make_unique<std::uint8_t[]>(ZSTD_compressBound(out.size()));
+		const auto comp_result = ZSTD_compress(out_c.get(), ZSTD_compressBound(out.size()), out.c_str(), out.size(), ZSTD_maxCLevel());
+		if(ZSTD_isError(comp_result))
+			error_text = {{"Failed to compress savefile: "s + ZSTD_getErrorName(comp_result), font_pixelish, 12}, application::effective_FPS() * 10};
+		else {
+			std::uint64_t raw_size        = out.size();
+			std::uint64_t compressed_size = comp_result;
+			std::ofstream(app_configuration.path + ".sav", std::ios::binary)
+			    .write(reinterpret_cast<const char *>(&raw_size), sizeof(raw_size))
+			    .write(reinterpret_cast<const char *>(&compressed_size), sizeof(compressed_size))
+			    .write(reinterpret_cast<const char *>(out_c.get()), compressed_size);
+		}
 	}
 
 	for(const auto & entity : entities)
@@ -90,6 +106,11 @@ void game_world::draw(sf::RenderTarget & upon) {
 	for(const auto & entity : entities)
 		if(const auto drwbl = dynamic_cast<const sf::Drawable *>(entity.second.get()))
 			upon.draw(*drwbl);
+
+	if(error_text.second) {
+		--error_text.second;
+		upon.draw(error_text.first);
+	}
 }
 
 void game_world::despawn(size_t id) {

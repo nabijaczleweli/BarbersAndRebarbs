@@ -36,6 +36,7 @@ private:
 	std::map<std::size_t, std::unique_ptr<entity>> entities;
 	std::vector<std::size_t> sheduled_for_deletion;
 	bool ticking = false;
+	std::pair<sf::Text, unsigned int> error_text;
 
 	std::size_t reserve_eid();
 	std::size_t spawn_p(std::size_t id, std::unique_ptr<entity> ep);
