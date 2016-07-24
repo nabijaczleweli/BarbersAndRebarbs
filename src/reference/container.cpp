@@ -50,6 +50,11 @@ const sf::Font font_swirly([] {
 	tmp.loadFromFile(font_root + "/MACABRA_.ttf");
 	return tmp;
 }());
+const sf::Font font_monospace([] {
+	sf::Font tmp;
+	tmp.loadFromFile(font_root + "/DejaVuSansMono.ttf");
+	return tmp;
+}());
 
 
 const audiere::AudioDevicePtr audio_device(audiere::OpenDevice());

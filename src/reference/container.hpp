@@ -48,6 +48,7 @@ extern const cpp_localiser::localiser global_iser;
 
 extern const sf::Font font_pixelish;
 extern const sf::Font font_swirly;
+extern const sf::Font font_monospace;
 
 
 extern const audiere::AudioDevicePtr audio_device;

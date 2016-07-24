@@ -86,7 +86,7 @@ void game_world::handle_event(const sf::Event & event) {
 		auto out_c             = std::make_unique<std::uint8_t[]>(ZSTD_compressBound(out.size()));
 		const auto comp_result = ZSTD_compress(out_c.get(), ZSTD_compressBound(out.size()), out.c_str(), out.size(), ZSTD_maxCLevel());
 		if(ZSTD_isError(comp_result))
-			error_text = {{"Failed to compress savefile: "s + ZSTD_getErrorName(comp_result), font_pixelish, 12}, application::effective_FPS() * 10};
+			error_text = {{"Failed to compress savefile: "s + ZSTD_getErrorName(comp_result), font_monospace, 10}, application::effective_FPS() * 10};
 		else {
 			std::uint64_t raw_size        = out.size();
 			std::uint64_t compressed_size = comp_result;
