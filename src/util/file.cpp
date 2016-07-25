@@ -39,9 +39,9 @@ public:
 
 
 // http://stackoverflow.com/questions/612097/how-can-i-get-a-list-of-files-in-a-directory-using-c-or-c
-std::vector<std::string> list_files(const std::string & directory) {
+std::vector<std::string> list_files(const char * directory) {
 	std::vector<std::string> result;
-	if(const auto dir = std::unique_ptr<DIR, DIR_deleter>(opendir(directory.c_str()))) {
+	if(const auto dir = std::unique_ptr<DIR, DIR_deleter>(opendir(directory))) {
 		/* print all the files and directories within directory */
 		while(const auto ent = readdir(dir.get()))
 			if(std::strcmp(ent->d_name, ".") && std::strcmp(ent->d_name, ".."))
@@ -50,7 +50,44 @@ std::vector<std::string> list_files(const std::string & directory) {
 	return result;
 }
 
-bool file_exists(const std::string & path) {
-	std::unique_ptr<std::FILE, FILE_deleter> file(std::fopen(path.c_str(), "r"));
+std::vector<std::string> list_files(const std::string & directory) {
+	return list_files(directory.c_str());
+}
+
+bool file_exists(const char * path) {
+	std::unique_ptr<std::FILE, FILE_deleter> file(std::fopen(path, "r"));
 	return file.get();
 }
+
+bool file_exists(const std::string & path) {
+	return file_exists(path.c_str());
+}
+
+void create_directory(const std::string & path) {
+	create_directory(path.c_str());
+}
+
+
+#ifdef _WIN32
+
+
+#include <windows.h>
+
+
+void create_directory(const char * path) {
+	CreateDirectoryA(path, nullptr);
+}
+
+
+#else
+
+
+#include <sys/stat.h>
+
+
+void create_directory(const char * path) {
+	mkdir(path, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+}
+
+
+#endif

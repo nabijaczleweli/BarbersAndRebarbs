@@ -37,6 +37,7 @@ extern const std::string sound_root;
 extern const std::string localization_root;
 extern const std::string drawing_root;
 extern const std::string firearm_root;
+extern const std::string screenshots_root;
 
 extern const std::string app_name;
 extern /***/ config app_configuration;

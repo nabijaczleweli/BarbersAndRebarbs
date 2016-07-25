@@ -24,6 +24,8 @@
 #include "../../reference/container.hpp"
 #include "../../reference/joystick_info.hpp"
 #include "../application.hpp"
+#include <ctime>
+#include <iomanip>
 
 
 void screen::setup() {}
@@ -32,7 +34,12 @@ int screen::handle_event(const sf::Event & event) {
 	if(event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) ||
 	   (event.type == sf::Event::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::Back))
 		app.window.close();
-	else if(event.type == sf::Event::MouseButtonPressed)
+	else if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F5) {
+		char str[25];
+		const auto tm = time(nullptr);
+		strftime(str, sizeof str, "/%Y.%m.%d %H;%M;%S.png", localtime(&tm));
+		app.window.capture().saveToFile(screenshots_root + str);
+	} else if(event.type == sf::Event::MouseButtonPressed)
 		app.window.requestFocus();
 	else if(event.type == sf::Event::Count)
 		throw sf::Event::Count;

@@ -21,6 +21,7 @@
 
 
 #include "container.hpp"
+#include "../util/file.hpp"
 #include <whereami++.hpp>
 
 
@@ -31,6 +32,11 @@ const std::string sound_root(assets_root + "/sound");
 const std::string localization_root(assets_root + "/lang");
 const std::string drawing_root(assets_root + "/drawings");
 const std::string firearm_root(assets_root + "/guns");
+const std::string screenshots_root([] {
+	const auto dir = whereami::executable_dir() + "/screenshots";
+	create_directory(dir);
+	return dir;
+}());
 
 const std::string app_name("BarbersAndRebarbs");
 /***/ config app_configuration(whereami::executable_dir() + "/" + app_name + ".cfg");
