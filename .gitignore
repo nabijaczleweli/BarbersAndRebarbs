@@ -1,6 +1,8 @@
 *
 !assets
 !assets/**
+!doc
+!doc/**
 !ext
 !ext/**
 !src
