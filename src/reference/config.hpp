@@ -44,6 +44,7 @@ public:
 	~config();
 
 private:
+	//TODO: better save location
 	friend class game_world;
 	std::string path;
 };

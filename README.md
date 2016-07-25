@@ -16,3 +16,14 @@ A game in C++ using SFML 2.3
 2. >=3.0 CMake, found [here](http://cmake.org/) or via `cmake` package, must be callable
 
 "Callable" tools must be either in `PATH` or passed in env as their uppercase names (`CMAKE=$HOME/bin/cmake-3.6.9`)
+
+## Library applications
+
+1. [SFML](http://sfml-dev.org/) — general graphics and window display
+2. [audiere](https://sourceforge.net/projects/audiere/) ([modified](https://github.com/nabijaczleweli/audiere)) — sounds
+3. [cimpoler-meta](https://github.com/nabijaczleweli/cimpoler-meta) — purely informational compiler and system data
+4. [cpp-localiser](https://github.com/nabijaczleweli/cpp-localiser) — localisation
+5. [jsonpp](https://github.com/Rapptz/jsonpp) — game saving/loading, model (`drawing`) loading
+6. [seed11](https://github.com/milleniumbug/seed11) — true RNG seeding
+7. [whereami-cpp](https://github.com/nabijaczleweli/whereami-cpp) — asset directory localisation
+8. [zstd](https://github.com/Cyan4973/zstd) — savefile compression
