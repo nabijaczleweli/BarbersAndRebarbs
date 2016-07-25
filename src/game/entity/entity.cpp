@@ -30,10 +30,13 @@
 std::unique_ptr<entity> entity::from_json(game_world & world, const json::object & from) {
 	const auto itr = from.find("kind");
 
-	if(itr != from.end() && itr->second.as<std::string>() == "player")
-		return std::make_unique<player>(std::ref(world), from);
-	else if(itr != from.end() && itr->second.as<std::string>() == "bullet")
-		return std::make_unique<bullet>(std::ref(world), from);
+	if(itr != from.end() && itr->second.is<std::string>()) {
+		const auto kind = itr->second.as<std::string>();
+		if(kind == "player")
+			return std::make_unique<player>(std::ref(world), from);
+		else if(kind == "bullet")
+			return std::make_unique<bullet>(std::ref(world), from);
+	}
 
 	return std::make_unique<entity>(std::ref(world), from);
 }
