@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 
-// Copyright (c) 2015 nabijaczleweli
+// Copyright (c) 2016 nabijaczleweli
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -23,24 +23,7 @@
 #pragma once
 
 
-#include <SFML/Graphics.hpp>
-#include <thread>
+#include <string>
 
 
-class application;
-class screen {
-private:
-	std::vector<std::thread> screenshot_threads;
-
-protected:
-	application & app;
-
-public:
-	virtual void setup();
-	virtual int loop() = 0;
-	virtual int draw() = 0;
-	virtual int handle_event(const sf::Event & event);
-
-	screen(application & theapp);
-	virtual ~screen();
-};
+std::string fs_safe_current_datetime();

@@ -63,7 +63,7 @@ ARCH := .a
 CMAKE := cmake
 NINJA := ninja
 AR := ar
-CXXAR := -O3 -fomit-frame-pointer -std=c++14 -pedantic -Wall -Wextra -pipe $(INCCXXAR) $(PIC)
+CXXAR := -O3 -fomit-frame-pointer -std=c++14 -pedantic -Wall -Wextra -pipe -pthread $(INCCXXAR) $(PIC)
 CCAR := -O3 -fomit-frame-pointer -std=c11 -pipe $(PIC)
 STRIP := strip
 STRIPAR := --strip-all --remove-section=.comment --remove-section=.note

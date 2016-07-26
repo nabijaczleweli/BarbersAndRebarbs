@@ -23,9 +23,8 @@
 #include "screen.hpp"
 #include "../../reference/container.hpp"
 #include "../../reference/joystick_info.hpp"
+#include "../../util/datetime.hpp"
 #include "../application.hpp"
-#include <ctime>
-#include <iomanip>
 
 
 void screen::setup() {}
@@ -35,10 +34,8 @@ int screen::handle_event(const sf::Event & event) {
 	   (event.type == sf::Event::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::Back))
 		app.window.close();
 	else if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F5) {
-		char str[25];
-		const auto tm = time(nullptr);
-		strftime(str, sizeof str, "/%Y.%m.%d %H;%M;%S.png", localtime(&tm));
-		app.window.capture().saveToFile(screenshots_root + str);
+		screenshot_threads.emplace_back([&](auto && img) { img.saveToFile(screenshots_root + '/' + fs_safe_current_datetime() + ".png"); }, app.window.capture());
+		screenshot_threads.back().detach();
 	} else if(event.type == sf::Event::MouseButtonPressed)
 		app.window.requestFocus();
 	else if(event.type == sf::Event::Count)
@@ -47,3 +44,9 @@ int screen::handle_event(const sf::Event & event) {
 }
 
 screen::screen(application & theapp) : app(theapp) {}
+
+screen::~screen() {
+	for(auto && thr : screenshot_threads)
+		if(thr.joinable())
+			thr.join();
+}

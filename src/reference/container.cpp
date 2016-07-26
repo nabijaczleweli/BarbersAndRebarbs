@@ -37,6 +37,11 @@ const std::string screenshots_root([] {
 	create_directory(dir);
 	return dir;
 }());
+const std::string saves_root([] {
+	const auto dir = whereami::executable_dir() + "/saves";
+	create_directory(dir);
+	return dir;
+}());
 
 const std::string app_name("BarbersAndRebarbs");
 /***/ config app_configuration(whereami::executable_dir() + "/" + app_name + ".cfg");

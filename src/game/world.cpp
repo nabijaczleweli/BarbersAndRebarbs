@@ -23,6 +23,7 @@
 #include "world.hpp"
 #include "../app/application.hpp"
 #include "../reference/container.hpp"
+#include "../util/datetime.hpp"
 #include "entity/event_handler.hpp"
 #include "entity/player.hpp"
 #include <fstream>
@@ -90,7 +91,7 @@ void game_world::handle_event(const sf::Event & event) {
 		else {
 			std::uint64_t raw_size        = out.size();
 			std::uint64_t compressed_size = comp_result;
-			std::ofstream(app_configuration.path + ".sav", std::ios::binary)
+			std::ofstream(saves_root + '/' + fs_safe_current_datetime() + ".sav", std::ios::binary)
 			    .write(reinterpret_cast<const char *>(&raw_size), sizeof(raw_size))
 			    .write(reinterpret_cast<const char *>(&compressed_size), sizeof(compressed_size))
 			    .write(reinterpret_cast<const char *>(out_c.get()), compressed_size);
