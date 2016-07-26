@@ -28,6 +28,7 @@
 #include <SFML/Window.hpp>
 #include <functional>
 #include <map>
+#include <thread>
 #include <vector>
 
 
@@ -37,6 +38,7 @@ private:
 	std::vector<std::size_t> sheduled_for_deletion;
 	bool ticking = false;
 	std::pair<sf::Text, unsigned int> error_text;
+	std::vector<std::thread> save_threads;
 
 	std::size_t reserve_eid();
 	std::size_t spawn_p(std::size_t id, std::unique_ptr<entity> ep);
@@ -62,4 +64,6 @@ public:
 	}
 
 	void despawn(std::size_t id);
+
+	~game_world();
 };

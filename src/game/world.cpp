@@ -83,19 +83,24 @@ void game_world::handle_event(const sf::Event & event) {
 		for(auto && pr : entities)
 			ents.emplace(std::to_string(pr.first), pr.second->write_to_json());
 
-		const auto out         = json::dump_string(ents, {0, json::format_options::minify, 20});
-		auto out_c             = std::make_unique<std::uint8_t[]>(ZSTD_compressBound(out.size()));
-		const auto comp_result = ZSTD_compress(out_c.get(), ZSTD_compressBound(out.size()), out.c_str(), out.size(), ZSTD_maxCLevel());
-		if(ZSTD_isError(comp_result))
-			error_text = {{"Failed to compress savefile: "s + ZSTD_getErrorName(comp_result), font_monospace, 10}, application::effective_FPS() * 10};
-		else {
-			std::uint64_t raw_size        = out.size();
-			std::uint64_t compressed_size = comp_result;
-			std::ofstream(saves_root + '/' + fs_safe_current_datetime() + ".sav", std::ios::binary)
-			    .write(reinterpret_cast<const char *>(&raw_size), sizeof(raw_size))
-			    .write(reinterpret_cast<const char *>(&compressed_size), sizeof(compressed_size))
-			    .write(reinterpret_cast<const char *>(out_c.get()), compressed_size);
-		}
+
+		save_threads.emplace_back(
+		    [&](auto && out) {
+			    auto out_c             = std::make_unique<std::uint8_t[]>(ZSTD_compressBound(out.size()));
+			    const auto comp_result = ZSTD_compress(out_c.get(), ZSTD_compressBound(out.size()), out.c_str(), out.size(), ZSTD_maxCLevel());
+			    if(ZSTD_isError(comp_result))
+				    error_text = {{"Failed to compress savefile: "s + ZSTD_getErrorName(comp_result), font_monospace, 10}, application::effective_FPS() * 10};
+			    else {
+				    std::uint64_t raw_size        = out.size();
+				    std::uint64_t compressed_size = comp_result;
+				    std::ofstream(saves_root + '/' + fs_safe_current_datetime() + ".sav", std::ios::binary)
+				        .write(reinterpret_cast<const char *>(&raw_size), sizeof(raw_size))
+				        .write(reinterpret_cast<const char *>(&compressed_size), sizeof(compressed_size))
+				        .write(reinterpret_cast<const char *>(out_c.get()), compressed_size);
+			    }
+			  },
+		    json::dump_string(ents, {0, json::format_options::minify, 20}));
+		save_threads.back().detach();
 	}
 
 	for(const auto & entity : entities)
@@ -119,4 +124,11 @@ void game_world::despawn(size_t id) {
 		sheduled_for_deletion.emplace_back(id);
 	else
 		entities.erase(id);
+}
+
+
+game_world::~game_world() {
+	for(auto && thr : save_threads)
+		if(thr.joinable())
+			thr.join();
 }
