@@ -4,8 +4,8 @@
 	"//": "https://en.wikipedia.org/wiki/PPSh-41",
 
 	"bullet": {
-		"speed": 4.88,
-		"speed_loss": 0.00025
+		"speed": 3.66,
+		"speed_loss": 0.0007
 	},
 
 	"fire_mode": "full-auto",
