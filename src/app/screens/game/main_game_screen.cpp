@@ -26,6 +26,12 @@
 #include "../../application.hpp"
 
 
+void main_game_screen::setup_stats() {
+	const auto & plr = dynamic_cast<const player &>(world.ent(player_id));
+	hp_stat          = {sf::Color::Red, plr.health()};
+	energy_stat      = {sf::Color(50, 200, 200), plr.gun_progress()};
+}
+
 void main_game_screen::setup() {
 	screen::setup();
 	const auto & winsize       = app.window.getView().getSize();
@@ -55,8 +61,9 @@ int main_game_screen::handle_event(const sf::Event & event) {
 
 main_game_screen::main_game_screen(application & theapp) : screen(theapp) {
 	player_id = world.spawn<player>(app.window.getSize());
+	setup_stats();
+}
 
-	const auto & plr = dynamic_cast<const player &>(world.ent(player_id));
-	hp_stat          = {sf::Color::Red, plr.health()};
-	energy_stat      = {sf::Color(50, 200, 200), plr.gun_progress()};
+main_game_screen::main_game_screen(application & theapp, const json::object & save) : screen(theapp), world(save, player_id) {
+	setup_stats();
 }

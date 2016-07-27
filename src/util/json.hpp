@@ -28,7 +28,7 @@
 
 
 template <class T>
-T && json_get_defaulted(const json::object & obj, const char * key, T && def) {
+T json_get_defaulted(const json::object & obj, const char * key, T && def) {
 	const auto itr = obj.find(key);
 	if(itr == obj.end())
 		return std::move(def);

@@ -127,6 +127,17 @@ void game_world::despawn(size_t id) {
 }
 
 
+game_world::game_world(const json::object & save, std::size_t & pid) {
+	for(auto && kv : save) {
+		const auto id = std::strtoull(kv.first.c_str(), nullptr, 10);
+		auto ent      = entity::from_json(*this, kv.second.as<json::object>());
+		if(ent.second)
+			pid = id;
+
+		entities.emplace(id, std::move(ent.first));
+	}
+}
+
 game_world::~game_world() {
 	for(auto && thr : save_threads)
 		if(thr.joinable())

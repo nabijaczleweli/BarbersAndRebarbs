@@ -46,6 +46,8 @@ void firearm::read_from_json(const json::object & from) {
 	auto itr = from.end();
 	if((itr = from.find("trigger_pulled")) != from.end())
 		trigger_pulled = itr->second.as<bool>();
+	if((itr = from.find("trigger_pulled")) != from.end())
+		trigger_pulled = itr->second.as<bool>();
 	if((itr = from.find("left_in_mag")) != from.end())
 		left_in_mag = itr->second.as<unsigned int>();
 	if((itr = from.find("left_mags")) != from.end())
@@ -54,9 +56,10 @@ void firearm::read_from_json(const json::object & from) {
 
 json::object firearm::write_to_json() const {
 	return {
+	    {"id", props->id},                   //
 	    {"trigger_pulled", trigger_pulled},  //
-	    {"left_in_mag", left_in_mag}, //
-	    {"left_mags", left_mags}, //
+	    {"left_in_mag", left_in_mag},        //
+	    {"left_mags", left_mags},            //
 	};
 }
 
@@ -140,8 +143,8 @@ float firearm::progress() const noexcept {
 float firearm::depletion() const noexcept {
 	const auto now          = std::chrono::high_resolution_clock::now();
 	const auto reload_ready = now - mag_reload_start >= reload_speed;
-	if(reload_ready)
+	if(reload_ready) {
 		return left_in_mag / static_cast<float>(props->mag_size);
-	else
+	} else
 		return left_mags / static_cast<float>(props->mag_quantity);
 }

@@ -30,19 +30,20 @@
 
 class game_world;
 class entity {
-protected:friend class game_world;
+protected:
 	float x, y;
 	float motion_x, motion_y;
 
 	std::size_t id;
 	game_world & world;
 
+
 public:
-	static std::unique_ptr<entity> from_json(game_world & world, const json::object & from);
+	static std::pair<std::unique_ptr<entity>, bool> from_json(game_world & world, const json::object & from);
 
 
 	entity(game_world & world, std::size_t id);
-	entity(game_world & world, const json::object & from);
+	entity(game_world & world);
 
 	virtual ~entity() = default;
 

@@ -27,6 +27,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <functional>
+#include <jsonpp/value.hpp>
 #include <map>
 #include <thread>
 #include <vector>
@@ -65,5 +66,7 @@ public:
 
 	void despawn(std::size_t id);
 
+	game_world() = default;
+	game_world(const json::object & save, std::size_t & pid);
 	~game_world();
 };

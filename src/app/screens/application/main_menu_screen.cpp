@@ -23,18 +23,19 @@
 #include "main_menu_screen.hpp"
 #include "../../../reference/container.hpp"
 #include "../../../reference/joystick_info.hpp"
+#include "../../../util/file.hpp"
 #include "../../application.hpp"
 #include "../game/main_game_screen.hpp"
 #include <cmath>
+#include <fstream>
+#include <jsonpp/parser.hpp>
+#include <zstd/common/zstd.h>
 
 
 using namespace std::literals;
 
 
-using direction = main_menu_screen::direction;
-
-
-void main_menu_screen::move_selection(direction dir) {
+void main_menu_screen::move_selection(main_menu_screen::direction dir) {
 	switch(dir) {
 		case direction::up:
 			selected = std::min(main_buttons.size() - 1, selected + 1);
@@ -61,6 +62,56 @@ void main_menu_screen::try_drawings() {
 			keys_drawing.move(0, joystick_drawing.second.size().y * .55f * (joystick_drawing.first ? -1 : 1));
 		}
 	}
+}
+
+void main_menu_screen::load_game(sf::Text & txt, const std::string & save_path) {
+	std::uint64_t raw_size;
+	std::uint64_t compressed_size;
+	std::ifstream save_file(save_path, std::ios::binary);
+	if(!save_file.is_open()) {
+		txt.setString("Save file inacessible");
+		return;
+	}
+
+	save_file.read(reinterpret_cast<char *>(&raw_size), sizeof(raw_size)).read(reinterpret_cast<char *>(&compressed_size), sizeof(compressed_size));
+	auto in_c = std::make_unique<std::uint8_t[]>(compressed_size);
+	save_file.read(reinterpret_cast<char *>(in_c.get()), compressed_size);
+
+	std::string in(raw_size, '\0');
+	const auto result = ZSTD_decompress(&in[0], in.size(), in_c.get(), compressed_size);
+	if(ZSTD_isError(result)) {
+		txt.setString("Decompression error: "s + ZSTD_getErrorName(result));
+		return;
+	}
+
+	json::value save;
+	json::parse(in, save);
+	app.schedule_screen<main_game_screen>(save.as<json::object>());
+}
+
+
+void main_menu_screen::set_default_menu_items() {
+	main_buttons.clear();
+
+	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.start"), font_swirly),
+	                           [&](sf::Text &) { app.schedule_screen<main_game_screen>(); });
+	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.load"), font_swirly), [&](sf::Text & txt) {
+		main_buttons.clear();
+		main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.back"), font_swirly), [&](sf::Text &) { set_default_menu_items(); });
+		for(auto && fname : list_files(saves_root))
+			main_buttons.emplace_front(sf::Text(fname.substr(0, fname.rfind('.')), font_swirly),
+			                           [&, fname = fname ](sf::Text &) { load_game(txt, saves_root + '/' + fname); });
+		selected = main_buttons.size() - 1;
+	});
+	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"), font_swirly),
+	                           [&](sf::Text & txt) {
+		                           app_configuration.play_sounds = !app_configuration.play_sounds;
+		                           txt.setString(global_iser.translate_key("gui.application.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"));
+		                           app.retry_music();
+		                         });
+	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.quit"), font_swirly), [&](sf::Text &) { app.window.close(); });
+
+	selected = main_buttons.size() - 1;
 }
 
 void main_menu_screen::setup() {
@@ -170,15 +221,5 @@ main_menu_screen::main_menu_screen(application & theapp)
 	joystick_drawing.second.move(app.window.getSize().x / 4 - joystick_drawing.second.size().x / 2,
 	                             app.window.getSize().y / 2 - joystick_drawing.second.size().y / 2);
 
-	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.start"), font_swirly),
-	                           [&](sf::Text &) { app.schedule_screen<main_game_screen>(); });
-	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"), font_swirly),
-	                           [&](sf::Text & txt) {
-		                           app_configuration.play_sounds = !app_configuration.play_sounds;
-		                           txt.setString(global_iser.translate_key("gui.application.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"));
-		                           app.retry_music();
-		                         });
-	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.quit"), font_swirly), [&](sf::Text &) { app.window.close(); });
-
-	selected = main_buttons.size() - 1;
+	set_default_menu_items();
 }

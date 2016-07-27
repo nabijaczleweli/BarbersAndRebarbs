@@ -45,6 +45,8 @@ private:
 	void move_selection(direction dir);
 	void press_button();
 	void try_drawings();
+	void load_game(sf::Text & txt, const std::string & save_path);
+	void set_default_menu_items();
 
 public:
 	virtual void setup() override;

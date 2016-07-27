@@ -62,7 +62,7 @@ void bullet::read_from_json(const json::object & from) {
 	auto itr = from.end();
 	if((itr = from.find("bullet")) != from.end()) {
 		const auto bullet = itr->second.as<json::object>();
-		props = {bullet.at("speed").as<float>(), bullet.at("speed_loss").as<float>()};
+		props             = {bullet.at("speed").as<float>(), bullet.at("speed_loss").as<float>()};
 	}
 }
 

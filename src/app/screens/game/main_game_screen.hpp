@@ -28,6 +28,7 @@
 #include "../../../render/stat_bar.hpp"
 #include "../screen.hpp"
 #include <deque>
+#include <jsonpp/value.hpp>
 #include <memory>
 
 
@@ -37,6 +38,8 @@ private:
 	game_world world;
 	std::size_t player_id;
 
+	void setup_stats();
+
 public:
 	virtual void setup() override;
 	virtual int loop() override;
@@ -44,5 +47,6 @@ public:
 	virtual int handle_event(const sf::Event & event) override;
 
 	main_game_screen(application & theapp);
+	main_game_screen(application & theapp, const json::object & save);
 	virtual ~main_game_screen() = default;
 };

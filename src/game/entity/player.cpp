@@ -31,6 +31,9 @@
 #include <seed11/seed11.hpp>
 
 
+static const sf::Color progress_colour(255, 255, 255, 100);
+
+
 std::pair<bool, sf::Vector2f> player::controller_aim(unsigned int controller_id) const {
 	const auto horizontal      = sf::Joystick::getAxisPosition(controller_id, X360_axis_mappings::RightStickHorizontal);
 	const auto vertical        = sf::Joystick::getAxisPosition(controller_id, X360_axis_mappings::RightStickVertical);
@@ -65,9 +68,12 @@ void player::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 	progress = gun.depletion();
 }
 
+player::player(game_world & world_r) : entity(world_r), progress_circle(0, 7) {
+	progress_circle.colour(progress_colour);
+}
+
 player::player(game_world & world_r, size_t id_a, sf::Vector2u screen_size)
       : entity(world_r, id_a), progress_circle(0, 7), gun(world_r, app_configuration.player_default_firearm), hp(1), progress(0) {
-	static const sf::Color progress_colour(255, 255, 255, 100);
 	static auto rand = seed11::make_seeded<std::mt19937>();
 
 	progress_circle.colour(progress_colour);

@@ -27,25 +27,26 @@
 #include <functional>
 
 
-std::unique_ptr<entity> entity::from_json(game_world & world, const json::object & from) {
+std::pair<std::unique_ptr<entity>, bool> entity::from_json(game_world & world, const json::object & from) {
 	const auto itr = from.find("kind");
+	std::pair<std::unique_ptr<entity>, bool> res;
 
 	if(itr != from.end() && itr->second.is<std::string>()) {
 		const auto kind = itr->second.as<std::string>();
 		if(kind == "player")
-			return std::make_unique<player>(std::ref(world), from);
+			res = {std::make_unique<player>(std::ref(world)), true};
 		else if(kind == "bullet")
-			return std::make_unique<bullet>(std::ref(world), from);
-	}
+			res = {std::make_unique<bullet>(std::ref(world)), false};
+	} else
+		res = {std::make_unique<entity>(std::ref(world)), false};
 
-	return std::make_unique<entity>(std::ref(world), from);
+	res.first->read_from_json(from);
+	return res;
 }
 
 
 entity::entity(game_world & world_r, size_t id_a) : x(0), y(0), motion_x(0), motion_y(0), id(id_a), world(world_r) {}
-entity::entity(game_world & world_r, const json::object & from) : entity(world_r, 0) {
-	read_from_json(from);
-}
+entity::entity(game_world & world_r) : entity(world_r, 0) {}
 
 void entity::read_from_json(const json::object & from) {
 	auto itr = from.end();

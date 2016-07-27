@@ -43,7 +43,7 @@ private:
 	mutable float progress;
 
 public:
-	using entity::entity;
+	player(game_world & world);
 	player(game_world & world, std::size_t id, sf::Vector2u screen_size);
 
 	virtual ~player() = default;
