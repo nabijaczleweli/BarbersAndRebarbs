@@ -26,7 +26,7 @@ include configMakefile
 LDDLLS := $(OS_LD_LIBS) audiere cpp-localiser whereami++ seed11 zstd
 LDAR := $(LNCXXAR) -L$(BLDDIR)audiere/lib -L$(BLDDIR)cpp-localiser -L$(BLDDIR)whereami-cpp -L$(BLDDIR)seed11 -L$(BLDDIR)zstd $(foreach dll,$(LDDLLS),-l$(dll))
 INCAR := $(foreach l,$(foreach l,audiere cereal cimpoler-meta cpp-localiser seed11 whereami-cpp,$(l)/include) jsonpp,-isystemext/$(l)) -isystem$(BLDDIR)zstd/include
-VERAR := $(foreach l,CEREAL CIMPOLER_META CPP_LOCALISER JSONPP SEED11 WHEREAMI_CPP,-D$(l)_VERSION='$($(l)_VERSION)')
+VERAR := $(foreach l,BARBERSANDREBARBS CEREAL CIMPOLER_META CPP_LOCALISER JSONPP SEED11 WHEREAMI_CPP,-D$(l)_VERSION='$($(l)_VERSION)')
 SOURCES := $(sort $(wildcard src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp))
 HEADERS := $(sort $(wildcard src/*.hpp src/**/*.hpp src/**/**/*.hpp src/**/**/**/*.hpp))
 

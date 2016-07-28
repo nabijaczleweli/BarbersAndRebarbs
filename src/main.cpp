@@ -59,6 +59,7 @@ static void credit() {
 	std::cout << "OS: " << CIMPOLER_META_OS_NAME << "\n"
 	          << "Compiler: " << CIMPOLER_META_COMPILER_NAME << " version " << cimpoler_meta::version() << "\n"
 	          << "Stdlib: " << CIMPOLER_META_STDLIB << " version " << cimpoler_meta::stdlib_version() << "\n"
+	          << "Version: " << BARBERSANDREBARBS_VERSION << "\n"
 	          << "Used libraries:\n"
 	          << "  - SFML version " << SFML_VERSION_MAJOR << '.' << SFML_VERSION_MINOR << ": http://sfml-dev.org\n"
 	          << "  - audiere version " << audiere::GetVersion() << ": https://sourceforge.net/projects/audiere\n"

@@ -51,6 +51,7 @@ endif
 INCCMAKEAR := CXXFLAGS="$(INCCXXAR)"
 LNCMAKEAR := LDFLAGS="$(LNCXXAR)"
 
+BARBERSANDREBARBS_VERSION := "$(patsubst v%,%,$(shell git describe --tags))"
 CEREAL_VERSION := "$(patsubst v%,%,$(shell git -C ext/cereal describe --tags))"
 CIMPOLER_META_VERSION := "$(shell git -C ext/cimpoler-meta log -1 --pretty=format:%h)"
 CPP_LOCALISER_VERSION := "$(patsubst v%,%,$(shell git -C ext/cpp-localiser describe --tags))"
