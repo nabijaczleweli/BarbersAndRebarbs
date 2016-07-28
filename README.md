@@ -7,7 +7,8 @@ A game in C++ using SFML 2.3
 1. Speex, found [here](http://www.speex.org/), via `libspeex-dev` APT package or `mingw-w64-x86_64-speex` MSYS2 `pacman` package is required to be installed externally
 2. DUMB, found [here](http://dumb.sourceforge.net/) via `libdumb1-dev` APT package or `mingw-w64-x86_64-dumb` MSYS2 `pacman` package, is required to be installed externally
 2. SFML >=2.3, found [here](http://sfml-dev.org/) via `libsfml-dev` APT package or `mingw-w64-x86_64-sfml` MSYS2 `pacman` package, is required to be installed externally
-3. All other dependencies are submodules, and as such must be explicitly initialised, be it by passing `--recursive` to `git-clone` or running `git submodule update --init --recursive`
+3. `libcurl`, found [here](https://curl.haxx.se/) via either of `libcurl4-{gnutls,nss,openssl}-dev` APT packages or `libcurl` MSYS2 `pacman` package, is required to be installed externally
+4. All other dependencies are submodules, and as such must be explicitly initialised, be it by passing `--recursive` to `git-clone` or running `git submodule update --init --recursive`
 
 "Externally" installed libraries need to be installed either globally or to pass `ADDITIONAL_{INCLUDE,LINK}_DIR` variable to GNU Make, as appropriate.
 
@@ -23,6 +24,7 @@ A game in C++ using SFML 2.3
 2. [audiere](https://sourceforge.net/projects/audiere/) ([modified](https://github.com/nabijaczleweli/audiere)) — sounds
 3. [cimpoler-meta](https://github.com/nabijaczleweli/cimpoler-meta) — purely informational compiler and system data
 4. [cpp-localiser](https://github.com/nabijaczleweli/cpp-localiser) — localisation
+4. [cpr](https://github.com/whoshuu/cpr) — web API interaction
 5. [jsonpp](https://github.com/Rapptz/jsonpp) — game saving/loading, model (`drawing`) loading
 6. [seed11](https://github.com/milleniumbug/seed11) — true RNG seeding
 7. [whereami-cpp](https://github.com/nabijaczleweli/whereami-cpp) — asset directory localisation

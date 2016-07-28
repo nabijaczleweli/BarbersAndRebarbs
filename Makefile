@@ -23,17 +23,17 @@
 include configMakefile
 
 
-LDDLLS := $(OS_LD_LIBS) audiere cpp-localiser whereami++ seed11 zstd
-LDAR := $(LNCXXAR) -L$(BLDDIR)audiere/lib -L$(BLDDIR)cpp-localiser -L$(BLDDIR)whereami-cpp -L$(BLDDIR)seed11 -L$(BLDDIR)zstd $(foreach dll,$(LDDLLS),-l$(dll))
-INCAR := $(foreach l,$(foreach l,audiere cereal cimpoler-meta cpp-localiser seed11 whereami-cpp,$(l)/include) jsonpp,-isystemext/$(l)) -isystem$(BLDDIR)zstd/include
-VERAR := $(foreach l,BARBERSANDREBARBS CEREAL CIMPOLER_META CPP_LOCALISER JSONPP SEED11 WHEREAMI_CPP,-D$(l)_VERSION='$($(l)_VERSION)')
+LDDLLS := $(OS_LD_LIBS) audiere cpp-localiser cpr whereami++ seed11 zstd curl
+LDAR := $(LNCXXAR) $(foreach l,audiere/lib cpp-localiser cpr/lib whereami-cpp seed11 zstd,-L$(BLDDIR)$(l)) $(foreach dll,$(LDDLLS),-l$(dll))
+INCAR := $(foreach l,$(foreach l,audiere cereal cimpoler-meta cpp-localiser seed11 whereami-cpp,$(l)/include) jsonpp,-isystemext/$(l)) $(foreach l,zstd cpr,-isystem$(BLDDIR)$(l)/include)
+VERAR := $(foreach l,BARBERSANDREBARBS CEREAL CIMPOLER_META CPP_LOCALISER CPR JSONPP SEED11 WHEREAMI_CPP,-D$(l)_VERSION='$($(l)_VERSION)')
 SOURCES := $(sort $(wildcard src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp))
 HEADERS := $(sort $(wildcard src/*.hpp src/**/*.hpp src/**/**/*.hpp src/**/**/**/*.hpp))
 
-.PHONY : all clean assets exe audiere cpp-localiser seed11 zstd whereami-cpp
+.PHONY : all clean assets exe audiere cpp-localiser cpr seed11 zstd whereami-cpp
 
 
-all : assets audiere cpp-localiser seed11 whereami-cpp zstd exe
+all : assets audiere cpp-localiser cpr seed11 whereami-cpp zstd exe
 
 clean :
 	rm -rf $(OUTDIR)
@@ -45,6 +45,7 @@ assets :
 exe : audiere seed11 whereami-cpp $(OUTDIR)BarbersAndRebarbs$(EXE)
 audiere : $(BLDDIR)audiere/lib/libaudiere$(DLL)
 cpp-localiser : $(BLDDIR)cpp-localiser/libcpp-localiser$(ARCH)
+cpr : $(BLDDIR)cpr/lib/libcpr$(ARCH) $(BLDDIR)cpr/include/cpr/cpr.h
 seed11 : $(BLDDIR)seed11/libseed11$(ARCH)
 whereami-cpp : $(BLDDIR)whereami-cpp/libwhereami++$(ARCH)
 zstd : $(BLDDIR)zstd/libzstd$(ARCH) $(BLDDIR)zstd/include/zstd/common/zstd.h
@@ -62,6 +63,15 @@ $(BLDDIR)audiere/lib/libaudiere$(DLL) : ext/audiere/CMakeLists.txt
 
 $(BLDDIR)cpp-localiser/libcpp-localiser$(ARCH) : ext/cpp-localiser/Makefile
 	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@)) stlib
+
+$(BLDDIR)cpr/lib/libcpr$(ARCH) : ext/cpr/CMakeLists.txt
+	@mkdir -p $(abspath $(dir $@)..)
+	cd $(abspath $(dir $@)..) && CXXFLAGS="$(INCCXXAR) -DCURL_STATICLIB" $(LNCMAKEAR) $(CMAKE) -DUSE_SYSTEM_CURL=ON -DBUILD_CPR_TESTS=OFF $(abspath $(dir $^)) -GNinja
+	cd $(abspath $(dir $@)..) && $(NINJA)
+
+$(BLDDIR)cpr/include/cpr/cpr.h : ext/cpr/include/cpr.h
+	@mkdir -p $(abspath $(dir $@)..)
+	cp -r $(dir $^) $(dir $@)
 
 $(BLDDIR)seed11/libseed11$(ARCH) : $(foreach src,seed11_system_agnostic seed11_$(SEED11_SYSTEM_TYPE) deterministic_unsafe_seed_device,$(BLDDIR)seed11/obj/$(src).o)
 	$(AR) crs $@ $^
