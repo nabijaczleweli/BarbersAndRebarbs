@@ -25,6 +25,7 @@
 
 #include "../../../render/drawing.hpp"
 #include "../screen.hpp"
+#include <cpr/cpr.h>
 #include <functional>
 #include <list>
 #include <utility>
@@ -41,6 +42,7 @@ private:
 	bool joystick_up;
 	std::pair<bool, drawing> joystick_drawing;
 	drawing keys_drawing;
+	std::tuple<std::future<cpr::Response>, std::thread, sf::Text, bool> update;
 
 	void move_selection(direction dir);
 	void press_button();
@@ -55,5 +57,5 @@ public:
 	virtual int handle_event(const sf::Event & event) override;
 
 	main_menu_screen(application & theapp);
-	virtual ~main_menu_screen() = default;
+	virtual ~main_menu_screen();
 };

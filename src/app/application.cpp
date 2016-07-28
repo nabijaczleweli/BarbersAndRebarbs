@@ -50,7 +50,7 @@ unsigned int application::effective_FPS() {
 }
 
 int application::run() {
-	window.create(sf::VideoMode::getDesktopMode(), app_name, sf::Style::Fullscreen);
+	window.create(sf::VideoMode::getDesktopMode(), app_name, sf::Style::None);
 	if(app_configuration.vsync)
 		window.setVerticalSyncEnabled(true);
 	else

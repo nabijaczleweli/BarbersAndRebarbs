@@ -100,7 +100,6 @@ void game_world::handle_event(const sf::Event & event) {
 			    }
 			  },
 		    json::dump_string(ents, {0, json::format_options::minify, 20}));
-		save_threads.back().detach();
 	}
 
 	for(const auto & entity : entities)

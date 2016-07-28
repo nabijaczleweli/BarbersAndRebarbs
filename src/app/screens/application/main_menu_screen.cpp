@@ -28,6 +28,7 @@
 #include "../game/main_game_screen.hpp"
 #include <cmath>
 #include <fstream>
+#include <iostream>
 #include <jsonpp/parser.hpp>
 #include <zstd/common/zstd.h>
 
@@ -119,17 +120,37 @@ void main_menu_screen::setup() {
 }
 
 int main_menu_screen::loop() {
-	const auto & winsize(app.window.getSize());
+	const auto & winsize = app.window.getSize();
 
 	unsigned int buttid = 0;
 	for(auto & button : main_buttons) {
-		const auto & btnbds(button.first.getGlobalBounds());
+		const auto & btnbds = button.first.getGlobalBounds();
 
 		button.first.setPosition((winsize.x * (59.f / 60.f)) - btnbds.width,
 		                         (winsize.y * (7.f / 8.f)) - (buttid + 1) * btnbds.height - (winsize.y * ((buttid * 1.f) / 90.f)));
 		button.first.setColor((buttid == selected) ? sf::Color::Red : sf::Color::White);
 		++buttid;
 	}
+
+	if(std::get<3>(update) && std::get<0>(update).valid()) {
+		std::get<3>(update) = false;
+		std::get<1>(update) = std::thread([&] {
+			auto result = std::get<0>(update).get();
+			std::cout << result.header["X-RateLimit-Remaining"] << " GitHub API accesses left\n";
+			std::cout << result.text << '\n';
+
+			if(!(result.status_code >= 200 && result.status_code < 300))
+				std::get<2>(update).setString("Couldn't get update data, HTTP error " + std::to_string(result.status_code));
+			else {
+				json::value newest_update;
+				json::parse(result.text, newest_update);
+
+				std::get<2>(update).setString("Found update " + newest_update["tag_name"].as<std::string>());
+				// ShellExecute(nullptr, nullptr, newest_update["html_url"].as<const char *>(), nullptr, nullptr, SW_SHOWNORMAL);
+			}
+		});
+	}
+
 	return 0;
 }
 
@@ -141,6 +162,8 @@ int main_menu_screen::draw() {
 	if(joystick_drawing.first)
 		app.window.draw(joystick_drawing.second);
 	app.window.draw(keys_drawing);
+
+	app.window.draw(std::get<2>(update));
 
 	return 0;
 }
@@ -216,10 +239,17 @@ int main_menu_screen::handle_event(const sf::Event & event) {
 
 main_menu_screen::main_menu_screen(application & theapp)
       : screen(theapp), control_frames_counter(0), joystick_up(false), joystick_drawing(false, drawing("xbox", app.window.getSize())),
-        keys_drawing("keyboard", app.window.getSize()) {
+        keys_drawing("keyboard", app.window.getSize()),
+        update(cpr::GetAsync(cpr::Url("https://api.github.com/repos/nabijaczleweli/BarbersAndRebarbs/releases/latest"), cpr::Parameters{{"anon", "true"}}),
+               std::thread(), sf::Text("", font_monospace, 10), true) {
 	keys_drawing.move(app.window.getSize().x / 4 - keys_drawing.size().x / 2, app.window.getSize().y / 2 - keys_drawing.size().y / 2);
 	joystick_drawing.second.move(app.window.getSize().x / 4 - joystick_drawing.second.size().x / 2,
 	                             app.window.getSize().y / 2 - joystick_drawing.second.size().y / 2);
 
 	set_default_menu_items();
+}
+
+main_menu_screen::~main_menu_screen() {
+	if(std::get<1>(update).joinable())
+		std::get<1>(update).join();
 }
