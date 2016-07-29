@@ -24,6 +24,7 @@
 #include "../../../reference/container.hpp"
 #include "../../../reference/joystick_info.hpp"
 #include "../../../util/file.hpp"
+#include "../../../util/url.hpp"
 #include "../../application.hpp"
 #include "../game/main_game_screen.hpp"
 #include <cmath>
@@ -146,7 +147,19 @@ int main_menu_screen::loop() {
 				json::parse(result.text, newest_update);
 
 				std::get<2>(update).setString("Found update " + newest_update["tag_name"].as<std::string>());
-				// ShellExecute(nullptr, nullptr, newest_update["html_url"].as<const char *>(), nullptr, nullptr, SW_SHOWNORMAL);
+
+				main_buttons.emplace_back(sf::Text(global_iser.translate_key("gui.application.text.update"), font_swirly),
+				                          [&, url = newest_update["html_url"].as<std::string>() ](sf::Text &) {
+					                          if(!launch_browser(url)) {
+						                          main_buttons.clear();
+						                          main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.back"), font_swirly),
+						                                                     [&](sf::Text &) { set_default_menu_items(); });
+						                          main_buttons.emplace_front(sf::Text("Failed to open browser, go to", font_pixelish, 20), [&](sf::Text &) {});
+						                          main_buttons.emplace_front(sf::Text(url, font_pixelish, 20), [&](sf::Text & txt) { copy_to_clipboard(txt.getString()); });
+						                          main_buttons.emplace_front(sf::Text("to download update", font_pixelish, 20), [&](sf::Text &) {});
+						                          selected = main_buttons.size() - 1;
+					                          }
+					                        });
 			}
 		});
 	}

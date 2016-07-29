@@ -4,3 +4,4 @@ gui.application.text.quit=Quit game
 gui.application.text.start=Start game
 gui.application.text.load=Load game
 gui.application.text.back=Back
+gui.application.text.update=Update
