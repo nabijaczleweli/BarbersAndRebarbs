@@ -20,7 +20,7 @@ env:
 
 matrix:
   include:
-    - env: CXX=g++-5 CC=gcc-5 WORKAROUND_1568899=true DEPLOY=true
+    - env: CXX=g++-5 CC=gcc-5 WORKAROUND_1568899=true
       addons:
         apt:
           packages:
@@ -41,13 +41,54 @@ matrix:
             - libxcb-randr0-dev
           sources: &sources
             - r-packages-precise
+            - llvm-toolchain-precise
             - llvm-toolchain-precise-3.8
             - ubuntu-toolchain-r-test
+    - env: CXX=g++-6 CC=gcc-6 WORKAROUND_1568899=false DEPLOY=true
+      addons:
+        apt:
+          packages:
+            - g++-6
+            - unzip
+            - libpthread-stubs0-dev
+            - libgl1-mesa-dev
+            - libx11-dev
+            - libxrandr-dev
+            - libfreetype6-dev
+            - libglew-dev
+            - libjpeg8-dev
+            - libsndfile1-dev
+            - libopenal-dev
+            - libudev-dev
+            - libx11-xcb-dev
+            - libxcb-image0-dev
+            - libxcb-randr0-dev
+          sources: *sources
     - env: CXX=clang++-3.8 CC=clang-3.8 WORKAROUND_1568899=false
       addons:
         apt:
           packages:
             - clang-3.8
+            - unzip
+            - libpthread-stubs0-dev
+            - libgl1-mesa-dev
+            - libx11-dev
+            - libxrandr-dev
+            - libfreetype6-dev
+            - libglew-dev
+            - libjpeg8-dev
+            - libsndfile1-dev
+            - libopenal-dev
+            - libudev-dev
+            - libx11-xcb-dev
+            - libxcb-image0-dev
+            - libxcb-randr0-dev
+          sources: *sources
+    - env: CXX=clang++-3.9 CC=clang-3.9 WORKAROUND_1568899=false
+      addons:
+        apt:
+          packages:
+            - clang-3.9
             - unzip
             - libpthread-stubs0-dev
             - libgl1-mesa-dev
