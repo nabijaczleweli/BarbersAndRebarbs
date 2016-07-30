@@ -42,7 +42,6 @@ void copy_to_clipboard(const std::string & address) {
 
 
 bool launch_browser(const char * address) {
-	return !address;
 	return ShellExecute(nullptr, "open", address, nullptr, nullptr, SW_SHOW);
 }
 
