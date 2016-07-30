@@ -23,17 +23,17 @@
 include configMakefile
 
 
-LDDLLS := $(OS_LD_LIBS) audiere cpp-localiser cpr whereami++ seed11 zstd curl
-LDAR := $(LNCXXAR) $(foreach l,audiere/lib cpp-localiser cpr/lib whereami-cpp seed11 zstd,-L$(BLDDIR)$(l)) $(foreach dll,$(LDDLLS),-l$(dll))
-INCAR := $(foreach l,$(foreach l,audiere cereal cimpoler-meta cpp-localiser seed11 whereami-cpp,$(l)/include) jsonpp,-isystemext/$(l)) $(foreach l,zstd cpr,-isystem$(BLDDIR)$(l)/include)
-VERAR := $(foreach l,BARBERSANDREBARBS CEREAL CIMPOLER_META CPP_LOCALISER CPR JSONPP SEED11 WHEREAMI_CPP,-D$(l)_VERSION='$($(l)_VERSION)')
+LDDLLS := $(OS_LD_LIBS) audiere cpp-localiser cpr whereami++ seed11 semver-utils zstd curl
+LDAR := $(LNCXXAR) $(foreach l,audiere/lib cpp-localiser cpr/lib whereami-cpp seed11 semver-utils zstd,-L$(BLDDIR)$(l)) $(foreach dll,$(LDDLLS),-l$(dll))
+INCAR := $(foreach l,$(foreach l,audiere cereal cimpoler-meta cpp-localiser seed11 whereami-cpp,$(l)/include) jsonpp,-isystemext/$(l)) $(foreach l,cpr zstd semver-utils,-isystem$(BLDDIR)$(l)/include)
+VERAR := $(foreach l,BARBERSANDREBARBS CEREAL CIMPOLER_META CPP_LOCALISER CPR JSONPP SEED11 SEMVER_UTILS WHEREAMI_CPP,-D$(l)_VERSION='$($(l)_VERSION)')
 SOURCES := $(sort $(wildcard src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp))
 HEADERS := $(sort $(wildcard src/*.hpp src/**/*.hpp src/**/**/*.hpp src/**/**/**/*.hpp))
 
-.PHONY : all clean assets exe audiere cpp-localiser cpr seed11 zstd whereami-cpp
+.PHONY : all clean assets exe audiere cpp-localiser cpr seed11 semver-utils zstd whereami-cpp
 
 
-all : assets audiere cpp-localiser cpr seed11 whereami-cpp zstd exe
+all : assets audiere cpp-localiser cpr seed11 semver-utils whereami-cpp zstd exe
 
 clean :
 	rm -rf $(OUTDIR)
@@ -47,6 +47,7 @@ audiere : $(BLDDIR)audiere/lib/libaudiere$(DLL)
 cpp-localiser : $(BLDDIR)cpp-localiser/libcpp-localiser$(ARCH)
 cpr : $(BLDDIR)cpr/lib/libcpr$(ARCH) $(BLDDIR)cpr/include/cpr/cpr.h
 seed11 : $(BLDDIR)seed11/libseed11$(ARCH)
+semver-utils : $(BLDDIR)semver-utils/libsemver-utils$(ARCH) $(BLDDIR)semver-utils/include/semver-utils/version.hpp
 whereami-cpp : $(BLDDIR)whereami-cpp/libwhereami++$(ARCH)
 zstd : $(BLDDIR)zstd/libzstd$(ARCH) $(BLDDIR)zstd/include/zstd/common/zstd.h
 
@@ -73,8 +74,19 @@ $(BLDDIR)cpr/include/cpr/cpr.h : ext/cpr/include/cpr.h
 	@mkdir -p $(abspath $(dir $@)..)
 	cp -r $(dir $^) $(dir $@)
 
-$(BLDDIR)seed11/libseed11$(ARCH) : $(foreach src,seed11_system_agnostic seed11_$(SEED11_SYSTEM_TYPE) deterministic_unsafe_seed_device,$(BLDDIR)seed11/obj/$(src).o)
+$(BLDDIR)seed11/libseed11$(ARCH) : $(foreach src,seed11_system_agnostic seed11_$(SEED11_SYSTEM_TYPE) deterministic_unsafe_seed_device,$(BLDDIR)seed11/obj/$(src)$(OBJ))
 	$(AR) crs $@ $^
+
+$(BLDDIR)semver-utils/libsemver-utils$(ARCH) : $(BLDDIR)semver-utils/obj/version$(OBJ)
+	$(AR) crs $@ $^
+
+$(BLDDIR)semver-utils/include/semver-utils/version.hpp : ext/semver-utils/src/libsemver/c++/version.hpp
+	@mkdir -p $(dir $@)
+	cp $^ $@
+
+$(BLDDIR)semver-utils/src/version.cpp : ext/semver-utils/src/libsemver/c++/version.cpp
+	@mkdir -p $(dir $@)
+	sed -e 's:#include "../gettext_defs.h":#define _(S) S:' -e 's:#include "version.hpp":#include "../include/semver-utils/version.hpp":' $^ > $@
 
 $(BLDDIR)whereami-cpp/libwhereami++$(ARCH) : ext/whereami-cpp/Makefile
 	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@)) stlib
@@ -92,10 +104,14 @@ $(OBJDIR)%$(OBJ) : $(SRCDIR)%.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXAR) $(INCAR) $(VERAR) -DZSTD_STATIC_LINKING_ONLY -c -o$@ $^
 
-$(BLDDIR)seed11/obj/%.o : ext/seed11/src/%.cpp
+$(BLDDIR)semver-utils/obj/%$(OBJ) : $(BLDDIR)semver-utils/src/%.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXAR) -DSEMVER_GETTEXT_DEFS_H -D_LIBGETTEXT_H -Wno-unknown-pragmas -c -o$@ $^
+
+$(BLDDIR)seed11/obj/%$(OBJ) : ext/seed11/src/%.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXAR) -isystemext/seed11/include -c -o$@ $^
 
-$(BLDDIR)zstd/obj/%.o : ext/zstd/lib/%.c
+$(BLDDIR)zstd/obj/%$(OBJ) : ext/zstd/lib/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CCAR) -Iext/zstd/lib/common -DZSTD_STATIC_LINKING_ONLY -c -o$@ $^

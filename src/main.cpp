@@ -69,6 +69,7 @@ static void credit() {
 	          << "  - cpr version " << CPR_VERSION << ": https://github.com/whoshuu/cpr\n"
 	          << "  - jsonpp version " << JSONPP_VERSION << ": http://rapptz.github.io/jsonpp\n"
 	          << "  - seed11 version " << SEED11_VERSION << ": https://github.com/milleniumbug/seed11\n"
+	          << "  - semver-utils version " << SEMVER_UTILS_VERSION << ": https://github.com/emcrisostomo/semver-utils\n"
 	          << "  - whereami-cpp version " << WHEREAMI_CPP_VERSION << ": https://github.com/nabijaczleweli/whereami-cpp\n"
 	          << "  - zstd version " << ZSTD_VERSION_STRING << ": https://github.com/Cyan4973/zstd\n"
 	          << "\n\n";

@@ -24,8 +24,9 @@ A game in C++ using SFML 2.3
 2. [audiere](https://sourceforge.net/projects/audiere/) ([modified](https://github.com/nabijaczleweli/audiere)) — sounds
 3. [cimpoler-meta](https://github.com/nabijaczleweli/cimpoler-meta) — purely informational compiler and system data
 4. [cpp-localiser](https://github.com/nabijaczleweli/cpp-localiser) — localisation
-4. [cpr](https://github.com/whoshuu/cpr) — web API interaction
+4. [cpr](https://github.com/whoshuu/cpr) — GitHub API interaction
 5. [jsonpp](https://github.com/Rapptz/jsonpp) — game saving/loading, model (`drawing`) loading
 6. [seed11](https://github.com/milleniumbug/seed11) — true RNG seeding
-7. [whereami-cpp](https://github.com/nabijaczleweli/whereami-cpp) — asset directory localisation
-8. [zstd](https://github.com/Cyan4973/zstd) — savefile compression
+7. [semver-utils](https://github.com/emcrisostomo/semver-utils) — semantic versioning comparison
+8. [whereami-cpp](https://github.com/nabijaczleweli/whereami-cpp) — asset directory localisation
+9. [zstd](https://github.com/Cyan4973/zstd) — savefile compression
