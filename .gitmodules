@@ -32,3 +32,7 @@
 	path = ext/cpr
 	url = https://github.com/whoshuu/cpr.git
 	branch = 1.2.0
+[submodule "semver-utils"]
+	path = ext/semver-utils
+	url = https://github.com/emcrisostomo/semver-utils.git
+	branch = 1.1.2
