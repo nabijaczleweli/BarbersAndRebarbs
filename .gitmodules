@@ -36,3 +36,6 @@
 	path = ext/semver-utils
 	url = https://github.com/emcrisostomo/semver-utils.git
 	branch = 1.1.2
+[submodule "fmt"]
+	path = ext/fmt
+	url = https://github.com/fmtlib/fmt.git
