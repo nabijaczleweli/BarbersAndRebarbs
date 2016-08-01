@@ -28,6 +28,7 @@
 #include "../../application.hpp"
 #include "../game/main_game_screen.hpp"
 #include <cmath>
+#include <fmt/format.h>
 #include <fstream>
 #include <iostream>
 #include <jsonpp/parser.hpp>
@@ -141,7 +142,7 @@ int main_menu_screen::loop() {
 			std::cout << result.header["X-RateLimit-Remaining"] << " GitHub API accesses left\n";
 
 			if(!(result.status_code >= 200 && result.status_code < 300))
-				std::get<2>(update).setString("Couldn't get update data, HTTP error " + std::to_string(result.status_code));
+				std::get<2>(update).setString(fmt::format(global_iser.translate_key("gui.application.text.update_connection_fail"), result.status_code));
 			else {
 				json::value newest_update;
 				json::parse(result.text, newest_update);
@@ -151,23 +152,25 @@ int main_menu_screen::loop() {
 				const auto current_version = semver::version::from_string(BARBERSANDREBARBS_VERSION);
 
 				if(new_version < current_version || new_version == current_version)
-					std::get<2>(update).setString("No updates found");
+					std::get<2>(update).setString(global_iser.translate_key("gui.application.text.update_none_found"));
 				else {
-					std::get<2>(update).setString("Found update: " + new_version.str());
+					std::get<2>(update).setString(fmt::format(global_iser.translate_key("gui.application.text.update_found"), new_version.str()));
 
-					main_buttons.emplace_back(sf::Text(global_iser.translate_key("gui.application.text.update"), font_swirly),
-					                          [&, url = newest_update["html_url"].as<std::string>() ](sf::Text &) {
-						                          if(!launch_browser(url)) {
-							                          main_buttons.clear();
-							                          main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.back"), font_swirly),
-							                                                     [&](sf::Text &) { set_default_menu_items(); });
-							                          main_buttons.emplace_front(sf::Text("Failed to open browser, go to", font_pixelish, 20), [&](sf::Text &) {});
-							                          main_buttons.emplace_front(sf::Text(url, font_pixelish, 20),
-							                                                     [&](sf::Text & txt) { copy_to_clipboard(txt.getString()); });
-							                          main_buttons.emplace_front(sf::Text("to download update", font_pixelish, 20), [&](sf::Text &) {});
-							                          selected = main_buttons.size() - 1;
-						                          }
-						                        });
+					main_buttons.emplace_back(
+					    sf::Text(global_iser.translate_key("gui.application.text.update"), font_swirly),
+					    [&, url = newest_update["html_url"].as<std::string>() ](sf::Text &) {
+						    if(!launch_browser(url)) {
+							    main_buttons.clear();
+							    main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.back"), font_swirly),
+							                               [&](sf::Text &) { set_default_menu_items(); });
+							    main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.update_browser_fail_0"), font_pixelish, 20),
+							                               [&](sf::Text &) {});
+							    main_buttons.emplace_front(sf::Text(url, font_pixelish, 20), [&](sf::Text & txt) { copy_to_clipboard(txt.getString()); });
+							    main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.update_browser_fail_1"), font_pixelish, 20),
+							                               [&](sf::Text &) {});
+							    selected = main_buttons.size() - 1;
+						    }
+						  });
 				}
 			}
 		});
