@@ -73,7 +73,7 @@ void main_menu_screen::load_game(sf::Text & txt, const std::string & save_path) 
 	std::uint64_t compressed_size;
 	std::ifstream save_file(save_path, std::ios::binary);
 	if(!save_file.is_open()) {
-		txt.setString("Save file inacessible");
+		txt.setString(global_iser.translate_key("gui.main_menu.text.load_file_inaccessible"));
 		return;
 	}
 
@@ -84,7 +84,7 @@ void main_menu_screen::load_game(sf::Text & txt, const std::string & save_path) 
 	std::string in(raw_size, '\0');
 	const auto result = ZSTD_decompress(&in[0], in.size(), in_c.get(), compressed_size);
 	if(ZSTD_isError(result)) {
-		txt.setString("Decompression error: "s + ZSTD_getErrorName(result));
+		txt.setString(fmt::format(global_iser.translate_key("gui.main_menu.text.load_decompression_error"), ZSTD_getErrorName(result)));
 		return;
 	}
 

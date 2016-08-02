@@ -4,9 +4,13 @@ gui.main_menu.text.quit=Wyjdz z gry
 gui.main_menu.text.start=Rozpocznij gre
 gui.main_menu.text.load=Zaladuj gre
 gui.main_menu.text.back=Wstecz
+
 gui.main_menu.text.update=Zaktualizuj
 gui.main_menu.text.update_connection_fail=Nie udalo sie pobrac danych aktualizacji, blad HTTP {}
 gui.main_menu.text.update_none_found=Nie znaleziono aktualizacji
 gui.main_menu.text.update_found=Znaleziono aktualizacje {}
 gui.main_menu.text.update_browser_fail_0=Nie udalo sie otworzyc przegladarki, odwiedz
 gui.main_menu.text.update_browser_fail_1=by pobrac aktualizacje
+
+gui.main_menu.text.load_file_inaccessible=Nie udalo sie otworzyc pliku zapisu gry
+gui.main_menu.text.load_decompression_error=Blad dekompresji: "{}"

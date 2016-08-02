@@ -4,9 +4,13 @@ gui.main_menu.text.quit=Quit game
 gui.main_menu.text.start=Start game
 gui.main_menu.text.load=Load game
 gui.main_menu.text.back=Back
+
 gui.main_menu.text.update=Update
 gui.main_menu.text.update_connection_fail=Couldn't get update data, HTTP error {}
 gui.main_menu.text.update_none_found=No updates found
 gui.main_menu.text.update_found=Found update: {}
 gui.main_menu.text.update_browser_fail_0=Failed to open browser, go to
 gui.main_menu.text.update_browser_fail_1=to download update
+
+gui.main_menu.text.load_file_inaccessible=Save file inacessible
+gui.main_menu.text.load_decompression_error=Decompression error: {}
