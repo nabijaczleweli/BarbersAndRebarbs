@@ -97,23 +97,23 @@ void main_menu_screen::load_game(sf::Text & txt, const std::string & save_path) 
 void main_menu_screen::set_default_menu_items() {
 	main_buttons.clear();
 
-	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.start"), font_swirly),
+	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.start"), font_swirly),
 	                           [&](sf::Text &) { app.schedule_screen<main_game_screen>(); });
-	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.load"), font_swirly), [&](sf::Text & txt) {
+	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.load"), font_swirly), [&](sf::Text & txt) {
 		main_buttons.clear();
-		main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.back"), font_swirly), [&](sf::Text &) { set_default_menu_items(); });
+		main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.back"), font_swirly), [&](sf::Text &) { set_default_menu_items(); });
 		for(auto && fname : list_files(saves_root))
 			main_buttons.emplace_front(sf::Text(fname.substr(0, fname.rfind('.')), font_swirly),
 			                           [&, fname = fname ](sf::Text &) { load_game(txt, saves_root + '/' + fname); });
 		selected = main_buttons.size() - 1;
 	});
-	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"), font_swirly),
+	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"), font_swirly),
 	                           [&](sf::Text & txt) {
 		                           app_configuration.play_sounds = !app_configuration.play_sounds;
-		                           txt.setString(global_iser.translate_key("gui.application.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"));
+		                           txt.setString(global_iser.translate_key("gui.main_menu.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"));
 		                           app.retry_music();
 		                         });
-	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.quit"), font_swirly), [&](sf::Text &) { app.window.close(); });
+	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.quit"), font_swirly), [&](sf::Text &) { app.window.close(); });
 
 	selected = main_buttons.size() - 1;
 }
@@ -142,7 +142,7 @@ int main_menu_screen::loop() {
 			std::cout << result.header["X-RateLimit-Remaining"] << " GitHub API accesses left\n";
 
 			if(!(result.status_code >= 200 && result.status_code < 300))
-				std::get<2>(update).setString(fmt::format(global_iser.translate_key("gui.application.text.update_connection_fail"), result.status_code));
+				std::get<2>(update).setString(fmt::format(global_iser.translate_key("gui.main_menu.text.update_connection_fail"), result.status_code));
 			else {
 				json::value newest_update;
 				json::parse(result.text, newest_update);
@@ -152,21 +152,21 @@ int main_menu_screen::loop() {
 				const auto current_version = semver::version::from_string(BARBERSANDREBARBS_VERSION);
 
 				if(new_version < current_version || new_version == current_version)
-					std::get<2>(update).setString(global_iser.translate_key("gui.application.text.update_none_found"));
+					std::get<2>(update).setString(global_iser.translate_key("gui.main_menu.text.update_none_found"));
 				else {
-					std::get<2>(update).setString(fmt::format(global_iser.translate_key("gui.application.text.update_found"), new_version.str()));
+					std::get<2>(update).setString(fmt::format(global_iser.translate_key("gui.main_menu.text.update_found"), new_version.str()));
 
 					main_buttons.emplace_back(
-					    sf::Text(global_iser.translate_key("gui.application.text.update"), font_swirly),
+					    sf::Text(global_iser.translate_key("gui.main_menu.text.update"), font_swirly),
 					    [&, url = newest_update["html_url"].as<std::string>() ](sf::Text &) {
 						    if(!launch_browser(url)) {
 							    main_buttons.clear();
-							    main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.back"), font_swirly),
+							    main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.back"), font_swirly),
 							                               [&](sf::Text &) { set_default_menu_items(); });
-							    main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.update_browser_fail_0"), font_pixelish, 20),
+							    main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.update_browser_fail_0"), font_pixelish, 20),
 							                               [&](sf::Text &) {});
 							    main_buttons.emplace_front(sf::Text(url, font_pixelish, 20), [&](sf::Text & txt) { copy_to_clipboard(txt.getString()); });
-							    main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.application.text.update_browser_fail_1"), font_pixelish, 20),
+							    main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.update_browser_fail_1"), font_pixelish, 20),
 							                               [&](sf::Text &) {});
 							    selected = main_buttons.size() - 1;
 						    }
