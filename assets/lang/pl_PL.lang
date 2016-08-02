@@ -14,3 +14,5 @@ gui.main_menu.text.update_browser_fail_1=by pobrac aktualizacje
 
 gui.main_menu.text.load_file_inaccessible=Nie udalo sie otworzyc pliku zapisu gry
 gui.main_menu.text.load_decompression_error=Blad dekompresji: "{}"
+
+gui.world.text.save_compression_error=Blad kompresji pliku zapisu: "{}"

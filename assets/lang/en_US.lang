@@ -14,3 +14,5 @@ gui.main_menu.text.update_browser_fail_1=to download update
 
 gui.main_menu.text.load_file_inaccessible=Save file inacessible
 gui.main_menu.text.load_decompression_error=Decompression error: {}
+
+gui.world.text.save_compression_error=Failed to compress savefile: {}

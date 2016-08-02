@@ -26,6 +26,7 @@
 #include "../util/datetime.hpp"
 #include "entity/event_handler.hpp"
 #include "entity/player.hpp"
+#include <fmt/format.h>
 #include <fstream>
 #include <jsonpp/parser.hpp>
 #include <random>
@@ -89,7 +90,8 @@ void game_world::handle_event(const sf::Event & event) {
 			    auto out_c             = std::make_unique<std::uint8_t[]>(ZSTD_compressBound(out.size()));
 			    const auto comp_result = ZSTD_compress(out_c.get(), ZSTD_compressBound(out.size()), out.c_str(), out.size(), ZSTD_maxCLevel());
 			    if(ZSTD_isError(comp_result))
-				    error_text = {{"Failed to compress savefile: "s + ZSTD_getErrorName(comp_result), font_monospace, 10}, application::effective_FPS() * 10};
+				    error_text = {{fmt::format(global_iser.translate_key("gui.world.text.save_compression_error"), ZSTD_getErrorName(comp_result)), font_monospace, 10},
+				                  application::effective_FPS() * 10};
 			    else {
 				    std::uint64_t raw_size        = out.size();
 				    std::uint64_t compressed_size = comp_result;
