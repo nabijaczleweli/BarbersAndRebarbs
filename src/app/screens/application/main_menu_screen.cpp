@@ -102,7 +102,11 @@ void main_menu_screen::set_default_menu_items() {
 	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.load"), font_swirly), [&](sf::Text & txt) {
 		main_buttons.clear();
 		main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.back"), font_swirly), [&](sf::Text &) { set_default_menu_items(); });
-		for(auto && fname : list_files(saves_root))
+		for(auto && fname : [] {
+			    auto saves = list_files(saves_root);
+			    std::sort(saves.begin(), saves.end());
+			    return saves;
+			  }())
 			main_buttons.emplace_front(sf::Text(fname.substr(0, fname.rfind('.')), font_swirly),
 			                           [&, fname = fname ](sf::Text &) { load_game(txt, saves_root + '/' + fname); });
 		selected = main_buttons.size() - 1;
