@@ -39,3 +39,6 @@
 [submodule "fmt"]
 	path = ext/fmt
 	url = https://github.com/fmtlib/fmt.git
+[submodule "semver"]
+	path = ext/semver
+	url = https://github.com/zmarko/semver.git
