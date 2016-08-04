@@ -60,7 +60,6 @@ FMT_VERSION := "$(shell grep "set.FMT_VERSION" ext/fmt/CMakeLists.txt | sed -r '
 JSONPP_VERSION := "$(shell git -C ext/jsonpp log -1 --pretty=format:%h)"
 SEED11_VERSION := "$(patsubst v%,%,$(shell git -C ext/seed11 describe --tags))"
 SEMVER_VERSION := "$(shell git -C ext/semver log -1 --pretty=format:%h)"
-SEMVER_UTILS_VERSION := "$(shell git -C ext/semver-utils describe --tags)"
 WHEREAMI_CPP_VERSION := "$(patsubst v%,%,$(shell git -C ext/whereami-cpp describe --tags))"
 
 OBJ := .o

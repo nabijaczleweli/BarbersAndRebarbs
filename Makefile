@@ -23,17 +23,17 @@
 include configMakefile
 
 
-LDDLLS := $(OS_LD_LIBS) audiere cpp-localiser cpr fmt whereami++ seed11 semver semver-utils zstd curl
-LDAR := $(LNCXXAR) $(foreach l,audiere/lib cpp-localiser cpr/lib fmt whereami-cpp seed11 semver semver-utils zstd,-L$(BLDDIR)$(l)) $(foreach dll,$(LDDLLS),-l$(dll))
-INCAR := $(foreach l,$(foreach l,audiere cereal cimpoler-meta cpp-localiser seed11 whereami-cpp,$(l)/include) jsonpp,-isystemext/$(l)) $(foreach l,cpr fmt semver semver-utils zstd,-isystem$(BLDDIR)$(l)/include)
-VERAR := $(foreach l,BARBERSANDREBARBS CEREAL CIMPOLER_META CPP_LOCALISER CPR FMT JSONPP SEED11 SEMVER SEMVER_UTILS WHEREAMI_CPP,-D$(l)_VERSION='$($(l)_VERSION)')
+LDDLLS := $(OS_LD_LIBS) audiere cpp-localiser cpr fmt whereami++ seed11 semver zstd curl
+LDAR := $(LNCXXAR) $(foreach l,audiere/lib cpp-localiser cpr/lib fmt whereami-cpp seed11 semver zstd,-L$(BLDDIR)$(l)) $(foreach dll,$(LDDLLS),-l$(dll))
+INCAR := $(foreach l,$(foreach l,audiere cereal cimpoler-meta cpp-localiser seed11 whereami-cpp,$(l)/include) jsonpp,-isystemext/$(l)) $(foreach l,cpr fmt semver zstd,-isystem$(BLDDIR)$(l)/include)
+VERAR := $(foreach l,BARBERSANDREBARBS CEREAL CIMPOLER_META CPP_LOCALISER CPR FMT JSONPP SEED11 SEMVER WHEREAMI_CPP,-D$(l)_VERSION='$($(l)_VERSION)')
 SOURCES := $(sort $(wildcard src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp))
 HEADERS := $(sort $(wildcard src/*.hpp src/**/*.hpp src/**/**/*.hpp src/**/**/**/*.hpp))
 
-.PHONY : all clean assets exe audiere cpp-localiser cpr fmt seed11 semver semver-utils zstd whereami-cpp
+.PHONY : all clean assets exe audiere cpp-localiser cpr fmt seed11 semver zstd whereami-cpp
 
 
-all : assets audiere cpp-localiser cpr fmt seed11 semver semver-utils whereami-cpp zstd exe
+all : assets audiere cpp-localiser cpr fmt seed11 semver whereami-cpp zstd exe
 
 clean :
 	rm -rf $(OUTDIR)
@@ -42,14 +42,13 @@ assets :
 	@rm -rf $(OUTDIR)assets
 	@cp -r $(ASSETDIR) $(OUTDIR)
 
-exe : audiere cpp-localiser cpr seed11 fmt seed11 semver-utils whereami-cpp zstd $(OUTDIR)BarbersAndRebarbs$(EXE)
+exe : audiere cpp-localiser cpr seed11 fmt seed11 semver whereami-cpp zstd $(OUTDIR)BarbersAndRebarbs$(EXE)
 audiere : $(BLDDIR)audiere/lib/libaudiere$(DLL)
 cpp-localiser : $(BLDDIR)cpp-localiser/libcpp-localiser$(ARCH)
 cpr : $(BLDDIR)cpr/lib/libcpr$(ARCH) $(BLDDIR)cpr/include/cpr/cpr.h
 fmt : $(BLDDIR)fmt/libfmt$(ARCH) $(BLDDIR)fmt/include/fmt/format.h
 seed11 : $(BLDDIR)seed11/libseed11$(ARCH)
 semver : $(BLDDIR)semver/libsemver$(ARCH) $(BLDDIR)semver/include/semver/semver200.h
-semver-utils : $(BLDDIR)semver-utils/libsemver-utils$(ARCH) $(BLDDIR)semver-utils/include/semver-utils/version.hpp
 whereami-cpp : $(BLDDIR)whereami-cpp/libwhereami++$(ARCH)
 zstd : $(BLDDIR)zstd/libzstd$(ARCH) $(BLDDIR)zstd/include/zstd/common/zstd.h
 
@@ -93,17 +92,6 @@ $(BLDDIR)semver/include/semver/semver200.h : $(wildcard ext/semver/include/*.h e
 	@mkdir -p $(dir $@)
 	cp $^ $(dir $@)
 
-$(BLDDIR)semver-utils/libsemver-utils$(ARCH) : $(BLDDIR)semver-utils/obj/version$(OBJ)
-	$(AR) crs $@ $^
-
-$(BLDDIR)semver-utils/include/semver-utils/version.hpp : ext/semver-utils/src/libsemver/c++/version.hpp
-	@mkdir -p $(dir $@)
-	cp $^ $@
-
-$(BLDDIR)semver-utils/src/version.cpp : ext/semver-utils/src/libsemver/c++/version.cpp
-	@mkdir -p $(dir $@)
-	sed -e 's:#include "../gettext_defs.h":#define _(S) S:' -e 's:#include "version.hpp":#include "../include/semver-utils/version.hpp":' $^ > $@
-
 $(BLDDIR)whereami-cpp/libwhereami++$(ARCH) : ext/whereami-cpp/Makefile
 	$(MAKE) -C$(dir $^) BUILD=$(abspath $(dir $@)) stlib
 
@@ -127,10 +115,6 @@ $(BLDDIR)fmt/obj/%$(OBJ) : ext/fmt/fmt/%.cc
 $(BLDDIR)semver/obj/%$(OBJ) : ext/semver/src/%.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXAR) -Iext/semver/include -c -o$@ $^
-
-$(BLDDIR)semver-utils/obj/%$(OBJ) : $(BLDDIR)semver-utils/src/%.cpp
-	@mkdir -p $(dir $@)
-	$(CXX) $(CXXAR) -DSEMVER_GETTEXT_DEFS_H -D_LIBGETTEXT_H -Wno-unknown-pragmas -c -o$@ $^
 
 $(BLDDIR)seed11/obj/%$(OBJ) : ext/seed11/src/%.cpp
 	@mkdir -p $(dir $@)

@@ -32,7 +32,7 @@
 #include <fstream>
 #include <iostream>
 #include <jsonpp/parser.hpp>
-#include <semver-utils/version.hpp>
+#include <semver/semver200.h>
 #include <zstd/common/zstd.h>
 
 
@@ -151,14 +151,13 @@ int main_menu_screen::loop() {
 				json::value newest_update;
 				json::parse(result.text, newest_update);
 
-				const auto new_version_s   = newest_update["tag_name"].as<std::string>();
-				const auto new_version     = semver::version::from_string(new_version_s.substr(new_version_s.find_first_of("0123456789")));
-				const auto current_version = semver::version::from_string(BARBERSANDREBARBS_VERSION);
+				auto new_version_s = newest_update["tag_name"].as<std::string>();
+				new_version_s      = new_version_s.substr(new_version_s.find_first_of("0123456789"));
 
-				if(new_version < current_version || new_version == current_version)
+				if(version::Semver200_version(new_version_s) <= version::Semver200_version(BARBERSANDREBARBS_VERSION))
 					std::get<2>(update).setString(global_iser.translate_key("gui.main_menu.text.update_none_found"));
 				else {
-					std::get<2>(update).setString(fmt::format(global_iser.translate_key("gui.main_menu.text.update_found"), new_version.str()));
+					std::get<2>(update).setString(fmt::format(global_iser.translate_key("gui.main_menu.text.update_found"), new_version_s));
 
 					main_buttons.emplace_back(
 					    sf::Text(global_iser.translate_key("gui.main_menu.text.update"), font_swirly),
