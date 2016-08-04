@@ -70,6 +70,7 @@ static void credit() {
 	          << "  - fmt version " << FMT_VERSION << ": https://github.com/fmtlib/fmt\n"
 	          << "  - jsonpp version " << JSONPP_VERSION << ": http://rapptz.github.io/jsonpp\n"
 	          << "  - seed11 version " << SEED11_VERSION << ": https://github.com/milleniumbug/seed11\n"
+	          << "  - semver version " << SEMVER_VERSION << ": https://github.com/zmarko/semver\n"
 	          << "  - semver-utils version " << SEMVER_UTILS_VERSION << ": https://github.com/emcrisostomo/semver-utils\n"
 	          << "  - whereami-cpp version " << WHEREAMI_CPP_VERSION << ": https://github.com/nabijaczleweli/whereami-cpp\n"
 	          << "  - zstd version " << ZSTD_VERSION_STRING << ": https://github.com/Cyan4973/zstd\n"

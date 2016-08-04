@@ -28,6 +28,7 @@ A game in C++ using SFML 2.3
 4. [fmt](https://github.com/fmtlib/fmt) — formatting in localisation
 5. [jsonpp](https://github.com/Rapptz/jsonpp) — game saving/loading, model (`drawing`) loading
 6. [seed11](https://github.com/milleniumbug/seed11) — true RNG seeding
+7. [semver](https://github.com/zmarko/semver) — semantic versioning comparison
 7. [semver-utils](https://github.com/emcrisostomo/semver-utils) — semantic versioning comparison
 8. [whereami-cpp](https://github.com/nabijaczleweli/whereami-cpp) — asset directory localisation
 9. [zstd](https://github.com/Cyan4973/zstd) — savefile compression
