@@ -2,30 +2,27 @@
 	"build_systems":
 	[
 		{
-			"working_dir": "$project_path",
 			"cmd": "make -j10",
-			"name": "Build BarbersAndRebarbs"
+			"name": "Build BarbersAndRebarbs",
+			"working_dir": "$project_path"
 		},
 		{
-			"working_dir": "$project_path",
 			"cmd": "make -j10 clean",
-			"name": "Clean BarbersAndRebarbs"
+			"name": "Clean BarbersAndRebarbs",
+			"working_dir": "$project_path"
 		}
 	],
 	"folders":
 	[
 		{
-			"follow_symlinks": true,
 			"name": "Source",
 			"path": "src"
 		},
 		{
-			"follow_symlinks": true,
 			"name": "Resources",
 			"path": "assets"
 		},
 		{
-			"follow_symlinks": true,
 			"name": "Documentation",
 			"path": "doc"
 		},
@@ -38,19 +35,19 @@
 			[
 				"*"
 			],
-			"follow_symlinks": true,
 			"name": "Makefiles",
 			"path": "."
 		},
 		{
-			"follow_symlinks": true,
 			"name": "Legacy",
 			"path": "old"
 		},
 		{
-			"follow_symlinks": true,
 			"name": "External code",
 			"path": "ext"
+		},
+		{
+			"path": ".git"
 		}
 	],
 	"settings":

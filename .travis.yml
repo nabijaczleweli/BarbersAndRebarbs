@@ -159,9 +159,7 @@ install:
   - make install
   - popd
 
-script:
-  - ADDITIONAL_INCLUDE_DIR="$LIB_INSTALLDIR/include" ADDITIONAL_LINK_DIR="$LIB_INSTALLDIR/lib" make -j$(nproc) semver-utils
-  - ADDITIONAL_INCLUDE_DIR="$LIB_INSTALLDIR/include" ADDITIONAL_LINK_DIR="$LIB_INSTALLDIR/lib" make -j$(nproc)
+script: ADDITIONAL_INCLUDE_DIR="$LIB_INSTALLDIR/include" ADDITIONAL_LINK_DIR="$LIB_INSTALLDIR/lib" make -j$(nproc)
 
 before_deploy:
   - mkdir release
