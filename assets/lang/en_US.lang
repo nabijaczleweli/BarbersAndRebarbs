@@ -4,6 +4,7 @@ gui.main_menu.text.quit=Quit game
 gui.main_menu.text.start=Start game
 gui.main_menu.text.load=Load game
 gui.main_menu.text.back=Back
+gui.main_menu.text.configure=Configure
 
 gui.main_menu.text.update=Update
 gui.main_menu.text.update_connection_fail=Couldn't get update data, HTTP error {}
@@ -14,5 +15,13 @@ gui.main_menu.text.update_browser_fail_1=to download update
 
 gui.main_menu.text.load_file_inaccessible=Save file inacessible
 gui.main_menu.text.load_decompression_error=Decompression error: {}
+
+gui.main_menu.text.config_lang=Language: {}
+gui.main_menu.text.config_controller_deadzone=Controller deadzone: {}
+gui.main_menu.text.config_vsync_on=VSync: on
+gui.main_menu.text.config_vsync_off=VSync: off
+gui.main_menu.text.config_fps={} FPS
+gui.main_menu.text.config_default_firearm=Default firearm: {}
+
 
 gui.world.text.save_compression_error=Failed to compress savefile: {}

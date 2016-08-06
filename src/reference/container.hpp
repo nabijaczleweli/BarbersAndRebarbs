@@ -44,8 +44,8 @@ extern const std::string app_name;
 extern /***/ config app_configuration;
 
 extern const cpp_localiser::localiser fallback_iser;
-extern const cpp_localiser::localiser local_iser;
-extern const cpp_localiser::localiser global_iser;
+extern /***/ cpp_localiser::localiser local_iser;
+extern /***/ cpp_localiser::localiser global_iser;
 
 
 extern const sf::Font font_pixelish;

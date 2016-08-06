@@ -37,11 +37,8 @@ namespace config_subcategories {
 
 		template <class Archive>
 		void serialize(Archive & archive) {
-			auto langs = list_files(localization_root);
-			transform(begin(langs), end(langs), begin(langs), [](const auto & lang) { return lang.substr(0, lang.find(".lang")); });
-
 			archive(cereal::make_nvp("controller_deadzone", controller_deadzone), cereal::make_nvp("language", language),
-			        cereal::make_nvp("available_languages", langs));
+			        cereal::make_nvp("available_languages", config::available_languages()));
 		}
 	};
 
@@ -74,6 +71,13 @@ void serialize(Archive & archive, config & cc) {
 	archive(cereal::make_nvp("system", config_subcategories::system{cc.language, cc.controller_deadzone}),
 	        cereal::make_nvp("application", config_subcategories::application{cc.vsync, cc.FPS, cc.play_sounds, cc.splash_length}),
 	        cereal::make_nvp("player", config_subcategories::player{cc.player_speed, cc.player_default_firearm}));
+}
+
+
+std::vector<std::string> config::available_languages() {
+	auto langs = list_files(localization_root);
+	transform(begin(langs), end(langs), begin(langs), [](const auto & lang) { return lang.substr(0, lang.find(".lang")); });
+	return langs;
 }
 
 

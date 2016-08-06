@@ -47,8 +47,8 @@ const std::string app_name("BarbersAndRebarbs");
 /***/ config app_configuration(whereami::executable_dir() + "/" + app_name + ".cfg");
 
 const cpp_localiser::localiser fallback_iser(localization_root);
-const cpp_localiser::localiser local_iser(localization_root, app_configuration.language);
-const cpp_localiser::localiser global_iser(local_iser, fallback_iser);
+/***/ cpp_localiser::localiser local_iser(localization_root, app_configuration.language);
+/***/ cpp_localiser::localiser global_iser(local_iser, fallback_iser);
 
 
 const sf::Font font_pixelish([] {

@@ -4,6 +4,7 @@ gui.main_menu.text.quit=Wyjdz z gry
 gui.main_menu.text.start=Rozpocznij gre
 gui.main_menu.text.load=Zaladuj gre
 gui.main_menu.text.back=Wstecz
+gui.main_menu.text.configure=Konfiguruj
 
 gui.main_menu.text.update=Zaktualizuj
 gui.main_menu.text.update_connection_fail=Nie udalo sie pobrac danych aktualizacji, blad HTTP {}
@@ -14,5 +15,12 @@ gui.main_menu.text.update_browser_fail_1=by pobrac aktualizacje
 
 gui.main_menu.text.load_file_inaccessible=Nie udalo sie otworzyc pliku zapisu gry
 gui.main_menu.text.load_decompression_error=Blad dekompresji: "{}"
+
+gui.main_menu.text.config_lang=Jezyk: {}
+gui.main_menu.text.config_controller_deadzone=Martwa strefa kontrolera: {}
+gui.main_menu.text.config_vsync_on=VSync: wlaczony
+gui.main_menu.text.config_vsync_off=VSync: wylaczony
+gui.main_menu.text.config_default_firearm=Bron startowa: {}
+
 
 gui.world.text.save_compression_error=Blad kompresji pliku zapisu: "{}"

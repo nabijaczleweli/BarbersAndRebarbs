@@ -21,6 +21,7 @@
 
 
 #include "main_menu_screen.hpp"
+#include "../../../game/firearm/firearm.hpp"
 #include "../../../reference/container.hpp"
 #include "../../../reference/joystick_info.hpp"
 #include "../../../util/file.hpp"
@@ -117,7 +118,65 @@ void main_menu_screen::set_default_menu_items() {
 		                           txt.setString(global_iser.translate_key("gui.main_menu.text."s + (app_configuration.play_sounds ? "" : "un") + "mute"));
 		                           app.retry_music();
 		                         });
+	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.configure"), font_swirly), [&](sf::Text &) { set_config_menu_items(); });
 	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.quit"), font_swirly), [&](sf::Text &) { app.window.close(); });
+
+	selected = main_buttons.size() - 1;
+}
+
+void main_menu_screen::set_config_menu_items() {
+	main_buttons.clear();
+
+	const auto langs               = config::available_languages();
+	const std::size_t cur_lang_idx = std::distance(langs.begin(), std::find(langs.begin(), langs.end(), app_configuration.language));
+
+	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.back"), font_swirly), [&](sf::Text &) {
+		local_iser  = cpp_localiser::localiser(localization_root, app_configuration.language);
+		global_iser = cpp_localiser::localiser(local_iser, fallback_iser);
+		set_default_menu_items();
+	});
+	main_buttons.emplace_front(sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_lang"), app_configuration.language), font_swirly),
+	                           [&, langs = std::move(langs), idx = cur_lang_idx ](sf::Text & text) mutable {
+		                           ++idx;
+		                           if(idx == langs.size())
+			                           idx = 0;
+
+		                           app_configuration.language = langs[idx];
+		                           text.setString(fmt::format(global_iser.translate_key("gui.main_menu.text.config_lang"), app_configuration.language));
+		                         });
+	main_buttons.emplace_front(
+	    sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_controller_deadzone"), app_configuration.controller_deadzone), font_swirly),
+	    [&](sf::Text & text) {
+		    app_configuration.controller_deadzone += 5;
+		    if(app_configuration.controller_deadzone > 100)
+			    app_configuration.controller_deadzone = 0;
+
+		    text.setString(fmt::format(global_iser.translate_key("gui.main_menu.text.config_controller_deadzone"), app_configuration.controller_deadzone));
+		  });
+	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.config_vsync_"s + (app_configuration.vsync ? "on" : "off")), font_swirly),
+	                           [&](sf::Text & text) {
+		                           app_configuration.vsync ^= 1;
+		                           text.setString(global_iser.translate_key("gui.main_menu.text.config_vsync_"s + (app_configuration.vsync ? "on" : "off")));
+		                         });
+	main_buttons.emplace_front(sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_fps"), app_configuration.FPS), font_swirly),
+	                           [&](sf::Text & text) {
+		                           app_configuration.FPS += 30;
+		                           if(app_configuration.FPS == 150)
+			                           app_configuration.FPS = 0;
+
+		                           text.setString(fmt::format(global_iser.translate_key("gui.main_menu.text.config_fps"), app_configuration.FPS));
+		                         });
+	main_buttons.emplace_front(sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_default_firearm"),
+	                                                firearm::properties().at(app_configuration.player_default_firearm).name),
+	                                    font_swirly),
+	                           [&, itr = firearm::properties().find(app_configuration.player_default_firearm) ](sf::Text & text) mutable {
+		                           ++itr;
+		                           if(itr == firearm::properties().end())
+			                           itr = firearm::properties().begin();
+
+		                           app_configuration.player_default_firearm = itr->first;
+		                           text.setString(fmt::format(global_iser.translate_key("gui.main_menu.text.config_default_firearm"), itr->second.name));
+		                         });
 
 	selected = main_buttons.size() - 1;
 }

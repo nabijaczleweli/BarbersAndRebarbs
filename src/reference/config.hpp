@@ -24,6 +24,7 @@
 
 
 #include <string>
+#include <vector>
 
 
 class config {
@@ -38,6 +39,9 @@ public:
 
 	float player_speed                 = 1;
 	std::string player_default_firearm = "default";
+
+
+	static std::vector<std::string> available_languages();
 
 
 	config(std::string && path);
