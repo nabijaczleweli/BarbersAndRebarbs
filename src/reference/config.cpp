@@ -58,10 +58,12 @@ namespace config_subcategories {
 	struct player {
 		float & player_speed;
 		std::string & player_default_firearm;
+		unsigned int & player_gun_popup_length;
 
 		template <class Archive>
 		void serialize(Archive & archive) {
-			archive(cereal::make_nvp("speed", player_speed), cereal::make_nvp("default_firearm", player_default_firearm));
+			archive(cereal::make_nvp("speed", player_speed), cereal::make_nvp("default_firearm", player_default_firearm),
+			        cereal::make_nvp("gun_popup_length", player_gun_popup_length));
 		}
 	};
 }
@@ -70,7 +72,7 @@ template <class Archive>
 void serialize(Archive & archive, config & cc) {
 	archive(cereal::make_nvp("system", config_subcategories::system{cc.language, cc.controller_deadzone}),
 	        cereal::make_nvp("application", config_subcategories::application{cc.vsync, cc.FPS, cc.play_sounds, cc.splash_length}),
-	        cereal::make_nvp("player", config_subcategories::player{cc.player_speed, cc.player_default_firearm}));
+	        cereal::make_nvp("player", config_subcategories::player{cc.player_speed, cc.player_default_firearm, cc.player_gun_popup_length}));
 }
 
 

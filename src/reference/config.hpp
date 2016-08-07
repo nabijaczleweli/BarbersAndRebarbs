@@ -37,8 +37,9 @@ public:
 	bool play_sounds           = true;
 	unsigned int splash_length = 2;
 
-	float player_speed                 = 1;
-	std::string player_default_firearm = "default";
+	float player_speed                   = 1;
+	std::string player_default_firearm   = "default";
+	unsigned int player_gun_popup_length = 3;
 
 
 	static std::vector<std::string> available_languages();

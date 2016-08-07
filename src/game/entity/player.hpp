@@ -35,12 +35,14 @@ protected:
 	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 
 	std::pair<bool, sf::Vector2f> controller_aim(unsigned int controller_id) const;
+	void create_gun_name_popup();
 
 private:
 	mutable circle_chunk progress_circle;
 	firearm gun;
 	float hp;
 	mutable float progress;
+	mutable std::pair<unsigned int, sf::Text> gun_name_popup;
 
 public:
 	player(game_world & world);

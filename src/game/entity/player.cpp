@@ -42,6 +42,7 @@ std::pair<bool, sf::Vector2f> player::controller_aim(unsigned int controller_id)
 	return {out_of_deadzone, {horizontal, vertical}};
 }
 
+
 void player::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 	static const sf::Color body_colour(231, 158, 109);
 	static const sf::Color armour_colour(200, 200, 200);
@@ -66,14 +67,40 @@ void player::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 		target.draw(progress_circle, states);
 	}
 	progress = gun.depletion();
+
+	if(gun_name_popup.first) {
+		const auto eff_ps             = application::effective_FPS();
+		const auto in_out_threshold   = eff_ps / 2;
+		const auto fade_in_threshold  = eff_ps * app_configuration.player_gun_popup_length - in_out_threshold;
+		const auto fade_out_threshold = in_out_threshold;
+
+		if(gun_name_popup.first >= fade_in_threshold || gun_name_popup.first <= fade_out_threshold) {
+			auto colour = gun_name_popup.second.getColor();
+			if(gun_name_popup.first >= fade_in_threshold)
+				colour.a = 255 * (1.f - (static_cast<float>(gun_name_popup.first - fade_in_threshold) / in_out_threshold));
+			else if(gun_name_popup.first <= fade_out_threshold)
+				colour.a = 255 * (static_cast<float>(gun_name_popup.first) / in_out_threshold);
+			gun_name_popup.second.setColor(colour);
+		}
+
+		const auto & size = gun_name_popup.second.getLocalBounds();
+		gun_name_popup.second.setPosition(x - size.width / 2., y - size.height * 2);
+
+		target.draw(gun_name_popup.second);
+
+		--gun_name_popup.first;
+	}
 }
 
-player::player(game_world & world_r) : entity(world_r), progress_circle(0, 7) {
+player::player(game_world & world_r)
+      : entity(world_r), progress_circle(0, 7),
+        gun_name_popup(application::effective_FPS() * app_configuration.player_gun_popup_length, {"", font_pixelish, 10}) {
 	progress_circle.colour(progress_colour);
 }
 
 player::player(game_world & world_r, size_t id_a, sf::Vector2u screen_size)
-      : entity(world_r, id_a), progress_circle(0, 7), gun(world_r, app_configuration.player_default_firearm), hp(1), progress(0) {
+      : entity(world_r, id_a), progress_circle(0, 7), gun(world_r, app_configuration.player_default_firearm), hp(1), progress(0),
+        gun_name_popup(application::effective_FPS() * app_configuration.player_gun_popup_length, {gun.name(), font_pixelish, 10}) {
 	static auto rand = seed11::make_seeded<std::mt19937>();
 
 	progress_circle.colour(progress_colour);
@@ -92,6 +119,8 @@ void player::read_from_json(const json::object & from) {
 		gun = firearm(world, itr->second.as<json::object>());
 	if((itr = from.find("hp")) != from.end())
 		hp = itr->second.as<float>();
+
+	gun_name_popup.second.setString(gun.name());
 }
 
 json::object player::write_to_json() const {
