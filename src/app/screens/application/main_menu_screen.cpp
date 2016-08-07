@@ -135,7 +135,7 @@ void main_menu_screen::set_config_menu_items() {
 		global_iser = cpp_localiser::localiser(local_iser, fallback_iser);
 		set_default_menu_items();
 	});
-	main_buttons.emplace_front(sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_lang"), app_configuration.language), font_swirly),
+	main_buttons.emplace_front(sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_lang"), app_configuration.language), font_pixelish, 20),
 	                           [&, langs = std::move(langs), idx = cur_lang_idx ](sf::Text & text) mutable {
 		                           ++idx;
 		                           if(idx == langs.size())
@@ -145,7 +145,8 @@ void main_menu_screen::set_config_menu_items() {
 		                           text.setString(fmt::format(global_iser.translate_key("gui.main_menu.text.config_lang"), app_configuration.language));
 		                         });
 	main_buttons.emplace_front(
-	    sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_controller_deadzone"), app_configuration.controller_deadzone), font_swirly),
+	    sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_controller_deadzone"), app_configuration.controller_deadzone), font_pixelish,
+	             20),
 	    [&](sf::Text & text) {
 		    app_configuration.controller_deadzone += 5;
 		    if(app_configuration.controller_deadzone > 100)
@@ -153,12 +154,13 @@ void main_menu_screen::set_config_menu_items() {
 
 		    text.setString(fmt::format(global_iser.translate_key("gui.main_menu.text.config_controller_deadzone"), app_configuration.controller_deadzone));
 		  });
-	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.config_vsync_"s + (app_configuration.vsync ? "on" : "off")), font_swirly),
-	                           [&](sf::Text & text) {
-		                           app_configuration.vsync ^= 1;
-		                           text.setString(global_iser.translate_key("gui.main_menu.text.config_vsync_"s + (app_configuration.vsync ? "on" : "off")));
-		                         });
-	main_buttons.emplace_front(sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_fps"), app_configuration.FPS), font_swirly),
+	main_buttons.emplace_front(
+	    sf::Text(global_iser.translate_key("gui.main_menu.text.config_vsync_"s + (app_configuration.vsync ? "on" : "off")), font_pixelish, 20),
+	    [&](sf::Text & text) {
+		    app_configuration.vsync ^= 1;
+		    text.setString(global_iser.translate_key("gui.main_menu.text.config_vsync_"s + (app_configuration.vsync ? "on" : "off")));
+		  });
+	main_buttons.emplace_front(sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_fps"), app_configuration.FPS), font_pixelish, 20),
 	                           [&](sf::Text & text) {
 		                           app_configuration.FPS += 30;
 		                           if(app_configuration.FPS == 150)
@@ -168,7 +170,7 @@ void main_menu_screen::set_config_menu_items() {
 		                         });
 	main_buttons.emplace_front(sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_default_firearm"),
 	                                                firearm::properties().at(app_configuration.player_default_firearm).name),
-	                                    font_swirly),
+	                                    font_pixelish, 20),
 	                           [&, itr = firearm::properties().find(app_configuration.player_default_firearm) ](sf::Text & text) mutable {
 		                           ++itr;
 		                           if(itr == firearm::properties().end())
