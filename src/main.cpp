@@ -26,7 +26,7 @@
 #include <cimpoler-meta.hpp>
 #include <iostream>
 #include <stdexcept>
-#include <zstd/common/zstd.h>
+#include <zstd/zstd.h>
 
 
 static void credit();

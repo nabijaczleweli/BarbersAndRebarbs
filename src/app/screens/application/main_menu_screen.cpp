@@ -34,7 +34,7 @@
 #include <iostream>
 #include <jsonpp/parser.hpp>
 #include <semver/semver200.h>
-#include <zstd/common/zstd.h>
+#include <zstd/zstd.h>
 
 
 using namespace std::literals;

@@ -31,7 +31,7 @@
 #include <jsonpp/parser.hpp>
 #include <random>
 #include <seed11/seed11.hpp>
-#include <zstd/common/zstd.h>
+#include <zstd/zstd.h>
 
 
 using namespace std::literals;
