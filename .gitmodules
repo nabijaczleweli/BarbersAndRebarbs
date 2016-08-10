@@ -31,7 +31,6 @@
 [submodule "cpr"]
 	path = ext/cpr
 	url = https://github.com/whoshuu/cpr.git
-	branch = 1.2.0
 [submodule "fmt"]
 	path = ext/fmt
 	url = https://github.com/fmtlib/fmt.git
