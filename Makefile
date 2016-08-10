@@ -25,7 +25,7 @@ include configMakefile
 
 LDDLLS := $(OS_LD_LIBS) audiere cpp-localiser cpr fmt whereami++ seed11 semver zstd curl
 LDAR := $(LNCXXAR) $(foreach l,audiere/lib cpp-localiser cpr/lib fmt whereami-cpp seed11 semver zstd,-L$(BLDDIR)$(l)) $(foreach dll,$(LDDLLS),-l$(dll))
-INCAR := $(foreach l,$(foreach l,audiere cereal cimpoler-meta cpp-localiser seed11 whereami-cpp,$(l)/include) jsonpp,-isystemext/$(l)) $(foreach l,cpr fmt semver zstd,-isystem$(BLDDIR)$(l)/include)
+INCAR := $(foreach l,$(foreach l,audiere cereal cimpoler-meta cpp-localiser cpr seed11 whereami-cpp,$(l)/include) jsonpp,-isystemext/$(l)) $(foreach l,fmt semver zstd,-isystem$(BLDDIR)$(l)/include)
 VERAR := $(foreach l,BARBERSANDREBARBS CEREAL CIMPOLER_META CPP_LOCALISER CPR FMT JSONPP SEED11 SEMVER WHEREAMI_CPP,-D$(l)_VERSION='$($(l)_VERSION)')
 SOURCES := $(sort $(wildcard src/*.cpp src/**/*.cpp src/**/**/*.cpp src/**/**/**/*.cpp))
 HEADERS := $(sort $(wildcard src/*.hpp src/**/*.hpp src/**/**/*.hpp src/**/**/**/*.hpp))
@@ -45,7 +45,7 @@ assets :
 exe : audiere cpp-localiser cpr seed11 fmt seed11 semver whereami-cpp zstd $(OUTDIR)BarbersAndRebarbs$(EXE)
 audiere : $(BLDDIR)audiere/lib/libaudiere$(DLL)
 cpp-localiser : $(BLDDIR)cpp-localiser/libcpp-localiser$(ARCH)
-cpr : $(BLDDIR)cpr/lib/libcpr$(ARCH) $(BLDDIR)cpr/include/cpr/cpr.h
+cpr : $(BLDDIR)cpr/lib/libcpr$(ARCH)
 fmt : $(BLDDIR)fmt/libfmt$(ARCH) $(BLDDIR)fmt/include/fmt/format.h
 seed11 : $(BLDDIR)seed11/libseed11$(ARCH)
 semver : $(BLDDIR)semver/libsemver$(ARCH) $(BLDDIR)semver/include/semver/semver200.h
@@ -70,10 +70,6 @@ $(BLDDIR)cpr/lib/libcpr$(ARCH) : ext/cpr/CMakeLists.txt
 	@mkdir -p $(abspath $(dir $@)..)
 	cd $(abspath $(dir $@)..) && CXXFLAGS="$(INCCXXAR) -DCURL_STATICLIB" $(LNCMAKEAR) $(CMAKE) -DUSE_SYSTEM_CURL=ON -DBUILD_CPR_TESTS=OFF $(abspath $(dir $^)) -GNinja
 	cd $(abspath $(dir $@)..) && $(NINJA)
-
-$(BLDDIR)cpr/include/cpr/cpr.h : ext/cpr/include/cpr.h
-	@mkdir -p $(abspath $(dir $@)..)
-	cp -r $(dir $^) $(dir $@)
 
 $(BLDDIR)seed11/libseed11$(ARCH) : $(foreach src,seed11_system_agnostic seed11_$(SEED11_SYSTEM_TYPE) deterministic_unsafe_seed_device,$(BLDDIR)seed11/obj/$(src)$(OBJ))
 	$(AR) crs $@ $^
