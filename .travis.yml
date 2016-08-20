@@ -84,26 +84,27 @@ matrix:
             - libxcb-image0-dev
             - libxcb-randr0-dev
           sources: *sources
-    - env: CXX=clang++-3.9 CC=clang-3.9 WORKAROUND_1568899=false
-      addons:
-        apt:
-          packages:
-            - clang-3.9
-            - unzip
-            - libpthread-stubs0-dev
-            - libgl1-mesa-dev
-            - libx11-dev
-            - libxrandr-dev
-            - libfreetype6-dev
-            - libglew-dev
-            - libjpeg8-dev
-            - libsndfile1-dev
-            - libopenal-dev
-            - libudev-dev
-            - libx11-xcb-dev
-            - libxcb-image0-dev
-            - libxcb-randr0-dev
-          sources: *sources
+# Somewhy doesn't work, see https://travis-ci.org/nabijaczleweli/BarbersAndRebarbs/jobs/153753685
+#    - env: CXX=clang++-3.9 CC=clang-3.9 WORKAROUND_1568899=false
+#      addons:
+#        apt:
+#          packages:
+#            - clang-3.9
+#            - unzip
+#            - libpthread-stubs0-dev
+#            - libgl1-mesa-dev
+#            - libx11-dev
+#            - libxrandr-dev
+#            - libfreetype6-dev
+#            - libglew-dev
+#            - libjpeg8-dev
+#            - libsndfile1-dev
+#            - libopenal-dev
+#            - libudev-dev
+#            - libx11-xcb-dev
+#            - libxcb-image0-dev
+#            - libxcb-randr0-dev
+#          sources: *sources
 
 install:
   - mkdir -p /tmp/tools
