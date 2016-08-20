@@ -118,4 +118,4 @@ $(BLDDIR)seed11/obj/%$(OBJ) : ext/seed11/src/%.cpp
 
 $(BLDDIR)zstd/obj/%$(OBJ) : ext/zstd/lib/%.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CCAR) -Iext/zstd/lib -Iext/zstd/lib/common -DZSTD_STATIC_LINKING_ONLY -c -o$@ $^
+	$(CC) $(CCAR) -Iext/zstd/lib -Iext/zstd/lib/common -c -o$@ $^
