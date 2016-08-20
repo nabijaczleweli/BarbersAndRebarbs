@@ -56,7 +56,7 @@ void bezier_curve::swap(bezier_curve & with) {
 }
 
 void bezier_curve::draw(sf::RenderTarget & target, sf::RenderStates) const {
-	target.draw(vertices.data(), vertices.size(), sf::PrimitiveType::LinesStrip);
+	target.draw(vertices.data(), vertices.size(), sf::PrimitiveType::LineStrip);
 	// target.draw(&static_cast<const sf::Vertex &>(Vertex(control_point,sf:: Color::White)), 1, sf::PrimitiveType::Points);  // Debug
 }
 

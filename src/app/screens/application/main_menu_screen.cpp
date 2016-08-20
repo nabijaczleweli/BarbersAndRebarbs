@@ -196,7 +196,7 @@ int main_menu_screen::loop() {
 
 		button.first.setPosition((winsize.x * (59.f / 60.f)) - btnbds.width,
 		                         (winsize.y * (7.f / 8.f)) - (buttid + 1) * btnbds.height - (winsize.y * ((buttid * 1.f) / 90.f)));
-		button.first.setColor((buttid == selected) ? sf::Color::Red : sf::Color::White);
+		button.first.setFillColor((buttid == selected) ? sf::Color::Red : sf::Color::White);
 		++buttid;
 	}
 

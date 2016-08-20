@@ -55,7 +55,7 @@ BARBERSANDREBARBS_VERSION := "$(patsubst v%,%,$(shell git describe --tags --abbr
 CEREAL_VERSION := "$(patsubst v%,%,$(shell git -C ext/cereal describe --tags))"
 CIMPOLER_META_VERSION := "$(shell git -C ext/cimpoler-meta log -1 --pretty=format:%h)"
 CPP_LOCALISER_VERSION := "$(patsubst v%,%,$(shell git -C ext/cpp-localiser describe --tags))"
-CPR_VERSION := "$(shell git -C ext/cpr describe --tags)"
+CPR_VERSION := "$(shell git -C ext/cpr log -1 --pretty=format:%h)"
 FMT_VERSION := "$(shell grep "set.FMT_VERSION" ext/fmt/CMakeLists.txt | sed -r 's/set\(FMT_VERSION ([0123456789.]+)\)/\1/')"
 JSONPP_VERSION := "$(shell git -C ext/jsonpp log -1 --pretty=format:%h)"
 SEED11_VERSION := "$(patsubst v%,%,$(shell git -C ext/seed11 describe --tags))"

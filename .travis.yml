@@ -16,7 +16,7 @@ env:
     - AUDIERE_TAG=1.9.4
     - SPEEX_VER=1.1.9
     - DUMB_VER=0.9.3
-    - SFML_TAG=2.3.2
+    - SFML_TAG=2.4.0
 
 matrix:
   include:

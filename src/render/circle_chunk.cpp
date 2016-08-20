@@ -37,7 +37,7 @@ void circle_chunk::draw(sf::RenderTarget & target, sf::RenderStates states) cons
 	}
 
 	states.transform *= getTransform();
-	target.draw(vertices.data(), vertices.size(), sf::PrimitiveType::LinesStrip, states);
+	target.draw(vertices.data(), vertices.size(), sf::PrimitiveType::LineStrip, states);
 }
 
 circle_chunk::circle_chunk(float frcn, float rad, unsigned int np) : fract(frcn), r(rad), points(np), recompute_next_time(true) {}

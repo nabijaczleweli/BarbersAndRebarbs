@@ -34,7 +34,11 @@ int screen::handle_event(const sf::Event & event) {
 	   (event.type == sf::Event::JoystickButtonPressed && event.joystickButton.button == X360_button_mappings::Back))
 		app.window.close();
 	else if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F5) {
-		screenshot_threads.emplace_back([&](auto && img) { img.saveToFile(screenshots_root + '/' + fs_safe_current_datetime() + ".png"); }, app.window.capture());
+		auto && wsize = app.window.getSize();
+		sf::Texture txtr;
+		txtr.create(wsize.x, wsize.y);
+		txtr.update(app.window);
+		screenshot_threads.emplace_back([&](auto img) { img.saveToFile(screenshots_root + '/' + fs_safe_current_datetime() + ".png"); }, txtr.copyToImage());
 		screenshot_threads.back().detach();
 	} else if(event.type == sf::Event::MouseButtonPressed)
 		app.window.requestFocus();

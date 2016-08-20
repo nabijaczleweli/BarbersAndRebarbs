@@ -75,12 +75,12 @@ void player::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 		const auto fade_out_threshold = in_out_threshold;
 
 		if(gun_name_popup.first >= fade_in_threshold || gun_name_popup.first <= fade_out_threshold) {
-			auto colour = gun_name_popup.second.getColor();
+			auto colour = gun_name_popup.second.getFillColor();
 			if(gun_name_popup.first >= fade_in_threshold)
 				colour.a = 255 * (1.f - (static_cast<float>(gun_name_popup.first - fade_in_threshold) / in_out_threshold));
 			else if(gun_name_popup.first <= fade_out_threshold)
 				colour.a = 255 * (static_cast<float>(gun_name_popup.first) / in_out_threshold);
-			gun_name_popup.second.setColor(colour);
+			gun_name_popup.second.setFillColor(colour);
 		}
 
 		const auto & size = gun_name_popup.second.getLocalBounds();

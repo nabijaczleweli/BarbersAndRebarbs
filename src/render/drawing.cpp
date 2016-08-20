@@ -96,7 +96,7 @@ void drawing::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 	for(auto && triangle : triangles)
 		target.draw(triangle.data(), triangle.size(), sf::PrimitiveType::Triangles);
 	for(auto && rectangle : rectangles)
-		target.draw(rectangle.data(), rectangle.size(), sf::PrimitiveType::LinesStrip);
+		target.draw(rectangle.data(), rectangle.size(), sf::PrimitiveType::LineStrip);
 	for(auto && curve : curves)
 		curve.draw(target, states);
 }
