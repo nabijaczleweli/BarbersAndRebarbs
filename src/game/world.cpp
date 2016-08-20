@@ -84,7 +84,6 @@ void game_world::handle_event(const sf::Event & event) {
 		for(auto && pr : entities)
 			ents.emplace(std::to_string(pr.first), pr.second->write_to_json());
 
-
 		save_threads.emplace_back(
 		    [&](auto && out) {
 			    auto out_c             = std::make_unique<std::uint8_t[]>(ZSTD_compressBound(out.size()));

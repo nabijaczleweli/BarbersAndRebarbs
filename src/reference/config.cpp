@@ -34,11 +34,12 @@ namespace config_subcategories {
 	struct system {
 		std::string & language;
 		float & controller_deadzone;
+		bool & use_network;
 
 		template <class Archive>
 		void serialize(Archive & archive) {
 			archive(cereal::make_nvp("controller_deadzone", controller_deadzone), cereal::make_nvp("language", language),
-			        cereal::make_nvp("available_languages", config::available_languages()));
+			        cereal::make_nvp("use_network", use_network), cereal::make_nvp("available_languages", config::available_languages()));
 		}
 	};
 
@@ -70,7 +71,7 @@ namespace config_subcategories {
 
 template <class Archive>
 void serialize(Archive & archive, config & cc) {
-	archive(cereal::make_nvp("system", config_subcategories::system{cc.language, cc.controller_deadzone}),
+	archive(cereal::make_nvp("system", config_subcategories::system{cc.language, cc.controller_deadzone, cc.use_network}),
 	        cereal::make_nvp("application", config_subcategories::application{cc.vsync, cc.FPS, cc.play_sounds, cc.splash_length}),
 	        cereal::make_nvp("player", config_subcategories::player{cc.player_speed, cc.player_default_firearm, cc.player_gun_popup_length}));
 }

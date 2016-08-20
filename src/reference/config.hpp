@@ -31,6 +31,7 @@ class config {
 public:
 	std::string language      = "en_US";
 	float controller_deadzone = 10;
+	bool use_network          = true;
 
 	bool vsync                 = true;
 	unsigned int FPS           = 60;
