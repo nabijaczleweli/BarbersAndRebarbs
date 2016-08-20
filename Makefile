@@ -50,7 +50,7 @@ fmt : $(BLDDIR)fmt/libfmt$(ARCH) $(BLDDIR)fmt/include/fmt/format.h
 seed11 : $(BLDDIR)seed11/libseed11$(ARCH)
 semver : $(BLDDIR)semver/libsemver$(ARCH) $(BLDDIR)semver/include/semver/semver200.h
 whereami-cpp : $(BLDDIR)whereami-cpp/libwhereami++$(ARCH)
-zstd : $(BLDDIR)zstd/libzstd$(ARCH) $(BLDDIR)zstd/include/zstd.h
+zstd : $(BLDDIR)zstd/libzstd$(ARCH) $(BLDDIR)zstd/include/zstd/zstd.h
 
 
 $(OUTDIR)BarbersAndRebarbs$(EXE) : $(subst $(SRCDIR),$(OBJDIR),$(subst .cpp,$(OBJ),$(SOURCES)))
@@ -95,7 +95,7 @@ $(BLDDIR)zstd/libzstd$(ARCH) : $(subst ext/zstd/lib,$(BLDDIR)zstd/obj,$(subst .c
 	@mkdir -p $(dir $@)
 	$(AR) crs $@ $^
 
-$(BLDDIR)zstd/include/zstd.h : $(wildcard ext/zstd/lib/*.h ext/zstd/lib/common/*.h ext/zstd/lib/compress/*.h ext/zstd/lib/decompress/*.h)
+$(BLDDIR)zstd/include/zstd/zstd.h : $(wildcard ext/zstd/lib/*.h ext/zstd/lib/common/*.h ext/zstd/lib/compress/*.h ext/zstd/lib/decompress/*.h)
 	@mkdir -p $(foreach incfile,$(subst ext/zstd/lib,$(BLDDIR)zstd/include/zstd,$^),$(abspath $(dir $(incfile))))
 	$(foreach incfile,$^,cp $(incfile) $(subst ext/zstd/lib,$(BLDDIR)zstd/include/zstd,$(incfile));)
 
