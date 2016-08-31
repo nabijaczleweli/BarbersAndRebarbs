@@ -26,8 +26,8 @@
 	branch = v1.0.0
 [submodule "zstd"]
 	path = ext/zstd
-	url = https://github.com/Cyan4973/zstd.git
-	branch = v0.8.1
+	url = https://github.com/facebook/zstd.git
+	branch = v1.0.0
 [submodule "cpr"]
 	path = ext/cpr
 	url = https://github.com/whoshuu/cpr.git

@@ -45,9 +45,6 @@
 		{
 			"name": "External code",
 			"path": "ext"
-		},
-		{
-			"path": ".git"
 		}
 	],
 	"settings":

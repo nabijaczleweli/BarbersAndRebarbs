@@ -72,7 +72,7 @@ static void credit() {
 	          << "  - seed11 version " << SEED11_VERSION << ": https://github.com/milleniumbug/seed11\n"
 	          << "  - semver version " << SEMVER_VERSION << ": https://github.com/zmarko/semver\n"
 	          << "  - whereami-cpp version " << WHEREAMI_CPP_VERSION << ": https://github.com/nabijaczleweli/whereami-cpp\n"
-	          << "  - zstd version " << ZSTD_VERSION_STRING << ": https://github.com/Cyan4973/zstd\n"
+	          << "  - zstd version " << ZSTD_VERSION_STRING << ": https://github.com/facebook/zstd\n"
 	          << "\n\n";
 }
 

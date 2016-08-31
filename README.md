@@ -30,4 +30,4 @@ A game in C++ using SFML 2.4
 6. [seed11](https://github.com/milleniumbug/seed11) — true RNG seeding
 7. [semver](https://github.com/zmarko/semver) — semantic versioning comparison
 8. [whereami-cpp](https://github.com/nabijaczleweli/whereami-cpp) — asset directory localisation
-9. [zstd](https://github.com/Cyan4973/zstd) — savefile compression
+9. [zstd](https://github.com/facebook/zstd) — savefile compression
