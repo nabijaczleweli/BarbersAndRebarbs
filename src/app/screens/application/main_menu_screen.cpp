@@ -26,15 +26,14 @@
 #include "../../../reference/joystick_info.hpp"
 #include "../../../util/file.hpp"
 #include "../../../util/url.hpp"
+#include "../../../util/zstd.hpp"
 #include "../../application.hpp"
 #include "../game/main_game_screen.hpp"
 #include <cmath>
 #include <fmt/format.h>
-#include <fstream>
 #include <iostream>
 #include <jsonpp/parser.hpp>
 #include <semver/semver200.h>
-#include <zstd/zstd.h>
 
 
 using namespace std::literals;
@@ -70,28 +69,17 @@ void main_menu_screen::try_drawings() {
 }
 
 void main_menu_screen::load_game(sf::Text & txt, const std::string & save_path) {
-	std::uint64_t raw_size;
-	std::uint64_t compressed_size;
-	std::ifstream save_file(save_path, std::ios::binary);
-	if(!save_file.is_open()) {
+	const auto data = decompress_file_to_string(save_path);
+
+	if(!std::get<1>(data)) {
 		txt.setString(global_iser.translate_key("gui.main_menu.text.load_file_inaccessible"));
-		return;
+	} else if(const auto err_s = std::get<2>(data)) {
+		txt.setString(fmt::format(global_iser.translate_key("gui.main_menu.text.load_decompression_error"), err_s));
+	} else {
+		json::value save;
+		json::parse(std::get<0>(data), save);
+		app.schedule_screen<main_game_screen>(save.as<json::object>());
 	}
-
-	save_file.read(reinterpret_cast<char *>(&raw_size), sizeof(raw_size)).read(reinterpret_cast<char *>(&compressed_size), sizeof(compressed_size));
-	auto in_c = std::make_unique<std::uint8_t[]>(compressed_size);
-	save_file.read(reinterpret_cast<char *>(in_c.get()), compressed_size);
-
-	std::string in(raw_size, '\0');
-	const auto result = ZSTD_decompress(&in[0], in.size(), in_c.get(), compressed_size);
-	if(ZSTD_isError(result)) {
-		txt.setString(fmt::format(global_iser.translate_key("gui.main_menu.text.load_decompression_error"), ZSTD_getErrorName(result)));
-		return;
-	}
-
-	json::value save;
-	json::parse(in, save);
-	app.schedule_screen<main_game_screen>(save.as<json::object>());
 }
 
 

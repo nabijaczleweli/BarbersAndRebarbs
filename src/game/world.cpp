@@ -24,14 +24,13 @@
 #include "../app/application.hpp"
 #include "../reference/container.hpp"
 #include "../util/datetime.hpp"
+#include "../util/zstd.hpp"
 #include "entity/event_handler.hpp"
 #include "entity/player.hpp"
 #include <fmt/format.h>
-#include <fstream>
 #include <jsonpp/parser.hpp>
 #include <random>
 #include <seed11/seed11.hpp>
-#include <zstd/zstd.h>
 
 
 using namespace std::literals;
@@ -86,19 +85,9 @@ void game_world::handle_event(const sf::Event & event) {
 
 		save_threads.emplace_back(
 		    [&](auto && out) {
-			    auto out_c             = std::make_unique<std::uint8_t[]>(ZSTD_compressBound(out.size()));
-			    const auto comp_result = ZSTD_compress(out_c.get(), ZSTD_compressBound(out.size()), out.c_str(), out.size(), ZSTD_maxCLevel());
-			    if(ZSTD_isError(comp_result))
-				    error_text = {{fmt::format(global_iser.translate_key("gui.world.text.save_compression_error"), ZSTD_getErrorName(comp_result)), font_monospace, 10},
+			    if(const auto err_s = compress_string_to_file(saves_root + '/' + fs_safe_current_datetime() + ".sav", out))
+				    error_text = {{fmt::format(global_iser.translate_key("gui.world.text.save_compression_error"), err_s), font_monospace, 10},
 				                  application::effective_FPS() * 10};
-			    else {
-				    std::uint64_t raw_size        = out.size();
-				    std::uint64_t compressed_size = comp_result;
-				    std::ofstream(saves_root + '/' + fs_safe_current_datetime() + ".sav", std::ios::binary)
-				        .write(reinterpret_cast<const char *>(&raw_size), sizeof(raw_size))
-				        .write(reinterpret_cast<const char *>(&compressed_size), sizeof(compressed_size))
-				        .write(reinterpret_cast<const char *>(out_c.get()), compressed_size);
-			    }
 			  },
 		    json::dump_string(ents, {0, json::format_options::minify, 20}));
 	}
