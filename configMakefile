@@ -77,3 +77,10 @@ BLDDIR := out/build/
 OBJDIR := $(BLDDIR)obj/
 SRCDIR := src/
 ASSETDIR := assets/
+
+
+ifeq "$(OS)" "Windows_NT"
+	OS_OBJS := $(OBJDIR)BarbersAndRebarbs.o
+else
+	OS_OBJS :=
+endif

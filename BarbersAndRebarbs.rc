@@ -1,0 +1,25 @@
+1056 ICON "assets/textures/gui/general/window_main.ico"
+1 VERSIONINFO
+FILEVERSION    BARBERSANDREBARBS_VERSION_RAW
+PRODUCTVERSION BARBERSANDREBARBS_VERSION_RAW
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "080904E4"
+    BEGIN
+      VALUE "CompanyName", "BarbersAndRebarbs developers"
+      VALUE "FileDescription", "BarbersAndRebarbs - a game in C++ using SFML 2.4"
+      VALUE "FileVersion", BARBERSANDREBARBS_VERSION_TEXT
+      VALUE "InternalName", "BarbersAndRebarbs"
+      VALUE "LegalCopyright", "nabijaczleweli"
+      VALUE "OriginalFilename", "BarbersAndRebarbs.exe"
+      VALUE "ProductName", "BarbersAndRebarbs"
+      VALUE "ProductVersion", BARBERSANDREBARBS_VERSION_TEXT
+    END
+  END
+
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x809, 1252
+  END
+END

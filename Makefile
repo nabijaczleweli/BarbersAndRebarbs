@@ -53,7 +53,7 @@ whereami-cpp : $(BLDDIR)whereami-cpp/libwhereami++$(ARCH)
 zstd : $(BLDDIR)zstd/libzstd$(ARCH) $(BLDDIR)zstd/include/zstd/zstd.h
 
 
-$(OUTDIR)BarbersAndRebarbs$(EXE) : $(subst $(SRCDIR),$(OBJDIR),$(subst .cpp,$(OBJ),$(SOURCES)))
+$(OUTDIR)BarbersAndRebarbs$(EXE) : $(subst $(SRCDIR),$(OBJDIR),$(subst .cpp,$(OBJ),$(SOURCES))) $(OS_OBJS)
 	$(CXX) -Wl,-rpath=$(BLDDIR)audiere/lib,-rpath=. $(CXXAR) -o$@ $^ $(PIC) $(LDAR) $(shell grep '<SFML/' $(HEADERS) $(SOURCES) | sed -r 's:.*#include <SFML/(.*).hpp>:-lsfml-\1$(SFML_LINK_SUFF):' | tr '[:upper:]' '[:lower:]' | sort | uniq)
 
 $(BLDDIR)audiere/lib/libaudiere$(DLL) : ext/audiere/CMakeLists.txt
@@ -98,6 +98,10 @@ $(BLDDIR)zstd/libzstd$(ARCH) : $(subst ext/zstd/lib,$(BLDDIR)zstd/obj,$(subst .c
 $(BLDDIR)zstd/include/zstd/zstd.h : $(wildcard ext/zstd/lib/*.h ext/zstd/lib/common/*.h ext/zstd/lib/compress/*.h ext/zstd/lib/decompress/*.h)
 	@mkdir -p $(foreach incfile,$(subst ext/zstd/lib,$(BLDDIR)zstd/include/zstd,$^),$(abspath $(dir $(incfile))))
 	$(foreach incfile,$^,cp $(incfile) $(subst ext/zstd/lib,$(BLDDIR)zstd/include/zstd,$(incfile));)
+
+$(OBJDIR)BarbersAndRebarbs.o : BarbersAndRebarbs.rc
+	@mkdir -p $(dir $@)
+	(echo '#define BARBERSANDREBARBS_VERSION_TEXT $(BARBERSANDREBARBS_VERSION)' && cat $^) | windres -DBARBERSANDREBARBS_VERSION_RAW='"$(shell echo $(BARBERSANDREBARBS_VERSION) | sed s/\\./,/g),0"' -o$@
 
 
 $(OBJDIR)%$(OBJ) : $(SRCDIR)%.cpp
