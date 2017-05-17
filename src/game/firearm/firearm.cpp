@@ -21,12 +21,36 @@
 
 
 #include "firearm.hpp"
+#include "../../reference/container.hpp"
 #include "../../util/json.hpp"
 #include "../entity/bullet.hpp"
+#include <algorithm>
 
 
 using namespace std::literals;
 
+
+static std::vector<audiere::SoundEffectPtr> open_shoot_sounds(const std::vector<std::string> & fnames) {
+	std::vector<audiere::SoundEffectPtr> out;
+	out.reserve(fnames.size());
+	std::transform(fnames.begin(), fnames.end(), std::back_inserter(out), [](auto && fname) {
+		return audiere::OpenSoundEffect(audio_device, (sound_root + "/guns/" + fname).c_str(), audiere::SoundEffectType::MULTIPLE);
+	});
+	return out;
+}
+
+void firearm::fire(std::chrono::time_point<std::chrono::high_resolution_clock> now, float pos_x, float pos_y, const sf::Vector2f & aim) {
+	world->spawn_create<bullet>(aim, pos_x, pos_y, std::cref(props->bullet_props));
+	if(!shoot_sounds.empty()) {
+		if(last_shoot_sound == shoot_sounds.size() - 1)
+			last_shoot_sound = 0;
+		else
+			++last_shoot_sound;
+		shoot_sounds[last_shoot_sound]->play();
+	}
+	action_repeat_start = now;
+	--left_in_mag;
+}
 
 firearm::firearm() : props(nullptr), world(nullptr) {}
 
@@ -36,10 +60,11 @@ firearm::firearm(game_world & w, const std::string & gun_id)
             std::chrono::microseconds(static_cast<std::chrono::microseconds::rep>(props->action_speed * std::micro::den)))),
         reload_speed(std::chrono::duration_cast<std::chrono::high_resolution_clock::duration>(
             std::chrono::microseconds(static_cast<std::chrono::microseconds::rep>(props->reload_speed * std::micro::den)))),
-        trigger_pulled(false), left_in_mag(0), left_mags(props->mag_quantity) {}
+        trigger_pulled(false), left_in_mag(0), left_mags(props->mag_quantity), shoot_sounds(open_shoot_sounds(props->shoot_sounds)), last_shoot_sound(0) {}
 
 firearm::firearm(game_world & w, const json::object & from) : firearm(w, json_get_defaulted(from, "id", "default"s)) {
 	read_from_json(from);
+	shoot_sounds = open_shoot_sounds(props->shoot_sounds);
 }
 
 void firearm::read_from_json(const json::object & from) {
@@ -71,11 +96,8 @@ void firearm::trigger(float pos_x, float pos_y, const sf::Vector2f & aim) {
 
 	trigger_pulled = true;
 
-	if(shoot) {
-		world->spawn_create<bullet>(aim, pos_x, pos_y, std::cref(props->bullet_props));
-		action_repeat_start = now;
-		--left_in_mag;
-	}
+	if(shoot)
+		fire(now, pos_x, pos_y, aim);
 }
 
 void firearm::tick(float pos_x, float pos_y, const sf::Vector2f & aim) {
@@ -86,11 +108,8 @@ void firearm::tick(float pos_x, float pos_y, const sf::Vector2f & aim) {
 		const auto action_ready = now - action_repeat_start >= action_speed;
 		const auto reload_ready = now - mag_reload_start >= reload_speed;
 
-		if(action_ready && reload_ready) {
-			world->spawn_create<bullet>(aim, pos_x, pos_y, std::cref(props->bullet_props));
-			action_repeat_start = now;
-			--left_in_mag;
-		}
+		if(action_ready && reload_ready)
+			fire(now, pos_x, pos_y, aim);
 	}
 }
 
@@ -104,11 +123,8 @@ void firearm::untrigger(float pos_x, float pos_y, const sf::Vector2f & aim) {
 		const auto action_ready = now - action_repeat_start >= action_speed;
 		const auto reload_ready = now - mag_reload_start >= reload_speed;
 
-		if(action_ready && reload_ready) {
-			world->spawn_create<bullet>(aim, pos_x, pos_y, std::cref(props->bullet_props));
-			action_repeat_start = now;
-			--left_in_mag;
-		}
+		if(action_ready && reload_ready)
+			fire(now, pos_x, pos_y, aim);
 	}
 }
 

@@ -24,6 +24,7 @@
 
 
 #include <string>
+#include <vector>
 
 
 struct bullet_properties {
@@ -48,4 +49,5 @@ struct firearm_properties {
 	float reload_speed;
 	unsigned int mag_size;
 	unsigned int mag_quantity;
+	std::vector<std::string> shoot_sounds;
 };

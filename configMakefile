@@ -53,7 +53,7 @@ LNCMAKEAR := LDFLAGS="$(LNCXXAR)"
 
 BARBERSANDREBARBS_VERSION := "$(patsubst v%,%,$(shell git describe --tags --abbrev=0))"
 CEREAL_VERSION := "$(patsubst v%,%,$(shell git -C ext/cereal describe --tags))"
-CIMPOLER_META_VERSION := "$(shell git -C ext/cimpoler-meta log -1 --pretty=format:%h)"
+CIMPOLER_META_VERSION := "$(shell git -C ext/cimpoler-meta log -1 --pretty=format:%h | grep -v gpg)"
 CPP_LOCALISER_VERSION := "$(patsubst v%,%,$(shell git -C ext/cpp-localiser describe --tags))"
 CPR_VERSION := "$(shell git -C ext/cpr log -1 --pretty=format:%h)"
 FMT_VERSION := "$(shell grep "set.FMT_VERSION" ext/fmt/CMakeLists.txt | sed -r 's/set\(FMT_VERSION ([0123456789.]+)\)/\1/')"

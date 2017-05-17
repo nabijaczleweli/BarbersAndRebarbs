@@ -26,6 +26,7 @@
 #include "../world.hpp"
 #include "firearm_properties.hpp"
 #include <SFML/System.hpp>
+#include <audiere.h>
 #include <chrono>
 #include <jsonpp/value.hpp>
 #include <map>
@@ -44,6 +45,12 @@ private:
 	bool trigger_pulled;
 	unsigned int left_in_mag;
 	unsigned int left_mags;
+
+	std::vector<audiere::SoundEffectPtr> shoot_sounds;
+	std::size_t last_shoot_sound;
+
+
+	void fire(std::chrono::time_point<std::chrono::high_resolution_clock> now, float pos_x, float pos_y, const sf::Vector2f & aim);
 
 public:
 	static const std::map<std::string, firearm_properties> & properties();

@@ -13,5 +13,9 @@
 	"reload_speed": 2.345,
 	"mag_size": 10,
 	"//1": "https://www.reddit.com/r/AskHistorians/comments/2gdsq9/how_many_bullets_did_the_average_soldier_in_ww1/",
-	"mag_quantity": 15
+	"mag_quantity": 15,
+
+	"sounds": {
+		"shoot": ["Enfield_01.wav"]
+	}
 }

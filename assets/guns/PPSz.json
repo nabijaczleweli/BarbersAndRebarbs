@@ -12,5 +12,9 @@
 	"action_speed": 0.0571428571428571,
 	"reload_speed": 2.2,
 	"mag_size": 71,
-	"mag_quantity": 6
+	"mag_quantity": 6,
+
+	"sounds": {
+		"shoot": ["PPSH_01.wav"]
+	}
 }

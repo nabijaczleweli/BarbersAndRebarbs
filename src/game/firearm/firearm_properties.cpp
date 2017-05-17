@@ -20,9 +20,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#include "firearm.hpp"
 #include "../../reference/container.hpp"
 #include "../../util/file.hpp"
+#include "firearm.hpp"
 #include <fstream>
 #include <jsonpp/parser.hpp>
 #include <stdexcept>
@@ -52,22 +52,28 @@ static std::pair<std::string, firearm_properties> load_single(std::string && fil
 	json::value doc;
 	json::parse(gun_file, doc);
 
+	std::vector<json::value> raw_sounds;
+	if(!doc["sounds"].is<json::null>())
+		raw_sounds = doc["sounds"]["shoot"].as<std::vector<json::value>>();
+	std::vector<std::string> sounds;
+	sounds.reserve(raw_sounds.size());
+	std::transform(raw_sounds.begin(), raw_sounds.end(), std::back_inserter(sounds), [](auto && rs)  { return rs.template as<std::string>(); });
+
 	auto bullet   = doc["bullet"].as<json::object>();
 	const auto id = doc["id"].as<std::string>();
 	return {id,
-	        {
-	            id,
-	            doc["name"].as<std::string>(),
-	            {
-	                bullet["speed"].as<float>(),  //
-	                bullet["speed_loss"].as<float>(),
-	            },
-	            fire_mode_from_string(doc["fire_mode"].as<std::string>()),
-	            doc["action_speed"].as<float>(),
-	            doc["reload_speed"].as<float>(),
-	            doc["mag_size"].as<unsigned int>(),
-	            doc["mag_quantity"].as<unsigned int>(),
-	        }};
+	        {id,
+	         doc["name"].as<std::string>(),
+	         {
+	             bullet["speed"].as<float>(),  //
+	             bullet["speed_loss"].as<float>(),
+	         },
+	         fire_mode_from_string(doc["fire_mode"].as<std::string>()),
+	         doc["action_speed"].as<float>(),
+	         doc["reload_speed"].as<float>(),
+	         doc["mag_size"].as<unsigned int>(),
+	         doc["mag_quantity"].as<unsigned int>(),
+	         sounds}};
 }
 
 firearm_properties::fire_mode_t fire_mode_from_string(const std::string & name) {

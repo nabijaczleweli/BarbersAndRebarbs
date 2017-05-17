@@ -13,5 +13,9 @@
 	"reload_speed": 2.66666666666666666,
 	"mag_size": 1,
 	"//1": "Straight outta my arse",
-	"mag_quantity": 150
+	"mag_quantity": 150,
+
+	"sounds": {
+		"shoot": ["Flak_single.wav", "flak88_fire.wav", "flak88_fire02.wav", "flak88_fire03.wav"]
+	}
 }

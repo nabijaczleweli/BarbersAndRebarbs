@@ -12,5 +12,9 @@
 	"action_speed": 0.1,
 	"reload_speed": 2.05,
 	"mag_size": 30,
-	"mag_quantity": 10
+	"mag_quantity": 10,
+
+	"sounds": {
+		"shoot": ["MP44_01.wav"]
+	}
 }

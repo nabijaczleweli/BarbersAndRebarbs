@@ -13,5 +13,9 @@
 	"reload_speed": 2.265,
 	"mag_size": 15,
 	"//1": "https://www.ar15.com/archive/topic.html?b=3&f=17&t=537142",
-	"mag_quantity": 7
+	"mag_quantity": 7,
+
+	"sounds": {
+		"shoot": ["colt45_01.wav"]
+	}
 }
