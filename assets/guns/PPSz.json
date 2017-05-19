@@ -15,6 +15,7 @@
 	"mag_quantity": 6,
 
 	"sounds": {
-		"shoot": ["PPSH_01.wav"]
+		"shoot": ["fire/PPSH_01.wav"],
+		"reload": "reload/ppsh_reload.wav"
 	}
 }

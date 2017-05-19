@@ -50,4 +50,5 @@ struct firearm_properties {
 	unsigned int mag_size;
 	unsigned int mag_quantity;
 	std::vector<std::string> shoot_sounds;
+	std::string reload_sound;
 };

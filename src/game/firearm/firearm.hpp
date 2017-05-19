@@ -48,6 +48,7 @@ private:
 
 	std::vector<audiere::SoundEffectPtr> shoot_sounds;
 	std::size_t last_shoot_sound;
+	audiere::SoundEffectPtr reload_sound;
 
 
 	void fire(std::chrono::time_point<std::chrono::high_resolution_clock> now, float pos_x, float pos_y, const sf::Vector2f & aim);

@@ -15,6 +15,7 @@
 	"mag_quantity": 10,
 
 	"sounds": {
-		"shoot": ["MP44_01.wav"]
+		"shoot": ["fire/MP44_01.wav"],
+		"reload": "reload/mp44_reload.wav"
 	}
 }

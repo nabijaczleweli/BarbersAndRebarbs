@@ -16,6 +16,7 @@
 	"mag_quantity": 7,
 
 	"sounds": {
-		"shoot": ["colt45_01.wav"]
+		"shoot": ["fire/colt45_01.wav"],
+		"reload": "reload/colt45_reload.wav"
 	}
 }

@@ -52,12 +52,17 @@ static std::pair<std::string, firearm_properties> load_single(std::string && fil
 	json::value doc;
 	json::parse(gun_file, doc);
 
+	auto && sounds_v = doc["sounds"];
 	std::vector<json::value> raw_sounds;
-	if(!doc["sounds"].is<json::null>())
-		raw_sounds = doc["sounds"]["shoot"].as<std::vector<json::value>>();
+	if(!sounds_v.is<json::null>())
+		raw_sounds = sounds_v["shoot"].as<std::vector<json::value>>();
 	std::vector<std::string> sounds;
 	sounds.reserve(raw_sounds.size());
-	std::transform(raw_sounds.begin(), raw_sounds.end(), std::back_inserter(sounds), [](auto && rs)  { return rs.template as<std::string>(); });
+	std::transform(raw_sounds.begin(), raw_sounds.end(), std::back_inserter(sounds), [](auto && rs) { return rs.template as<std::string>(); });
+
+	std::string reload_sound;
+	if(!sounds_v.is<json::null>())
+		reload_sound = sounds_v["reload"].as<std::string>();
 
 	auto bullet   = doc["bullet"].as<json::object>();
 	const auto id = doc["id"].as<std::string>();
@@ -73,7 +78,8 @@ static std::pair<std::string, firearm_properties> load_single(std::string && fil
 	         doc["reload_speed"].as<float>(),
 	         doc["mag_size"].as<unsigned int>(),
 	         doc["mag_quantity"].as<unsigned int>(),
-	         sounds}};
+	         sounds,
+	         reload_sound}};
 }
 
 firearm_properties::fire_mode_t fire_mode_from_string(const std::string & name) {

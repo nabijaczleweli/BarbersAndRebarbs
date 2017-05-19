@@ -16,6 +16,7 @@
 	"mag_quantity": 15,
 
 	"sounds": {
-		"shoot": ["Enfield_01.wav"]
+		"shoot": ["fire/Enfield_01.wav"],
+		"reload": "reload/enfield.mp3"
 	}
 }
