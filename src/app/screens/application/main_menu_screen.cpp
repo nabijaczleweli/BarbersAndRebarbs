@@ -42,9 +42,11 @@ using namespace std::literals;
 void main_menu_screen::move_selection(main_menu_screen::direction dir) {
 	switch(dir) {
 		case direction::up:
+			selected_option_switch_sound->play();
 			selected = std::min(main_buttons.size() - 1, selected + 1);
 			break;
 		case direction::down:
+			selected_option_switch_sound->play();
 			if(selected)
 				--selected;
 			break;
@@ -254,6 +256,8 @@ int main_menu_screen::handle_event(const sf::Event & event) {
 			unsigned int buttid = 0;
 			for(const auto & button : main_buttons) {
 				if(button.first.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y)) {
+					if(selected != buttid)
+						selected_option_switch_sound->play();
 					selected = buttid;
 					break;
 				}
@@ -317,7 +321,8 @@ int main_menu_screen::handle_event(const sf::Event & event) {
 main_menu_screen::main_menu_screen(application & theapp)
       : screen(theapp), control_frames_counter(0), joystick_up(false), joystick_drawing(false, drawing("xbox", app.window.getSize())),
         keys_drawing("keyboard", app.window.getSize()),
-        update(std::future<cpr::Response>(), std::thread(), sf::Text("", font_monospace, 10), app_configuration.use_network) {
+        update(std::future<cpr::Response>(), std::thread(), sf::Text("", font_monospace, 10), app_configuration.use_network),
+        selected_option_switch_sound(audiere::OpenSoundEffect(audio_device, (sound_root + "/main_menu/switch.ogg").c_str(), audiere::SoundEffectType::MULTIPLE)) {
 	if(app_configuration.use_network)
 		std::get<0>(update) =
 		    cpr::GetAsync(cpr::Url("https://api.github.com/repos/nabijaczleweli/BarbersAndRebarbs/releases/latest"), cpr::Parameters{{"anon", "true"}});

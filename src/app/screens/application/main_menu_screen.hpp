@@ -25,6 +25,7 @@
 
 #include "../../../render/drawing.hpp"
 #include "../screen.hpp"
+#include <audiere.h>
 #include <cpr/cpr.h>
 #include <functional>
 #include <list>
@@ -43,6 +44,7 @@ private:
 	std::pair<bool, drawing> joystick_drawing;
 	drawing keys_drawing;
 	std::tuple<std::future<cpr::Response>, std::thread, sf::Text, bool> update;
+	audiere::SoundEffectPtr selected_option_switch_sound;
 
 	void move_selection(direction dir);
 	void press_button();
