@@ -1,7 +1,7 @@
 [submodule "cereal"]
 	path = ext/cereal
 	url = https://github.com/USCiLab/cereal.git
-	branch = v1.2.1
+	branch = v1.2.2
 [submodule "cimpoler-meta"]
 	path = ext/cimpoler-meta
 	url = https://github.com/nabijaczleweli/cimpoler-meta.git
@@ -12,7 +12,7 @@
 [submodule "seed11"]
 	path = ext/seed11
 	url = https://github.com/milleniumbug/seed11.git
-	branch = v1.0.1
+	branch = v1.0.2
 [submodule "jsonpp"]
 	path = ext/jsonpp
 	url = https://github.com/Rapptz/jsonpp.git
@@ -27,10 +27,11 @@
 [submodule "zstd"]
 	path = ext/zstd
 	url = https://github.com/facebook/zstd.git
-	branch = v1.0.0
+	branch = v1.2.0
 [submodule "cpr"]
 	path = ext/cpr
 	url = https://github.com/whoshuu/cpr.git
+	branch = 1.3.0
 [submodule "fmt"]
 	path = ext/fmt
 	url = https://github.com/fmtlib/fmt.git
