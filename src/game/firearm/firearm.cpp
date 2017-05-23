@@ -23,6 +23,7 @@
 #include "firearm.hpp"
 #include "../../reference/container.hpp"
 #include "../../util/json.hpp"
+#include "../../util/sound.hpp"
 #include "../entity/bullet.hpp"
 #include <algorithm>
 
@@ -36,13 +37,14 @@ static std::vector<audiere::SoundEffectPtr> open_shoot_sounds(const std::vector<
 	std::transform(fnames.begin(), fnames.end(), std::back_inserter(out), [](auto && fname) {
 		return audiere::OpenSoundEffect(audio_device, (sound_root + "/guns/" + fname).c_str(), audiere::SoundEffectType::MULTIPLE);
 	});
-	std::for_each(out.begin(), out.end(), [](auto && sound) { sound->setVolume(.7); });
+
+	std::for_each(out.begin(), out.end(), [](auto && sound) { sound->setVolume(output_volume(app_configuration.sound_effect_volume * .7)); });
 	return out;
 }
 
 void firearm::fire(std::chrono::time_point<std::chrono::high_resolution_clock> now, float pos_x, float pos_y, const sf::Vector2f & aim) {
 	world->spawn_create<bullet>(aim, pos_x, pos_y, std::cref(props->bullet_props));
-	if(!shoot_sounds.empty()) {
+	if(app_configuration.play_sounds && !shoot_sounds.empty()) {
 		if(last_shoot_sound == shoot_sounds.size() - 1)
 			last_shoot_sound = 0;
 		else
@@ -63,7 +65,7 @@ firearm::firearm(game_world & w, const std::string & gun_id)
             std::chrono::microseconds(static_cast<std::chrono::microseconds::rep>(props->reload_speed * std::micro::den)))),
         trigger_pulled(false), left_in_mag(0), left_mags(props->mag_quantity), shoot_sounds(open_shoot_sounds(props->shoot_sounds)), last_shoot_sound(0),
         reload_sound(audiere::OpenSoundEffect(audio_device, (sound_root + "/guns/" + props->reload_sound).c_str(), audiere::SoundEffectType::SINGLE)) {
-	reload_sound->setVolume(.7);
+	reload_sound->setVolume(output_volume(app_configuration.sound_effect_volume * .7));
 }
 
 firearm::firearm(game_world & w, const json::object & from) : firearm(w, json_get_defaulted(from, "id", "default"s)) {
@@ -133,7 +135,8 @@ void firearm::untrigger(float pos_x, float pos_y, const sf::Vector2f & aim) {
 
 void firearm::reload() {
 	if(left_mags) {
-		reload_sound->play();
+		if(app_configuration.play_sounds)
+			reload_sound->play();
 		left_in_mag      = props->mag_size;
 		mag_reload_start = std::chrono::high_resolution_clock::now();
 		--left_mags;

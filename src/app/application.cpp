@@ -24,6 +24,7 @@
 #include "../reference/container.hpp"
 #include "../util/file.hpp"
 #include "../util/monitor.hpp"
+#include "../util/sound.hpp"
 #include "screens/application/splash_screen.hpp"
 #include <SFML/System.hpp>
 #include <algorithm>
@@ -108,5 +109,6 @@ int application::draw() {
 
 void application::retry_music() {
 	music = open_sequential_application_music(app_configuration.play_sounds);
+	music.setVolume(output_volume(app_configuration.music_volume));
 	music.play();
 }

@@ -25,6 +25,7 @@
 #include "../../../reference/container.hpp"
 #include "../../../reference/joystick_info.hpp"
 #include "../../../util/file.hpp"
+#include "../../../util/sound.hpp"
 #include "../../../util/url.hpp"
 #include "../../../util/zstd.hpp"
 #include "../../application.hpp"
@@ -42,11 +43,13 @@ using namespace std::literals;
 void main_menu_screen::move_selection(main_menu_screen::direction dir) {
 	switch(dir) {
 		case direction::up:
-			selected_option_switch_sound->play();
+			if(app_configuration.play_sounds)
+				selected_option_switch_sound->play();
 			selected = std::min(main_buttons.size() - 1, selected + 1);
 			break;
 		case direction::down:
-			selected_option_switch_sound->play();
+			if(app_configuration.play_sounds)
+				selected_option_switch_sound->play();
 			if(selected)
 				--selected;
 			break;
@@ -119,10 +122,21 @@ void main_menu_screen::set_config_menu_items() {
 
 	const auto langs               = config::available_languages();
 	const std::size_t cur_lang_idx = std::distance(langs.begin(), std::find(langs.begin(), langs.end(), app_configuration.language));
+	const auto volume_func         = [&](const char * key, float & volume, auto additional) {
+		return [&, key, additional](sf::Text & text) {
+			volume += .05f;
+			if(volume > 1.f)
+				volume = 0.f;
+
+			additional(volume);
+			text.setString(fmt::format(global_iser.translate_key(key), volume * 100.f));
+		};
+	};
 
 	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.back"), font_swirly), [&](sf::Text &) {
 		local_iser  = cpp_localiser::localiser(localization_root, app_configuration.language);
 		global_iser = cpp_localiser::localiser(local_iser, fallback_iser);
+		app.retry_music();
 		set_default_menu_items();
 	});
 	main_buttons.emplace_front(sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_lang"), app_configuration.language), font_pixelish, 20),
@@ -153,11 +167,19 @@ void main_menu_screen::set_config_menu_items() {
 	main_buttons.emplace_front(sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_fps"), app_configuration.FPS), font_pixelish, 20),
 	                           [&](sf::Text & text) {
 		                           app_configuration.FPS += 30;
-		                           if(app_configuration.FPS == 150)
+		                           if(app_configuration.FPS > 120)
 			                           app_configuration.FPS = 0;
 
 		                           text.setString(fmt::format(global_iser.translate_key("gui.main_menu.text.config_fps"), app_configuration.FPS));
 		                         });
+	main_buttons.emplace_front(
+	    sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_music_volume"), app_configuration.music_volume * 100.f), font_pixelish, 20),
+	    volume_func("gui.main_menu.text.config_music_volume", app_configuration.music_volume, [](auto) {}));
+	main_buttons.emplace_front(
+	    sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_sound_effect_volume"), app_configuration.sound_effect_volume * 100.f),
+	             font_pixelish, 20),
+	    volume_func("gui.main_menu.text.config_sound_effect_volume", app_configuration.sound_effect_volume,
+	                [&](auto vol) { selected_option_switch_sound->setVolume(output_volume(vol * .8)); }));
 	main_buttons.emplace_front(sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_default_firearm"),
 	                                                firearm::properties().at(app_configuration.player_default_firearm).name),
 	                                    font_pixelish, 20),
@@ -256,7 +278,7 @@ int main_menu_screen::handle_event(const sf::Event & event) {
 			unsigned int buttid = 0;
 			for(const auto & button : main_buttons) {
 				if(button.first.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y)) {
-					if(selected != buttid)
+					if(app_configuration.play_sounds && selected != buttid)
 						selected_option_switch_sound->play();
 					selected = buttid;
 					break;
@@ -322,7 +344,10 @@ main_menu_screen::main_menu_screen(application & theapp)
       : screen(theapp), control_frames_counter(0), joystick_up(false), joystick_drawing(false, drawing("xbox", app.window.getSize())),
         keys_drawing("keyboard", app.window.getSize()),
         update(std::future<cpr::Response>(), std::thread(), sf::Text("", font_monospace, 10), app_configuration.use_network),
-        selected_option_switch_sound(audiere::OpenSoundEffect(audio_device, (sound_root + "/main_menu/switch.ogg").c_str(), audiere::SoundEffectType::MULTIPLE)) {
+        selected_option_switch_sound(
+            audiere::OpenSoundEffect(audio_device, (sound_root + "/main_menu/switch.ogg").c_str(), audiere::SoundEffectType::MULTIPLE)) {
+	selected_option_switch_sound->setVolume(output_volume(app_configuration.sound_effect_volume * .8));
+
 	if(app_configuration.use_network)
 		std::get<0>(update) =
 		    cpr::GetAsync(cpr::Url("https://api.github.com/repos/nabijaczleweli/BarbersAndRebarbs/releases/latest"), cpr::Parameters{{"anon", "true"}});

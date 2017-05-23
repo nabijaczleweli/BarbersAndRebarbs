@@ -67,13 +67,24 @@ namespace config_subcategories {
 			        cereal::make_nvp("gun_popup_length", player_gun_popup_length));
 		}
 	};
+
+	struct sound {
+		float & music_volume;
+		float & sound_effect_volume;
+
+		template <class Archive>
+		void serialize(Archive & archive) {
+			archive(cereal::make_nvp("music_volume", music_volume), cereal::make_nvp("sound_effect_volume", sound_effect_volume));
+		}
+	};
 }
 
 template <class Archive>
 void serialize(Archive & archive, config & cc) {
 	archive(cereal::make_nvp("system", config_subcategories::system{cc.language, cc.controller_deadzone, cc.use_network}),
 	        cereal::make_nvp("application", config_subcategories::application{cc.vsync, cc.FPS, cc.play_sounds, cc.splash_length}),
-	        cereal::make_nvp("player", config_subcategories::player{cc.player_speed, cc.player_default_firearm, cc.player_gun_popup_length}));
+	        cereal::make_nvp("player", config_subcategories::player{cc.player_speed, cc.player_default_firearm, cc.player_gun_popup_length}),
+	        cereal::make_nvp("sound", config_subcategories::sound{cc.music_volume, cc.sound_effect_volume}));
 }
 
 

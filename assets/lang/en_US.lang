@@ -21,6 +21,8 @@ gui.main_menu.text.config_controller_deadzone=Controller deadzone: {}
 gui.main_menu.text.config_vsync_on=VSync: on
 gui.main_menu.text.config_vsync_off=VSync: off
 gui.main_menu.text.config_fps={} FPS
+gui.main_menu.text.config_music_volume=Music volume: {:.0f}%
+gui.main_menu.text.config_sound_effect_volume=Sound effect volume: {:.0f}%
 gui.main_menu.text.config_default_firearm=Default firearm: {}
 
 

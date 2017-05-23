@@ -20,7 +20,9 @@ gui.main_menu.text.config_lang=Jezyk: {}
 gui.main_menu.text.config_controller_deadzone=Martwa strefa kontrolera: {}
 gui.main_menu.text.config_vsync_on=VSync: wlaczony
 gui.main_menu.text.config_vsync_off=VSync: wylaczony
-gui.main_menu.text.config_default_firearm=Bron startowa: {}
+gui.main_menu.text.config_music_volume=Glosnosc muzyki: {:.0f}%
+gui.main_menu.text.config_sound_effect_volume=Glosnosc efektow dzwiekowych: {:.0f}%
+gui.main_menu.text.config_default_firearm=Domyslna bron: {}
 
 
 gui.world.text.save_compression_error=Blad kompresji pliku zapisu: "{}"

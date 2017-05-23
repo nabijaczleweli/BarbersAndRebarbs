@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 
-// Copyright (c) 2016 nabijaczleweli
+// Copyright (c) 2017 nabijaczleweli
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
@@ -23,35 +23,5 @@
 #pragma once
 
 
-#include <string>
-#include <vector>
-
-
-class config {
-public:
-	std::string language      = "en_US";
-	float controller_deadzone = 10;
-	bool use_network          = true;
-
-	bool vsync                 = true;
-	unsigned int FPS           = 60;
-	bool play_sounds           = true;
-	unsigned int splash_length = 2;
-
-	float player_speed                   = 1;
-	std::string player_default_firearm   = "default";
-	unsigned int player_gun_popup_length = 3;
-
-	float music_volume        = 1.f;
-	float sound_effect_volume = 1.f;
-
-
-	static std::vector<std::string> available_languages();
-
-
-	config(std::string && path);
-	~config();
-
-private:
-	std::string path;
-};
+/// Get output volume [0, 1] scaled exponentially from knob volume [0, 1]
+float output_volume(float in);
