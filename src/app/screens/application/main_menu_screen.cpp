@@ -57,6 +57,7 @@ void main_menu_screen::move_selection(main_menu_screen::direction dir) {
 }
 
 void main_menu_screen::press_button() {
+	selected_option_select_sound->play();
 	auto itr = main_buttons.begin();
 	advance(itr, selected);
 	(itr->second)(itr->first);
@@ -178,8 +179,10 @@ void main_menu_screen::set_config_menu_items() {
 	main_buttons.emplace_front(
 	    sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_sound_effect_volume"), app_configuration.sound_effect_volume * 100.f),
 	             font_pixelish, 20),
-	    volume_func("gui.main_menu.text.config_sound_effect_volume", app_configuration.sound_effect_volume,
-	                [&](auto vol) { selected_option_switch_sound->setVolume(output_volume(vol * .8)); }));
+	    volume_func("gui.main_menu.text.config_sound_effect_volume", app_configuration.sound_effect_volume, [&](auto vol) {
+		    selected_option_switch_sound->setVolume(output_volume(vol * .8));
+		    selected_option_select_sound->setVolume(output_volume(vol * .8));
+		  }));
 	main_buttons.emplace_front(sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_default_firearm"),
 	                                                firearm::properties().at(app_configuration.player_default_firearm).name),
 	                                    font_pixelish, 20),
@@ -345,8 +348,11 @@ main_menu_screen::main_menu_screen(application & theapp)
         keys_drawing("keyboard", app.window.getSize()),
         update(std::future<cpr::Response>(), std::thread(), sf::Text("", font_monospace, 10), app_configuration.use_network),
         selected_option_switch_sound(
-            audiere::OpenSoundEffect(audio_device, (sound_root + "/main_menu/switch.ogg").c_str(), audiere::SoundEffectType::MULTIPLE)) {
+            audiere::OpenSoundEffect(audio_device, (sound_root + "/main_menu/mouse_over.wav").c_str(), audiere::SoundEffectType::MULTIPLE)),
+        selected_option_select_sound(
+            audiere::OpenSoundEffect(audio_device, (sound_root + "/main_menu/mouse_click.wav").c_str(), audiere::SoundEffectType::MULTIPLE)) {
 	selected_option_switch_sound->setVolume(output_volume(app_configuration.sound_effect_volume * .8));
+	selected_option_select_sound->setVolume(output_volume(app_configuration.sound_effect_volume * .8));
 
 	if(app_configuration.use_network)
 		std::get<0>(update) =
