@@ -24,6 +24,7 @@
 #include "../../app/application.hpp"
 #include "../../reference/container.hpp"
 #include "../../reference/joystick_info.hpp"
+#include "../../util/sound.hpp"
 #include "../world.hpp"
 #include "bullet.hpp"
 #include <SFML/Window.hpp>
@@ -32,6 +33,16 @@
 
 
 static const sf::Color progress_colour(255, 255, 255, 100);
+static const char * gun_pickup_fnames[]{"gear_rattle02.wav", "gear_rattle03.wav", "gear_rattle05.wav"};
+
+static std::vector<audiere::SoundEffectPtr> open_pickup_sounds() {
+	std::vector<audiere::SoundEffectPtr> out;
+	out.reserve(sizeof gun_pickup_fnames / sizeof *gun_pickup_fnames);
+	std::transform(std::begin(gun_pickup_fnames), std::end(gun_pickup_fnames), std::back_inserter(out),
+	               [](auto fname) { return audiere::OpenSoundEffect(audio_device, (sound_root + '/' + fname).c_str(), audiere::SoundEffectType::SINGLE); });
+	std::for_each(out.begin(), out.end(), [](auto && sound) { sound->setVolume(output_volume(app_configuration.sound_effect_volume)); });
+	return out;
+}
 
 
 std::pair<bool, sf::Vector2f> player::controller_aim(unsigned int controller_id) const {
@@ -88,28 +99,38 @@ void player::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 
 		target.draw(gun_name_popup.second);
 
+		if(gun_name_popup.first == fade_in_threshold) {
+			gun_pickup_sounds.second[gun_pickup_sounds.first]->play();
+			if(++gun_pickup_sounds.first >= gun_pickup_sounds.second.size())
+				gun_pickup_sounds.first = 0;
+		}
+
 		--gun_name_popup.first;
 	}
 }
 
 player::player(game_world & world_r)
       : entity(world_r), progress_circle(0, 7),
-        gun_name_popup(application::effective_FPS() * app_configuration.player_gun_popup_length, {"", font_pixelish, 10}) {
+        gun_name_popup(application::effective_FPS() * app_configuration.player_gun_popup_length, {"", font_pixelish, 10}),
+        gun_pickup_sounds(0, open_pickup_sounds()) {
 	progress_circle.colour(progress_colour);
 }
 
 player::player(game_world & world_r, size_t id_a, sf::Vector2u screen_size)
       : entity(world_r, id_a), progress_circle(0, 7), gun(world_r, app_configuration.player_default_firearm), hp(1), progress(0),
-        gun_name_popup(application::effective_FPS() * app_configuration.player_gun_popup_length, {gun.name(), font_pixelish, 10}) {
+        gun_name_popup(application::effective_FPS() * app_configuration.player_gun_popup_length, {gun.name(), font_pixelish, 10}),
+        gun_pickup_sounds(0, open_pickup_sounds()) {
 	static auto rand = seed11::make_seeded<std::mt19937>();
 
 	progress_circle.colour(progress_colour);
 
 	std::uniform_real_distribution<float> x_dist(0, screen_size.x - 1);
 	std::uniform_real_distribution<float> y_dist(0, screen_size.y - 1);
+	std::uniform_int_distribution<std::size_t> pickup_dist(0, gun_pickup_sounds.second.size() - 1);
 
-	x = x_dist(rand);
-	y = y_dist(rand);
+	x                       = x_dist(rand);
+	y                       = y_dist(rand);
+	gun_pickup_sounds.first = pickup_dist(rand);
 }
 
 void player::read_from_json(const json::object & from) {

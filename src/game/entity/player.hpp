@@ -28,6 +28,7 @@
 #include "entity.hpp"
 #include "event_handler.hpp"
 #include <SFML/Graphics.hpp>
+#include <audiere.h>
 
 
 class player : public entity, public event_handler, public sf::Drawable {
@@ -43,6 +44,7 @@ private:
 	float hp;
 	mutable float progress;
 	mutable std::pair<unsigned int, sf::Text> gun_name_popup;
+	mutable std::pair<std::size_t, std::vector<audiere::SoundEffectPtr>> gun_pickup_sounds;
 
 public:
 	player(game_world & world);
