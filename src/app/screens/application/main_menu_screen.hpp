@@ -46,6 +46,7 @@ private:
 	std::tuple<std::future<cpr::Response>, std::thread, sf::Text, bool> update;
 	audiere::SoundEffectPtr selected_option_switch_sound;
 	audiere::SoundEffectPtr selected_option_select_sound;
+	audiere::SoundEffectPtr update_ready_sound;
 
 	void move_selection(direction dir);
 	void press_button();

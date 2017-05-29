@@ -182,6 +182,7 @@ void main_menu_screen::set_config_menu_items() {
 	    volume_func("gui.main_menu.text.config_sound_effect_volume", app_configuration.sound_effect_volume, [&](auto vol) {
 		    selected_option_switch_sound->setVolume(output_volume(vol * .8));
 		    selected_option_select_sound->setVolume(output_volume(vol * .8));
+		    update_ready_sound->setVolume(output_volume(vol * .8));
 		  }));
 	main_buttons.emplace_front(sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_default_firearm"),
 	                                                firearm::properties().at(app_configuration.player_default_firearm).name),
@@ -233,6 +234,7 @@ int main_menu_screen::loop() {
 				if(version::Semver200_version(new_version_s) <= version::Semver200_version(BARBERSANDREBARBS_VERSION))
 					std::get<2>(update).setString(global_iser.translate_key("gui.main_menu.text.update_none_found"));
 				else {
+					update_ready_sound->play();
 					std::get<2>(update).setString(fmt::format(global_iser.translate_key("gui.main_menu.text.update_found"), new_version_s));
 
 					main_buttons.emplace_back(
@@ -350,9 +352,11 @@ main_menu_screen::main_menu_screen(application & theapp)
         selected_option_switch_sound(
             audiere::OpenSoundEffect(audio_device, (sound_root + "/main_menu/mouse_over.wav").c_str(), audiere::SoundEffectType::MULTIPLE)),
         selected_option_select_sound(
-            audiere::OpenSoundEffect(audio_device, (sound_root + "/main_menu/mouse_click.wav").c_str(), audiere::SoundEffectType::MULTIPLE)) {
+            audiere::OpenSoundEffect(audio_device, (sound_root + "/main_menu/mouse_click.wav").c_str(), audiere::SoundEffectType::MULTIPLE)),
+        update_ready_sound(audiere::OpenSoundEffect(audio_device, (sound_root + "/main_menu/update.wav").c_str(), audiere::SoundEffectType::SINGLE)) {
 	selected_option_switch_sound->setVolume(output_volume(app_configuration.sound_effect_volume * .8));
 	selected_option_select_sound->setVolume(output_volume(app_configuration.sound_effect_volume * .8));
+	update_ready_sound->setVolume(output_volume(app_configuration.sound_effect_volume * .8));
 
 	if(app_configuration.use_network)
 		std::get<0>(update) =
