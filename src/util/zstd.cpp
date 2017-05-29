@@ -55,9 +55,9 @@ std::tuple<std::string, bool, const char *> decompress_file_to_string(const std:
 static const char * compress_string_to_file(const char * filename, const char * data, std::size_t data_len) {
 	auto out_c             = std::make_unique<std::uint8_t[]>(ZSTD_compressBound(data_len));
 	const auto comp_result = ZSTD_compress(out_c.get(), ZSTD_compressBound(data_len), data, data_len, ZSTD_maxCLevel());
-	if(ZSTD_isError(comp_result)) {
+	if(ZSTD_isError(comp_result))
 		return ZSTD_getErrorName(comp_result);
-	} else {
+	else {
 		std::uint64_t raw_size        = data_len;
 		std::uint64_t compressed_size = comp_result;
 		std::ofstream(filename, std::ios::binary)
@@ -73,9 +73,8 @@ std::tuple<std::string, bool, const char *> decompress_file_to_string(const char
 	std::uint64_t raw_size;
 	std::uint64_t compressed_size;
 	std::ifstream save_file(filename, std::ios::binary);
-	if(!save_file.is_open()) {
+	if(!save_file.is_open())
 		return std::make_tuple("", false, nullptr);
-	}
 
 	save_file.read(reinterpret_cast<char *>(&raw_size), sizeof(raw_size)).read(reinterpret_cast<char *>(&compressed_size), sizeof(compressed_size));
 	auto in_c = std::make_unique<std::uint8_t[]>(compressed_size);
@@ -83,9 +82,8 @@ std::tuple<std::string, bool, const char *> decompress_file_to_string(const char
 
 	std::string in(raw_size, '\0');
 	const auto result = ZSTD_decompress(&in[0], in.size(), in_c.get(), compressed_size);
-	if(ZSTD_isError(result)) {
+	if(ZSTD_isError(result))
 		return std::make_tuple(in, true, ZSTD_getErrorName(result));
-	} else {
+	else
 		return std::make_tuple(in, true, nullptr);
-	}
 }

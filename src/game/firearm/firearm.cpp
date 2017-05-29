@@ -76,8 +76,6 @@ void firearm::read_from_json(const json::object & from) {
 	auto itr = from.end();
 	if((itr = from.find("trigger_pulled")) != from.end())
 		trigger_pulled = itr->second.as<bool>();
-	if((itr = from.find("trigger_pulled")) != from.end())
-		trigger_pulled = itr->second.as<bool>();
 	if((itr = from.find("left_in_mag")) != from.end())
 		left_in_mag = itr->second.as<unsigned int>();
 	if((itr = from.find("left_mags")) != from.end())

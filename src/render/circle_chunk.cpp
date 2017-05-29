@@ -30,9 +30,8 @@ void circle_chunk::draw(sf::RenderTarget & target, sf::RenderStates states) cons
 
 	if(recompute_next_time) {
 		vertices.resize(points);
-		for(auto i = 0.; i < points; ++i) {
+		for(auto i = 0.; i < points; ++i)
 			vertices[i] = {{static_cast<float>(r * std::cos(i / points * fract * tau)), static_cast<float>(r * std::sin(i / points * fract * tau))}, clr};
-		}
 		recompute_next_time = false;
 	}
 
