@@ -42,7 +42,7 @@ public:
 	std::string player_default_firearm   = "default";
 	unsigned int player_gun_popup_length = 3;
 
-	float music_volume        = 1.f;
+	float music_volume        = .8f;
 	float sound_effect_volume = 1.f;
 
 
