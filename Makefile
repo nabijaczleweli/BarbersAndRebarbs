@@ -68,7 +68,7 @@ $(BLDDIR)cpp-localiser/libcpp-localiser$(ARCH) : ext/cpp-localiser/Makefile
 
 $(BLDDIR)cpr/lib/libcpr$(ARCH) : ext/cpr/CMakeLists.txt
 	@mkdir -p $(abspath $(dir $@)..)
-	cd $(abspath $(dir $@)..) && CXXFLAGS="$(INCCXXAR) -DCURL_STATICLIB" $(LNCMAKEAR) $(CMAKE) -DUSE_SYSTEM_CURL=ON -DBUILD_CPR_TESTS=OFF $(abspath $(dir $^)) -GNinja
+	cd $(abspath $(dir $@)..) && CXXFLAGS="$(INCCXXAR) -DCURL_STATICLIB" $(LNCMAKEAR) $(CMAKE) -DUSE_SYSTEM_CURL=$(SYSTEM_CURL) -DBUILD_CPR_TESTS=OFF $(abspath $(dir $^)) -GNinja
 	cd $(abspath $(dir $@)..) && $(NINJA)
 
 $(BLDDIR)seed11/libseed11$(ARCH) : $(foreach src,seed11_system_agnostic seed11_$(SEED11_SYSTEM_TYPE) deterministic_unsafe_seed_device,$(BLDDIR)seed11/obj/$(src)$(OBJ))

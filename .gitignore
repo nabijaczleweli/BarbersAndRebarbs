@@ -9,7 +9,7 @@
 !src/**
 !.git*
 !.clang-format
-!.travis.yml
+!*.yml
 !*Makefile
 !*.sublime-project
 !LICENSE

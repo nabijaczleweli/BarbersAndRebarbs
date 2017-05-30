@@ -24,14 +24,14 @@ ifeq "$(OS)" "Windows_NT"
 	EXE := .exe
 	DLL := .dll
 	PIC :=
-	SFML_LINK_SUFF := -2
+	SFML_LINK_SUFF ?= -2
 	SEED11_SYSTEM_TYPE := windows
 	OS_LD_LIBS :=
 else
 	EXE := .out
 	DLL := .so
 	PIC := -fPIC
-	SFML_LINK_SUFF :=
+	SFML_LINK_SUFF ?=
 	SEED11_SYSTEM_TYPE := unix
 	OS_LD_LIBS := Xrandr X11
 endif
@@ -50,6 +50,7 @@ endif
 
 INCCMAKEAR := CXXFLAGS="$(INCCXXAR)"
 LNCMAKEAR := LDFLAGS="$(LNCXXAR)"
+SYSTEM_CURL ?= ON
 
 BARBERSANDREBARBS_VERSION := "$(patsubst v%,%,$(shell git describe --tags --abbrev=0))"
 CEREAL_VERSION := "$(patsubst v%,%,$(shell git -C ext/cereal describe --tags))"

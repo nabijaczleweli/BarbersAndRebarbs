@@ -1,0 +1,42 @@
+version: 0.5.1-{build}
+
+skip_tags: false
+
+platform: x64
+configuration: Release
+
+clone_folder: C:\BarbersAndRebarbs
+
+install:
+  - set PATH=C:\msys64\mingw64\bin;C:\msys64\usr\bin;%PATH%
+  -
+  - bash -lc "pacman --needed --noconfirm -Sy pacman-mirrors"
+  - bash -lc "pacman --noconfirm -Syyu"
+  - bash -lc "pacman --noconfirm -Su mingw-w64-x86_64-ninja mingw-w64-x86_64-speex mingw-w64-x86_64-dumb mingw-w64-x86_64-sfml libcurl-devel"
+
+build: off
+build_script:
+  - git submodule update --init --recursive
+  - make SYSTEM_CURL=OFF SFML_LINK_SUFF=
+  - rm -rf out/build
+  - mv out BarbersAndRebarbs-v0.5.1
+  - cp target\release\BarbersAndRebarbs.exe BarbersAndRebarbs.exe
+  - strip --strip-all --remove-section=.comment --remove-section=.note BarbersAndRebarbs.exe
+
+test: off
+
+artifacts:
+  - path: BarbersAndRebarbs-v0.5.1.exe
+
+deploy:
+  provider: GitHub
+  artifact: BarbersAndRebarbs-v0.5.1.exe
+  auth_token:
+    secure: /6TsIkMcI5dtUAvr8RJZxjUMR9uDgFLLZDyNbm5HqNCD0zbuj4TUY2JPIte4F+E7
+  on:
+    appveyor_repo_tag: true
+
+notifications:
+  - provider: Email
+    to: nabijaczleweli@gmail.com
+    on_build_status_changed: true

@@ -1,4 +1,4 @@
-BarbersAndRebarbs [![Build Status](https://img.shields.io/travis/nabijaczleweli/BarbersAndRebarbs.svg)](https://travis-ci.org/nabijaczleweli/BarbersAndRebarbs) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
+BarbersAndRebarbs [![TravisCI build status](https://img.shields.io/travis/nabijaczleweli/BarbersAndRebarbs.svg)](https://travis-ci.org/nabijaczleweli/BarbersAndRebarbs) [![AppVeyorCI build status](https://ci.appveyor.com/api/projects/status/4y3r4ddm2n5qx1c8/branch/master?svg=true)](https://ci.appveyor.com/project/nabijaczleweli/tweetr/branch/master) [![Licence](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 =======
 A game in C++ using SFML 2.4
 
@@ -7,7 +7,7 @@ A game in C++ using SFML 2.4
 1. Speex, found [here](http://www.speex.org/), via `libspeex-dev` APT package or `mingw-w64-x86_64-speex` MSYS2 `pacman` package is required to be installed externally
 2. DUMB, found [here](http://dumb.sourceforge.net/) via `libdumb1-dev` APT package or `mingw-w64-x86_64-dumb` MSYS2 `pacman` package, is required to be installed externally
 2. SFML >=2.4, found [here](http://sfml-dev.org/) via `libsfml-dev` APT package or `mingw-w64-x86_64-sfml` MSYS2 `pacman` package, is required to be installed externally
-3. `libcurl`, found [here](https://curl.haxx.se/) via either of `libcurl4-{gnutls,nss,openssl}-dev` APT packages or `libcurl` MSYS2 `pacman` package, is required to be installed externally
+3. `libcurl`, found [here](https://curl.haxx.se/) via either of `libcurl4-{gnutls,nss,openssl}-dev` APT packages or `libcurl-devel` MSYS2 `pacman` package, is required to be installed externally
 4. All other dependencies are submodules, and as such must be explicitly initialised, be it by passing `--recursive` to `git-clone` or running `git submodule update --init --recursive`
 
 "Externally" installed libraries need to be installed either globally or to pass `ADDITIONAL_{INCLUDE,LINK}_DIR` variable to GNU Make, as appropriate.
