@@ -121,6 +121,7 @@ void main_menu_screen::set_default_menu_items() {
 void main_menu_screen::set_config_menu_items() {
 	main_buttons.clear();
 
+	bool music_volume_changed      = false;
 	const auto langs               = config::available_languages();
 	const std::size_t cur_lang_idx = std::distance(langs.begin(), std::find(langs.begin(), langs.end(), app_configuration.language));
 	const auto volume_func         = [&](const char * key, float & volume, auto additional) {
@@ -137,7 +138,8 @@ void main_menu_screen::set_config_menu_items() {
 	main_buttons.emplace_front(sf::Text(global_iser.translate_key("gui.main_menu.text.back"), font_swirly), [&](sf::Text &) {
 		local_iser  = cpp_localiser::localiser(localization_root, app_configuration.language);
 		global_iser = cpp_localiser::localiser(local_iser, fallback_iser);
-		app.retry_music();
+		if(music_volume_changed)
+			app.retry_music();
 		set_default_menu_items();
 	});
 	main_buttons.emplace_front(sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_lang"), app_configuration.language), font_pixelish, 20),
@@ -175,7 +177,7 @@ void main_menu_screen::set_config_menu_items() {
 		                         });
 	main_buttons.emplace_front(
 	    sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_music_volume"), app_configuration.music_volume * 100.f), font_pixelish, 20),
-	    volume_func("gui.main_menu.text.config_music_volume", app_configuration.music_volume, [](auto) {}));
+	    volume_func("gui.main_menu.text.config_music_volume", app_configuration.music_volume, [&](auto) { music_volume_changed = true; }));
 	main_buttons.emplace_front(
 	    sf::Text(fmt::format(global_iser.translate_key("gui.main_menu.text.config_sound_effect_volume"), app_configuration.sound_effect_volume * 100.f),
 	             font_pixelish, 20),
