@@ -39,6 +39,7 @@ public:
 	unsigned int splash_length = 2;
 
 	float player_speed                   = 1;
+	float player_seconds_to_full_speed   = .4f;
 	std::string player_default_firearm   = "default";
 	unsigned int player_gun_popup_length = 3;
 

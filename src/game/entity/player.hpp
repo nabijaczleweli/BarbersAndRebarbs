@@ -42,6 +42,7 @@ private:
 	mutable circle_chunk progress_circle;
 	firearm gun;
 	float hp;
+	std::size_t frames_pressed;
 	mutable float progress;
 	mutable std::pair<unsigned int, sf::Text> gun_name_popup;
 	mutable std::pair<std::size_t, std::vector<audiere::SoundEffectPtr>> gun_pickup_sounds;

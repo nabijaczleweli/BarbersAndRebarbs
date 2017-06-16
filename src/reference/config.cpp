@@ -58,13 +58,14 @@ namespace config_subcategories {
 
 	struct player {
 		float & player_speed;
+		float & player_seconds_to_full_speed;
 		std::string & player_default_firearm;
 		unsigned int & player_gun_popup_length;
 
 		template <class Archive>
 		void serialize(Archive & archive) {
-			archive(cereal::make_nvp("speed", player_speed), cereal::make_nvp("default_firearm", player_default_firearm),
-			        cereal::make_nvp("gun_popup_length", player_gun_popup_length));
+			archive(cereal::make_nvp("speed", player_speed), cereal::make_nvp("seconds_to_full_speed", player_seconds_to_full_speed),
+			        cereal::make_nvp("default_firearm", player_default_firearm), cereal::make_nvp("gun_popup_length", player_gun_popup_length));
 		}
 	};
 
@@ -83,7 +84,8 @@ template <class Archive>
 void serialize(Archive & archive, config & cc) {
 	archive(cereal::make_nvp("system", config_subcategories::system{cc.language, cc.controller_deadzone, cc.use_network}),
 	        cereal::make_nvp("application", config_subcategories::application{cc.vsync, cc.FPS, cc.play_sounds, cc.splash_length}),
-	        cereal::make_nvp("player", config_subcategories::player{cc.player_speed, cc.player_default_firearm, cc.player_gun_popup_length}),
+	        cereal::make_nvp(
+	            "player", config_subcategories::player{cc.player_speed, cc.player_seconds_to_full_speed, cc.player_default_firearm, cc.player_gun_popup_length}),
 	        cereal::make_nvp("sound", config_subcategories::sound{cc.music_volume, cc.sound_effect_volume}));
 }
 

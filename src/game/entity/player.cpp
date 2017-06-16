@@ -110,14 +110,14 @@ void player::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 }
 
 player::player(game_world & world_r)
-      : entity(world_r), progress_circle(0, 7),
+      : entity(world_r), progress_circle(0, 7), frames_pressed(0),
         gun_name_popup(application::effective_FPS() * app_configuration.player_gun_popup_length, {"", font_pixelish, 10}),
         gun_pickup_sounds(0, open_pickup_sounds()) {
 	progress_circle.colour(progress_colour);
 }
 
 player::player(game_world & world_r, size_t id_a, sf::Vector2u screen_size)
-      : entity(world_r, id_a), progress_circle(0, 7), gun(world_r, app_configuration.player_default_firearm), hp(1), progress(0),
+      : entity(world_r, id_a), progress_circle(0, 7), gun(world_r, app_configuration.player_default_firearm), hp(1), frames_pressed(0), progress(0),
         gun_name_popup(application::effective_FPS() * app_configuration.player_gun_popup_length, {gun.name(), font_pixelish, 10}),
         gun_pickup_sounds(0, open_pickup_sounds()) {
 	static auto rand = seed11::make_seeded<std::mt19937>();
@@ -160,15 +160,24 @@ void player::tick(float max_x, float max_y) {
 
 	auto delta_speed_x = 0.f;
 	auto delta_speed_y = 0.f;
+	auto any_pressed   = false;
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+		any_pressed = true;
 		delta_speed_x -= 1;
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+	}
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+		any_pressed = true;
 		delta_speed_x += 1;
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+	}
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+		any_pressed = true;
 		delta_speed_y -= 1;
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+	}
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+		any_pressed = true;
 		delta_speed_y += 1;
+	}
 
 	if(joystick_connected) {
 		const auto horizontal = sf::Joystick::getAxisPosition(0, X360_axis_mappings::LeftStickHorizontal);
@@ -177,12 +186,24 @@ void player::tick(float max_x, float max_y) {
 			const auto horizontal_sign = horizontal / std::abs(horizontal);
 			const auto vertical_sign   = vertical / std::abs(vertical);
 
+			any_pressed   = true;
 			delta_speed_x = ((horizontal_sign == X360_axis_up_right_mappings::RightStickHorizontal) ? std::abs(horizontal) : -std::abs(horizontal)) / 100.f;
 			delta_speed_y = ((vertical_sign == X360_axis_up_right_mappings::RightStickVertical) ? -std::abs(vertical) : std::abs(vertical)) / 100.f;
 		}
 	}
 
-	start_movement(delta_speed_x, delta_speed_y);
+	if(!any_pressed) {
+		if(frames_pressed > 4)
+			frames_pressed -= 4;
+		else if(frames_pressed)
+			frames_pressed -= 1;
+	} else {
+		const auto frames_to_full_speed = app_configuration.player_seconds_to_full_speed * application::effective_FPS();
+		const auto accel_scaled         = std::min(frames_pressed / frames_to_full_speed, 1.f);
+
+		start_movement(delta_speed_x * accel_scaled, delta_speed_y * accel_scaled);
+		++frames_pressed;
+	}
 }
 
 void player::handle_event(const sf::Event & event) {
