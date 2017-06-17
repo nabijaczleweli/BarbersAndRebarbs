@@ -57,7 +57,8 @@ void main_menu_screen::move_selection(main_menu_screen::direction dir) {
 }
 
 void main_menu_screen::press_button() {
-	selected_option_select_sound->play();
+	if(app_configuration.play_sounds)
+		selected_option_select_sound->play();
 	auto itr = main_buttons.begin();
 	advance(itr, selected);
 	(itr->second)(itr->first);
@@ -236,7 +237,8 @@ int main_menu_screen::loop() {
 				if(version::Semver200_version(new_version_s) <= version::Semver200_version(BARBERSANDREBARBS_VERSION))
 					std::get<2>(update).setString(global_iser.translate_key("gui.main_menu.text.update_none_found"));
 				else {
-					update_ready_sound->play();
+					if(app_configuration.play_sounds)
+						update_ready_sound->play();
 					std::get<2>(update).setString(fmt::format(global_iser.translate_key("gui.main_menu.text.update_found"), new_version_s));
 
 					main_buttons.emplace_back(

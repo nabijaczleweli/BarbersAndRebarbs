@@ -100,7 +100,8 @@ void player::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 		target.draw(gun_name_popup.second);
 
 		if(gun_name_popup.first == fade_in_threshold) {
-			gun_pickup_sounds.second[gun_pickup_sounds.first]->play();
+			if(app_configuration.play_sounds)
+				gun_pickup_sounds.second[gun_pickup_sounds.first]->play();
 			if(++gun_pickup_sounds.first >= gun_pickup_sounds.second.size())
 				gun_pickup_sounds.first = 0;
 		}
