@@ -27,6 +27,7 @@
 #include "../world.hpp"
 #include <SFML/Window.hpp>
 #include <cmath>
+#include <seed11/seed11.hpp>
 
 
 std::unique_ptr<bullet> bullet::create(game_world & world, size_t id, sf::Vector2f aim, unsigned int x, unsigned int y, const bullet_properties & props) {
@@ -42,6 +43,26 @@ std::unique_ptr<bullet> bullet::create(game_world & world, size_t id, sf::Vector
 	bull->start_movement(aim.x, aim.y);
 
 	return bull;
+}
+
+std::unique_ptr<bullet> bullet::create(game_world & world, size_t id, sf::Vector2f aim, unsigned int x, unsigned int y, float spread_min, float spread_max,
+                                       const bullet_properties & props) {
+	static auto rand = seed11::make_seeded<std::mt19937>();
+	static std::bernoulli_distribution dev_way_dist;
+
+	aim              = normalised(aim);
+	double aim_angle = std::atan2(aim.x, aim.y) * 180. / 3.1415926535897932384626433832795028841971693993751;
+	auto ang_dev     = std::uniform_real_distribution<double>{spread_min, spread_max}(rand);
+	if(dev_way_dist(rand))
+		aim_angle += ang_dev;
+	else
+		aim_angle -= ang_dev;
+
+	auto aim_angle_rad = aim_angle * 3.1415926535897932384626433832795028841971693993751 / 180.;
+	aim.x              = std::sin(aim_angle_rad);
+	aim.y              = std::cos(aim_angle_rad);
+
+	return create(world, id, aim, x, y, props);
 }
 
 void bullet::draw(sf::RenderTarget & target, sf::RenderStates states) const {

@@ -37,6 +37,7 @@ private:
 
 public:
 	static std::unique_ptr<bullet> create(game_world & world, std::size_t id, sf::Vector2f aim, unsigned int x, unsigned int y, const bullet_properties & props);
+	static std::unique_ptr<bullet> create(game_world & world, std::size_t id, sf::Vector2f aim, unsigned int x, unsigned int y, float spread_min, float spread_max, const bullet_properties & props);
 
 
 	using entity::entity;

@@ -1,0 +1,27 @@
+{
+	"id": "shotgun",
+	"name": "Shotgun",
+
+	"bullet": {
+		"speed": 6,
+		"speed_loss": 0.02
+	},
+
+	"fire_mode": "semi-auto",
+	"action_speed": 0.4,
+	"reload_speed": 2.460,
+	"mag_size": 2,
+	"mag_quantity": 15,
+	"projectiles_per_shot": 17,
+
+	"spread": {
+		"on": true,
+		"min": 1.7,
+		"max": 17
+	},
+
+	"sounds": {
+		"shoot": ["fire/shotgun.mp3"],
+		"reload": "reload/shotgun.mp3"
+	}
+}

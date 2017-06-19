@@ -64,6 +64,21 @@ static std::pair<std::string, firearm_properties> load_single(std::string && fil
 	if(!sounds_v.is<json::null>())
 		reload_sound = sounds_v["reload"].as<std::string>();
 
+	unsigned int projectiles_per_shot = 1;
+	if(!doc["projectiles_per_shot"].is<json::null>())
+		projectiles_per_shot = std::max(doc["projectiles_per_shot"].as<unsigned int>(), 1u);
+
+	auto have_spread = !doc["spread"].is<json::null>();
+	float spread_min = 0;
+	float spread_max = 0;
+	if(have_spread) {
+		auto spread = doc["spread"].as<json::object>();
+		have_spread = spread["on"].as<bool>();
+		spread_min = spread["min"].as<float>();
+		spread_max = spread["max"].as<float>();
+	}
+
+
 	auto bullet   = doc["bullet"].as<json::object>();
 	const auto id = doc["id"].as<std::string>();
 	return {id,
@@ -78,6 +93,12 @@ static std::pair<std::string, firearm_properties> load_single(std::string && fil
 	         doc["reload_speed"].as<float>(),
 	         doc["mag_size"].as<unsigned int>(),
 	         doc["mag_quantity"].as<unsigned int>(),
+	         {have_spread,
+	          {
+	              spread_min,  //
+	              spread_max,
+	          }},
+	         projectiles_per_shot,
 	         sounds,
 	         reload_sound}};
 }

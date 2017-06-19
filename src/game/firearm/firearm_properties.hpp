@@ -24,6 +24,7 @@
 
 
 #include <string>
+#include <utility>
 #include <vector>
 
 
@@ -32,12 +33,18 @@ struct bullet_properties {
 	float speed_loss;
 };
 
+struct spread {
+	float min;
+	float max;
+};
+
 struct firearm_properties {
 	enum class fire_mode_t {
 		full_auto,
 		semi_auto,
 		// https://www.youtube.com/watch?v=PYThNUVZrYM
 		semi_auto_response_trigger,
+		shotgun,
 	};
 
 
@@ -49,6 +56,8 @@ struct firearm_properties {
 	float reload_speed;
 	unsigned int mag_size;
 	unsigned int mag_quantity;
+	std::pair<bool, spread> spread;
+	unsigned int projectiles_per_shot;
 	std::vector<std::string> shoot_sounds;
 	std::string reload_sound;
 };

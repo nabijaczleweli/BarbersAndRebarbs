@@ -14,6 +14,12 @@
 	"mag_size": 71,
 	"mag_quantity": 6,
 
+	"spread": {
+		"on": true,
+		"min": 0,
+		"max": 3
+	},
+
 	"sounds": {
 		"shoot": ["fire/PPSH_01.wav"],
 		"reload": "reload/ppsh_reload.wav"

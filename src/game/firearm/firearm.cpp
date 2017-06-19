@@ -43,7 +43,12 @@ static std::vector<audiere::SoundEffectPtr> open_shoot_sounds(const std::vector<
 }
 
 void firearm::fire(std::chrono::time_point<std::chrono::high_resolution_clock> now, float pos_x, float pos_y, const sf::Vector2f & aim) {
-	world->spawn_create<bullet>(aim, pos_x, pos_y, std::cref(props->bullet_props));
+	for(auto bid = 0u; bid < props->projectiles_per_shot; ++bid)
+		if(props->spread.first)
+			world->spawn_create<bullet>(aim, pos_x, pos_y, props->spread.second.min, props->spread.second.max, std::cref(props->bullet_props));
+		else
+			world->spawn_create<bullet>(aim, pos_x, pos_y, std::cref(props->bullet_props));
+
 	if(app_configuration.play_sounds && !shoot_sounds.empty()) {
 		if(last_shoot_sound == shoot_sounds.size() - 1)
 			last_shoot_sound = 0;
@@ -65,7 +70,8 @@ firearm::firearm(game_world & w, const std::string & gun_id)
             std::chrono::microseconds(static_cast<std::chrono::microseconds::rep>(props->reload_speed * std::micro::den)))),
         trigger_pulled(false), left_in_mag(0), left_mags(props->mag_quantity), shoot_sounds(open_shoot_sounds(props->shoot_sounds)), last_shoot_sound(0),
         reload_sound(audiere::OpenSoundEffect(audio_device, (sound_root + "/guns/" + props->reload_sound).c_str(), audiere::SoundEffectType::SINGLE)) {
-	reload_sound->setVolume(output_volume(app_configuration.sound_effect_volume * .7));
+	if(reload_sound)
+		reload_sound->setVolume(output_volume(app_configuration.sound_effect_volume * .7));
 }
 
 firearm::firearm(game_world & w, const json::object & from) : firearm(w, json_get_defaulted(from, "id", "default"s)) {
@@ -133,7 +139,7 @@ void firearm::untrigger(float pos_x, float pos_y, const sf::Vector2f & aim) {
 
 void firearm::reload() {
 	if(left_mags) {
-		if(app_configuration.play_sounds)
+		if(app_configuration.play_sounds && reload_sound)
 			reload_sound->play();
 		left_in_mag      = props->mag_size;
 		mag_reload_start = std::chrono::high_resolution_clock::now();
