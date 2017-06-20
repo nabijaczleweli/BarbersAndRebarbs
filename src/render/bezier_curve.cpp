@@ -24,7 +24,6 @@
 #include "../util/vector.hpp"
 #include <algorithm>
 #include <functional>
-#include <future>
 
 
 float bezier_curve::bezier_step       = .0001f;
@@ -38,21 +37,10 @@ bezier_curve::bezier_curve(sf::Vector2f the_start_point, sf::Vector2f the_contro
 }
 
 void bezier_curve::swap(bezier_curve & with) {
-#define VSWAP(var)       \
-	{                      \
-		temp     = var;      \
-		var      = with.var; \
-		with.var = temp;     \
-	}
-
-	sf::Vector2f temp;
-
-	VSWAP(start_point);
-	VSWAP(control_point);
-	VSWAP(end_point);
+	std::swap(start_point, with.start_point);
+	std::swap(control_point, with.control_point);
+	std::swap(end_point, with.end_point);
 	vertices.swap(with.vertices);
-
-#undef VSWAP
 }
 
 void bezier_curve::draw(sf::RenderTarget & target, sf::RenderStates) const {
