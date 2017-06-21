@@ -40,10 +40,9 @@
 // p[2] -> end
 
 
-class bezier_curve : public sf::Drawable {
+class bezier_curve : public sf::Drawable, public sf::Transformable {
 private:
 	std::vector<sf::Vertex> vertices;
-	sf::Transformable transform;
 
 public:
 	static float bezier_step;
@@ -62,11 +61,4 @@ public:
 	virtual void draw(sf::RenderTarget & target, sf::RenderStates states) const override;
 
 	void compute_vertices();  // Call after messing with `*_point`s
-
-
-	void move(float x, float y);
-	void scale(const sf::Vector2f & factor);
-	void scale(float factor_x, float factor_y);
-	void set_scale(float factor_x, float factor_y);
-	inline const sf::Vector2f & get_scale() const { return transform.getScale(); }
 };

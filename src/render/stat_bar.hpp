@@ -45,7 +45,4 @@ public:
 
 	sf::FloatRect getGlobalBounds() const;
 	sf::FloatRect getLocalBounds() const;
-
-	virtual void setPosition(float x, float y) /*override*/;
-	virtual void setPosition(const sf::Vector2f & position) /*override*/;
 };
