@@ -26,7 +26,7 @@
 
 
 void circle_chunk::draw(sf::RenderTarget & target, sf::RenderStates states) const {
-	static const auto tau = std::acos(-1) * 2;
+	static const auto tau = std::acos(-1.l) * 2;
 
 	if(recompute_next_time) {
 		vertices.resize(points);
