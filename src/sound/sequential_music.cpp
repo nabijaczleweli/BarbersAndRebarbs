@@ -27,7 +27,7 @@
 
 sequential_music::sequential_music() : getter_algo([](auto) { return ""; }) {}
 sequential_music::sequential_music(unsigned int seq_len, std::function<std::string(unsigned int)> getter)
-      : loop(true), output_stream(nullptr), music_id(0), max_id(seq_len - 1), getter_algo(getter) {
+      : loop(true), output_stream(nullptr), music_id(0), max_id(seq_len - 1), getter_algo(getter), volume(1), pan(0), pitch_shift(1) {
 	if(seq_len)
 		output_stream = audiere::OpenSound(audio_device, getter(0).c_str(), true);
 }
@@ -35,7 +35,7 @@ sequential_music::sequential_music(unsigned int maximal_id, const std::string & 
       : sequential_music(maximal_id, [=](unsigned int) { return filename; }) {}
 
 void sequential_music::tick() {
-	if(!output_stream || (output_stream && isPlaying()))
+	if(!output_stream || isPlaying())
 		return;
 	go_to_next();
 }
@@ -43,8 +43,7 @@ void sequential_music::tick() {
 void sequential_music::go_to_next() {
 	stop();
 
-	++music_id;
-	music_id = std::min(music_id, max_id);
+	music_id = std::min(music_id + 1, max_id);
 	if(music_id == max_id) {
 		if(getRepeat())
 			music_id = 0;
@@ -55,6 +54,9 @@ void sequential_music::go_to_next() {
 	}
 
 	output_stream = audiere::OpenSound(audio_device, getter_algo(music_id).c_str(), true);
+	output_stream->setVolume(volume);
+	output_stream->setPan(pan);
+	output_stream->setPitchShift(pitch_shift);
 	play();
 }
 
@@ -85,27 +87,33 @@ bool sequential_music::getRepeat() {
 	return loop;
 }
 
-void sequential_music::setVolume(float volume) {
-	if(output_stream)
+void sequential_music::setVolume(float new_volume) {
+	if(output_stream) {
+		volume = new_volume;
 		output_stream->setVolume(volume);
+	}
 }
 
 float sequential_music::getVolume() {
 	return output_stream ? output_stream->getVolume() : 0;
 }
 
-void sequential_music::setPan(float pan) {
-	if(output_stream)
+void sequential_music::setPan(float new_pan) {
+	if(output_stream) {
+		pan = new_pan;
 		output_stream->setPan(pan);
+	}
 }
 
 float sequential_music::getPan() {
 	return output_stream ? output_stream->getPan() : 0;
 }
 
-void sequential_music::setPitchShift(float shift) {
-	if(output_stream)
-		output_stream->setPitchShift(shift);
+void sequential_music::setPitchShift(float new_shift) {
+	if(output_stream) {
+		pitch_shift = new_shift;
+		output_stream->setPitchShift(pitch_shift);
+	}
 }
 
 float sequential_music::getPitchShift() {

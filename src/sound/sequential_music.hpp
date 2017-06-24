@@ -35,6 +35,10 @@ private:
 	unsigned int max_id;
 	std::function<std::string(unsigned int)> getter_algo;
 
+	float volume;
+	float pan;
+	float pitch_shift;
+
 public:
 	sequential_music();
 	sequential_music(unsigned int max_id, std::function<std::string(unsigned int)> getter_algo);
