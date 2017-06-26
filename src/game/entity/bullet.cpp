@@ -32,23 +32,15 @@
 
 std::unique_ptr<bullet> bullet::create(game_world & world, size_t id, sf::Vector2f aim, unsigned int x, unsigned int y, const bullet_properties & props) {
 	auto bull = std::make_unique<bullet>(std::ref(world), id, x, y, std::cref(props));
-
 	aim = normalised(aim);
-	// TODO: remove in favour of time-based bullet lifespan
-	const auto ignore_up_to = bull->speed_loss() * 10;
-	if(std::abs(aim.x) < ignore_up_to)
-		aim.x = 0;
-	if(std::abs(aim.y) < ignore_up_to)
-		aim.y = 0;
 	bull->start_movement(aim.x, aim.y);
-
 	return bull;
 }
 
 std::unique_ptr<bullet> bullet::create(game_world & world, size_t id, sf::Vector2f aim, unsigned int x, unsigned int y, float spread_min, float spread_max,
                                        const bullet_properties & props) {
 	static const auto pi = std::acos(-1.l);
-	static auto rand = seed11::make_seeded<std::mt19937>();
+	static auto rand     = seed11::make_seeded<std::mt19937>();
 	static std::bernoulli_distribution dev_way_dist;
 
 	aim              = normalised(aim);
@@ -98,10 +90,9 @@ json::object bullet::write_to_json() const {
 void bullet::tick(float max_x, float max_y) {
 	entity::tick(max_x, max_y);
 
-	const auto min_speed = props.speed * props.speed_loss * 10;
-	// Only kill the bullet if it's moving in that direction the the first place, see `bullet::create()`
-	// TODO: remove in favour of time-based bullet lifespan
-	if((motion_x && std::abs(motion_x) < min_speed) && (motion_y && std::abs(motion_y) < min_speed))
+	const auto min_speed = props.speed / 20;
+	const auto speed     = std::sqrt(motion_x * motion_x + motion_y * motion_y);
+	if(speed < min_speed)
 		world.despawn(id);
 }
 
