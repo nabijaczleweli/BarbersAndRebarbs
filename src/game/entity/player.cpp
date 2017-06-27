@@ -68,7 +68,20 @@ void player::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 	    {{x + 2, y + 2}, armour_colour},  //
 	    {{x - 2, y + 2}, armour_colour},  //
 	};
-	target.draw(vertices, sizeof vertices / sizeof *vertices, sf::PrimitiveType::Points, states);
+
+	// The current/"local" rotation is calculated as follows:
+	//   popup_frames_shown = popup_length - popup_frames_left
+	//   popup_progress ∈ [0..1] = popup_frames_shown / popup_length
+	//   rot ∈ [0..360] = -(popup_progress²) + 1
+	//
+	// In other words, it's an inverted parabola in [0..1].
+	auto rot_state = states;
+	if(gun_name_popup.first) {
+		const auto full_length = application::effective_FPS() * app_configuration.player_gun_popup_length;
+		const auto rot         = gun_name_popup.first / static_cast<double>(full_length);
+		rot_state.transform.rotate(360. * (1. - (rot * rot)), x, y);
+	}
+	target.draw(vertices, sizeof vertices / sizeof *vertices, sf::PrimitiveType::Points, rot_state);
 
 	const auto gun_progress = gun.progress();
 	if(gun_progress != 1) {
@@ -81,8 +94,9 @@ void player::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 
 	if(gun_name_popup.first) {
 		const auto eff_ps             = application::effective_FPS();
+		const auto full_length        = eff_ps * app_configuration.player_gun_popup_length;
 		const auto in_out_threshold   = eff_ps / 2;
-		const auto fade_in_threshold  = eff_ps * app_configuration.player_gun_popup_length - in_out_threshold;
+		const auto fade_in_threshold  = full_length - in_out_threshold;
 		const auto fade_out_threshold = in_out_threshold;
 
 		if(gun_name_popup.first >= fade_in_threshold || gun_name_popup.first <= fade_out_threshold) {
@@ -99,7 +113,7 @@ void player::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 
 		target.draw(gun_name_popup.second);
 
-		if(gun_name_popup.first == fade_in_threshold) {
+		if(gun_name_popup.first == full_length) {
 			if(app_configuration.play_sounds)
 				gun_pickup_sounds.second[gun_pickup_sounds.first]->play();
 			if(++gun_pickup_sounds.first >= gun_pickup_sounds.second.size())
