@@ -85,9 +85,12 @@ void game_world::handle_event(const sf::Event & event) {
 
 		save_threads.emplace_back(
 		    [&](auto && out) {
-			    if(const auto err_s = compress_string_to_file(saves_root + '/' + fs_safe_current_datetime() + ".sav", out))
-				    error_text = {{fmt::format(global_iser.translate_key("gui.world.text.save_compression_error"), err_s), font_monospace, 10},
-				                  application::effective_FPS() * 10};
+			    const auto fname = fs_safe_current_datetime();
+			    if(const auto err_s = compress_string_to_file(saves_root + '/' + fname + ".sav", out))
+				    save_error_text = {{fmt::format(global_iser.translate_key("gui.world.text.save_compression_error"), err_s), font_monospace, 10},
+				                       application::effective_FPS() * 10};
+			    else
+				    save_text = {{fmt::format(global_iser.translate_key("gui.world.text.save_success"), fname), font_monospace, 10}, application::effective_FPS() * 2};
 			  },
 		    json::dump_string(ents, {0, json::format_options::minify, 20}));
 	}
@@ -102,9 +105,30 @@ void game_world::draw(sf::RenderTarget & upon) {
 		if(const auto drwbl = dynamic_cast<const sf::Drawable *>(entity.second.get()))
 			upon.draw(*drwbl);
 
-	if(error_text.second) {
-		--error_text.second;
-		upon.draw(error_text.first);
+	if(save_text.second) {
+		const auto size        = save_text.first.getLocalBounds();
+		const auto eff_ps      = application::effective_FPS();
+		const auto full_length = eff_ps * 2;
+		const auto slide_len   = eff_ps / 2;
+
+		auto y = 0.;
+		auto x = 1.;
+		if(full_length - save_text.second < slide_len) {
+			const auto slide_progress = (full_length - save_text.second) / static_cast<double>(slide_len);
+			y = -((slide_progress - 1.) * (slide_progress - 1.));
+		} else if(save_text.second < slide_len) {
+			const auto slide_progress = save_text.second / static_cast<double>(slide_len);
+			x = slide_progress * slide_progress;
+		}
+		save_text.first.setPosition(upon.getSize().x - x * (size.width + static_cast<std::size_t>(save_text.first.getCharacterSize() * .75)), y * size.height);
+
+		upon.draw(save_text.first);
+		--save_text.second;
+	}
+
+	if(save_error_text.second) {
+		upon.draw(save_error_text.first);
+		--save_error_text.second;
 	}
 }
 

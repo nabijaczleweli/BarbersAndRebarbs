@@ -25,4 +25,5 @@ gui.main_menu.text.config_sound_effect_volume=Glosnosc efektow dzwiekowych: {:.0
 gui.main_menu.text.config_default_firearm=Domyslna bron: {}
 
 
+gui.world.text.save_success=Zapisano do "{}"
 gui.world.text.save_compression_error=Blad kompresji pliku zapisu: "{}"

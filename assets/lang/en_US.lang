@@ -26,4 +26,5 @@ gui.main_menu.text.config_sound_effect_volume=Sound effect volume: {:.0f}%
 gui.main_menu.text.config_default_firearm=Default firearm: {}
 
 
+gui.world.text.save_success=Saved to "{}"
 gui.world.text.save_compression_error=Failed to compress savefile: {}
