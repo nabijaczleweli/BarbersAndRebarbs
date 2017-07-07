@@ -40,20 +40,33 @@
 using namespace std::literals;
 
 
-void main_menu_screen::move_selection(main_menu_screen::direction dir) {
+void main_menu_screen::move_selection(main_menu_screen::direction dir, bool end = false) {
+	const auto max_idx     = main_buttons.size() - 1;
+	auto desired_selection = selected;
+
 	switch(dir) {
 		case direction::up:
-			if(app_configuration.play_sounds)
-				selected_option_switch_sound->play();
-			selected = std::min(main_buttons.size() - 1, selected + 1);
+			if(end)
+				desired_selection = max_idx;
+			else
+				desired_selection = selected + 1;
 			break;
 		case direction::down:
-			if(app_configuration.play_sounds)
-				selected_option_switch_sound->play();
-			if(selected)
-				--selected;
+			if(selected && !end)
+				desired_selection = selected - 1;
+			else
+				desired_selection = 0;
 			break;
 	}
+
+	desired_selection = std::min(max_idx, desired_selection);
+	if(app_configuration.play_sounds) {
+		if(desired_selection != selected)
+			selected_option_switch_sound->play();
+		else
+			selected_option_unchanged_sound->play();
+	}
+	selected = desired_selection;
 }
 
 void main_menu_screen::press_button() {
@@ -78,11 +91,11 @@ void main_menu_screen::try_drawings() {
 void main_menu_screen::load_game(sf::Text & txt, const std::string & save_path) {
 	const auto data = decompress_file_to_string(save_path);
 
-	if(!std::get<1>(data)) {
+	if(!std::get<1>(data))
 		txt.setString(global_iser.translate_key("gui.main_menu.text.load_file_inaccessible"));
-	} else if(const auto err_s = std::get<2>(data)) {
+	else if(const auto err_s = std::get<2>(data))
 		txt.setString(fmt::format(global_iser.translate_key("gui.main_menu.text.load_decompression_error"), err_s));
-	} else {
+	else {
 		json::value save;
 		json::parse(std::get<0>(data), save);
 		app.schedule_screen<main_game_screen>(save.as<json::object>());
@@ -310,6 +323,12 @@ int main_menu_screen::handle_event(const sf::Event & event) {
 			break;
 		case sf::Event::KeyPressed:
 			switch(static_cast<int>(event.key.code)) {
+				case sf::Keyboard::Key::Home:
+					move_selection(direction::up, true);
+					break;
+				case sf::Keyboard::Key::End:
+					move_selection(direction::down, true);
+					break;
 				case sf::Keyboard::Key::Up:
 					move_selection(direction::up);
 					break;
@@ -355,10 +374,13 @@ main_menu_screen::main_menu_screen(application & theapp)
         update(std::future<cpr::Response>(), std::thread(), sf::Text("", font_monospace, 10), app_configuration.use_network),
         selected_option_switch_sound(
             audiere::OpenSoundEffect(audio_device, (sound_root + "/main_menu/mouse_over.wav").c_str(), audiere::SoundEffectType::MULTIPLE)),
+        selected_option_unchanged_sound(
+            audiere::OpenSoundEffect(audio_device, (sound_root + "/main_menu/Alt_Fire_Switch.mp3").c_str(), audiere::SoundEffectType::MULTIPLE)),
         selected_option_select_sound(
             audiere::OpenSoundEffect(audio_device, (sound_root + "/main_menu/mouse_click.wav").c_str(), audiere::SoundEffectType::MULTIPLE)),
         update_ready_sound(audiere::OpenSoundEffect(audio_device, (sound_root + "/main_menu/update.wav").c_str(), audiere::SoundEffectType::SINGLE)) {
 	selected_option_switch_sound->setVolume(output_volume(app_configuration.sound_effect_volume * .8));
+	selected_option_unchanged_sound->setVolume(output_volume(app_configuration.sound_effect_volume * .8));
 	selected_option_select_sound->setVolume(output_volume(app_configuration.sound_effect_volume * .8));
 	update_ready_sound->setVolume(output_volume(app_configuration.sound_effect_volume * .8));
 

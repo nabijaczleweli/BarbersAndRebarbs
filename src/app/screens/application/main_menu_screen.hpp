@@ -45,10 +45,11 @@ private:
 	drawing keys_drawing;
 	std::tuple<std::future<cpr::Response>, std::thread, sf::Text, bool> update;
 	audiere::SoundEffectPtr selected_option_switch_sound;
+	audiere::SoundEffectPtr selected_option_unchanged_sound;
 	audiere::SoundEffectPtr selected_option_select_sound;
 	audiere::SoundEffectPtr update_ready_sound;
 
-	void move_selection(direction dir);
+	void move_selection(direction dir, bool end);
 	void press_button();
 	void try_drawings();
 	void load_game(sf::Text & txt, const std::string & save_path);
